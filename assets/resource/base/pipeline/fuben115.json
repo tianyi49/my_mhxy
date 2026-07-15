@@ -931,8 +931,8 @@
         "action": "Click",
         "post_delay": 1500,
         "next": [
-            "日常抓鬼-第一轮",
-            "[JumpBack]打开大地图_69副本"
+            "[JumpBack]捉鬼-fuben桥接",
+            "panduan_zhujiemian"
         ]
     }
 }

@@ -683,5 +683,147 @@
             -4,
             -8
         ]
+    },
+    "捉鬼-fuben桥接": {
+        "max_hit": 1,
+        "next": [
+            "识别位置-长安城-抓鬼-过渡"
+        ]
+    },
+    "捉鬼-fuben结束": {},
+    "抓鬼轮次计算-max-fuben": {
+        "max_hit": 1,
+        "next": [
+            "钟馗-捉鬼任务-循环",
+            "捉鬼-fuben结束"
+        ]
+    },
+    "抓鬼不足五人-图片识别": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "zhuagui/buzu5ren.png"
+        ],
+        "roi": [
+            384,
+            224,
+            502,
+            280
+        ],
+        "next": [
+            "抓鬼不足五人-点击取消"
+        ]
+    },
+    "抓鬼不足五人-点击取消": {
+        "recognition": "OCR",
+        "expected": [
+            "取消"
+        ],
+        "roi": "抓鬼不足五人-图片识别",
+        "pre_delay": 1000,
+        "action": "Click",
+        "post_delay": 1500,
+        "next": [
+            "抓鬼不足五人-点击钟馗"
+        ]
+    },
+    "抓鬼不足五人-点击钟馗": {
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "TemplateMatch",
+                "template": [
+                    "zhuagui/zhongkui.png"
+                ],
+                "roi": [
+                    294,
+                    102,
+                    583,
+                    386
+                ]
+            },
+            {
+                "recognition": "OCR",
+                "expected": [
+                    "钟馗",
+                    "钟道",
+                    "钟",
+                    "道"
+                ],
+                "roi": [
+                    186,
+                    157,
+                    853,
+                    426
+                ]
+            }
+        ],
+        "pre_delay": 1000,
+        "action": "Click",
+        "post_delay": 1500,
+        "target_offset": [
+            0,
+            0,
+            -4,
+            -8
+        ],
+        "next": [
+            "抓鬼不足五人-捉鬼任务"
+        ]
+    },
+    "抓鬼不足五人-捉鬼任务": {
+        "recognition": "OCR",
+        "expected": [
+            "捉鬼任务"
+        ],
+        "roi": [
+            925,
+            73,
+            312,
+            482
+        ],
+        "action": "Click",
+        "post_delay": 2000
+    },
+    "抓鬼领取双倍弹窗": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "zhuagui/zhuagui_shuangbei.png"
+        ],
+        "roi": [
+            402,
+            263,
+            475,
+            196
+        ],
+        "pre_delay": 1000,
+        "next": [
+            "抓鬼关闭领取双倍弹窗-点击确定"
+        ]
+    },
+    "抓鬼关闭领取双倍弹窗-点击确定": {
+        "recognition": "OCR",
+        "expected": [
+            "确定"
+        ],
+        "roi": "抓鬼领取双倍弹窗",
+        "pre_delay": 500,
+        "action": "Click",
+        "post_delay": 1500
+    },
+    "抓鬼-点击任务栏-通用": {
+        "recognition": "OCR",
+        "expected": [
+            "捉鬼[(（]\\d*/\\d*[)）]",
+            "捉拿.*鬼",
+            "千年厉鬼"
+        ],
+        "roi": [
+            1032,
+            165,
+            247,
+            300
+        ],
+        "pre_delay": 1000,
+        "action": "Click"
     }
 }
