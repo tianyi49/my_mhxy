@@ -87,8 +87,27 @@
         "next": [
             "[JumpBack]amazing_discount",
             "[JumpBack]panduan_zhujiemian_ks",
+            "[JumpBack]close_exit_confirm",
             "zai_zhujiemian"
         ]
+    },
+    "close_exit_confirm": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "zonghe/exit_confirm.png"
+        ],
+        "roi": [
+            246,
+            398,
+            791,
+            200
+        ],
+        "action": "ClickKey",
+        "post_wait_freezes": 200,
+        "key": [
+            4
+        ],
+        "post_delay": 500
     },
     "amazing_discount": {
         "recognition": "TemplateMatch",
@@ -138,7 +157,7 @@
         ],
         "pre_delay": 1000,
         "action": "ClickKey",
-        "post_wait_freezes": 100,
+        "post_wait_freezes": 200,
         "key": [
             4
         ],
