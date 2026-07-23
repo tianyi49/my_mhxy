@@ -30,25 +30,7 @@
         ]
     },
     "人物界面-按键打开失败-点击图标": {
-        "recognition": "ColorMatch",
-        "upper": [
-            141,
-            93,
-            44
-        ],
-        "lower": [
-            136,
-            88,
-            41
-        ],
-        "roi": [
-            1181,
-            3,
-            99,
-            99
-        ],
-        "count": 400,
-        "pre_delay": 500,
+        "max_hit": 5,
         "action": "Click",
         "target": [
             1185,
