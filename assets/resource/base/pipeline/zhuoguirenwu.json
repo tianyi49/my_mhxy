@@ -372,7 +372,7 @@
             243,
             334
         ],
-        "pre_delay": 3000,
+        "pre_delay": 1000,
         "action": "Click",
         "next": [
             "[JumpBack]捉鬼-领取双倍点数弹窗",

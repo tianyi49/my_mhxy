@@ -265,11 +265,17 @@
             "description": "伽蓝助战，每日聊天"
         },
         {
-            "name": "1",
+            "name": "邀请队员",
             "entry": "5R_duizhang",
             "option": [
                 "邀请队员"
-            ]
+            ],
+            "description": "./docs/description/5R_duizhang.md"
+        },
+        {
+            "name": "任务链（高级功能）",
+            "entry": "renwulian",
+            "description": "./docs/description/renwulian.md"
         }
     ],
     "option": {
