@@ -210,21 +210,14 @@
             "[JumpBack]战斗中-等待20秒"
         ]
     },
-    "kk": {
-        "next": [
-            "[JumpBack]秘境-点击进入战斗",
-            "[JumpBack]海底秘境-点击关卡",
-            "mijing_tongguan",
-            "mijing_shibai",
-            "[JumpBack]战斗中-等待20秒"
-        ]
-    },
     "海底秘境-指定关卡结束任务": {
         "focus": {
             "Node.Recognition.Succeeded": "{name}"
         },
         "recognition": "OCR",
-        "expected": [],
+        "expected": [
+            "第25关"
+        ],
         "roi": [
             1014,
             209,
@@ -255,6 +248,60 @@
         ]
     },
     "秘境-点击进入战斗": {
+        "recognition": "OCR",
+        "expected": [
+            "进入战斗"
+        ],
+        "roi": [
+            939,
+            366,
+            285,
+            63
+        ],
+        "action": "Click",
+        "target": [
+            1039,
+            235,
+            79,
+            35
+        ],
+        "next": [
+            "秘境-点击进入战斗前重新确认关卡数",
+            "秘境-实际点击进入战斗1"
+        ]
+    },
+    "秘境-点击进入战斗前重新确认关卡数": {
+        "focus": {
+            "Node.Recognition.Succeeded": "{name}"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "第25关"
+        ],
+        "roi": [
+            1014,
+            209,
+            101,
+            109
+        ]
+    },
+    "秘境-实际点击进入战斗1": {
+        "recognition": "OCR",
+        "expected": [
+            "第\\d*关"
+        ],
+        "roi": [
+            1014,
+            209,
+            101,
+            109
+        ],
+        "action": "Click",
+        "next": [
+            "秘境-实际点击进入战斗2"
+        ]
+    },
+    "秘境-实际点击进入战斗2": {
         "recognition": "OCR",
         "expected": [
             "进入战斗"

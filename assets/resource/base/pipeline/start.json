@@ -11,8 +11,45 @@
         "next": [
             "主界面",
             "点击登录游戏",
+            "[JumpBack]更新客户端",
             "[JumpBack]正在下载本周更新",
             "[JumpBack]登录等待10秒"
+        ]
+    },
+    "更新客户端": {
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "TemplateMatch",
+                "template": [
+                    "zhanghao/require_update.png"
+                ],
+                "roi": [
+                    188,
+                    69,
+                    899,
+                    343
+                ]
+            },
+            {
+                "recognition": "OCR",
+                "expected": [
+                    "关闭"
+                ],
+                "roi": [
+                    431,
+                    485,
+                    200,
+                    79
+                ]
+            }
+        ],
+        "action": "Click",
+        "target": [
+            494,
+            512,
+            75,
+            30
         ]
     },
     "正在下载本周更新": {

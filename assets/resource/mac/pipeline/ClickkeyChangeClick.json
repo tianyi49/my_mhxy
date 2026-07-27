@@ -313,29 +313,6 @@
             "[JumpBack]队伍界面-按键打开失败-点击队伍图标"
         ]
     },
-    "日常抓鬼-第一轮": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "zonghe/xiaoditu_taiyang.png",
-            "zonghe/xiaoditu_yueliang.png"
-        ],
-        "roi": [
-            58,
-            1,
-            75,
-            79
-        ],
-        "threshold": [
-            0.9
-        ],
-        "pre_delay": 500,
-        "action": "Click",
-        "post_delay": 1000,
-        "next": [
-            "日常抓鬼-点击钟馗",
-            "[JumpBack]小地图-按键打开失败-点击小地图图标"
-        ]
-    },
     "115打开小地图_百晓仙子": {
         "recognition": "TemplateMatch",
         "template": [
