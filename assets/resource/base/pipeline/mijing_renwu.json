@@ -202,6 +202,7 @@
         "action": "Click",
         "post_delay": 200,
         "next": [
+            "[JumpBack]海底秘境-关闭进入战斗",
             "海底秘境-指定关卡结束任务",
             "[JumpBack]秘境-点击进入战斗",
             "[JumpBack]海底秘境-点击关卡",
@@ -260,7 +261,7 @@
         ],
         "action": "Click"
     },
-    "海底秘境-识别进入战斗-并确认关卡": {
+    "海底秘境-关闭进入战斗": {
         "recognition": "OCR",
         "expected": [
             "进入战斗"
@@ -277,56 +278,7 @@
             235,
             79,
             35
-        ],
-        "next": [
-            "海底秘境-点击进入战斗前重新确认关卡数"
         ]
-    },
-    "海底秘境-点击进入战斗前重新确认关卡数": {
-        "focus": {
-            "Node.Recognition.Succeeded": "{name}"
-        },
-        "recognition": "OCR",
-        "expected": [],
-        "roi": [
-            1014,
-            209,
-            101,
-            109
-        ]
-    },
-    "海底秘境-再次点击关卡": {
-        "recognition": "OCR",
-        "expected": [
-            "第\\d*关"
-        ],
-        "roi": [
-            1014,
-            209,
-            101,
-            109
-        ],
-        "pre_delay": 500,
-        "action": "Click",
-        "post_delay": 500,
-        "next": [
-            "海底秘境-再次点击关卡-点击进入战斗"
-        ]
-    },
-    "海底秘境-再次点击关卡-点击进入战斗": {
-        "recognition": "OCR",
-        "expected": [
-            "进入战斗"
-        ],
-        "roi": [
-            939,
-            366,
-            285,
-            63
-        ],
-        "pre_delay": 500,
-        "action": "Click",
-        "post_delay": 500
     },
     "mijing_tongguan": {
         "focus": {
@@ -422,6 +374,7 @@
         "action": "Click",
         "post_delay": 1000,
         "next": [
+            "[JumpBack]日月之井-关闭进入战斗",
             "日月之井-指定关卡结束任务",
             "[JumpBack]秘境-点击进入战斗",
             "[JumpBack]日月之井-点击关卡",
@@ -438,6 +391,25 @@
             "日月之井-通关",
             "日月之井-失败",
             "[JumpBack]战斗中-等待20秒"
+        ]
+    },
+    "日月之井-关闭进入战斗": {
+        "recognition": "OCR",
+        "expected": [
+            "进入战斗"
+        ],
+        "roi": [
+            939,
+            366,
+            285,
+            63
+        ],
+        "action": "Click",
+        "target": [
+            1039,
+            235,
+            79,
+            35
         ]
     },
     "日月之井-指定关卡结束任务": {
