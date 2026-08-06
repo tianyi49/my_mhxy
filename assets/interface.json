@@ -121,7 +121,10 @@
         {
             "name": "师门任务",
             "entry": "shimen_renwu",
-            "description": "请勾选“自动选择每日任务”和“自动完成任务”两个选项，师门任务暂时只做了自动。"
+            "description": "./docs/description/shimen_renwu.md",
+            "option": [
+                "师门任务模式"
+            ]
         },
         {
             "name": "秘境降妖",
@@ -279,6 +282,11 @@
             "name": "任务链（高级功能）",
             "entry": "renwulian",
             "description": "./docs/description/renwulian.md"
+        },
+        {
+            "name": "帮派任务",
+            "entry": "bangpai_renwu",
+            "description": "新任务，手动"
         }
     ],
     "option": {
@@ -767,6 +775,27 @@
                             "enabled": true
                         }
                     }
+                }
+            ]
+        },
+        "师门任务模式": {
+            "type": "switch",
+            "description": "是否使用手动师门任务",
+            "default_case": "No",
+            "cases": [
+                {
+                    "name": "Yes",
+                    "pipeline_override": {
+                        "shimen_renwu": {
+                            "next": [
+                                "shimen_renwu_new"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "No",
+                    "pipeline_override": {}
                 }
             ]
         },
