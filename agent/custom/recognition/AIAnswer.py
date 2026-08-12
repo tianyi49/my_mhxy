@@ -174,7 +174,7 @@ class AIAnswer(CustomRecognition):
                 data = {
                     "model": UImodel,   
                     "messages": [
-                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "system", "content": "你是一个答题助手"},
                         {"role": "user", "content": prompt}
                     ],
                     "thinking": {"type": "disabled"},
