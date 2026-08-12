@@ -1,0 +1,333 @@
+{
+    "zhuogui_hundui": {
+        "next": [
+            "混队-抓鬼-过渡",
+            "[JumpBack]panduan_zhujiemian"
+        ]
+    },
+    "混队-抓鬼-过渡": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "zonghe/chenghao.png",
+            "zonghe/jiahao.png"
+        ],
+        "roi": [
+            1206,
+            637,
+            66,
+            57
+        ],
+        "next": [
+            "混队-抓鬼-打开队伍界面"
+        ]
+    },
+    "混队-抓鬼-双倍点数": {},
+    "混队-抓鬼-打开队伍界面": {
+        "pre_delay": 500,
+        "action": "ClickKey",
+        "key": [
+            57,
+            48
+        ],
+        "post_delay": 500,
+        "next": [
+            "混队-抓鬼-未在队伍中-开始混队捉鬼任务"
+        ]
+    },
+    "混队-抓鬼-未在队伍中-开始混队捉鬼任务": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "duiwu/duiwu-zudui.png"
+        ],
+        "roi": [
+            0,
+            0,
+            229,
+            106
+        ],
+        "next": [
+            "混队-抓鬼-点击便捷组队"
+        ]
+    },
+    "混队-抓鬼-点击便捷组队": {
+        "recognition": "OCR",
+        "expected": [
+            "便捷组队"
+        ],
+        "roi": [
+            994,
+            634,
+            188,
+            58
+        ],
+        "pre_delay": 500,
+        "action": "Click",
+        "post_delay": 500,
+        "next": [
+            "混队-抓鬼-进入便捷组队成功"
+        ]
+    },
+    "混队-抓鬼-进入便捷组队成功": {
+        "recognition": "OCR",
+        "expected": [
+            "便捷组队"
+        ],
+        "roi": [
+            540,
+            5,
+            187,
+            60
+        ],
+        "pre_delay": 500,
+        "action": "Swipe",
+        "begin": [
+            270,
+            126
+        ],
+        "end": [
+            268,
+            403
+        ],
+        "post_delay": 1000,
+        "next": [
+            "混队-抓鬼-点击日常-捉鬼任务",
+            "[JumpBack]混队-抓鬼-点击日常任务"
+        ]
+    },
+    "混队-抓鬼-点击日常任务": {
+        "recognition": "OCR",
+        "expected": [
+            "日常任务"
+        ],
+        "roi": [
+            153,
+            80,
+            243,
+            598
+        ],
+        "pre_delay": 500,
+        "action": "Click",
+        "post_delay": 500
+    },
+    "混队-抓鬼-点击日常-捉鬼任务": {
+        "recognition": "OCR",
+        "expected": [
+            "捉鬼任务"
+        ],
+        "roi": [
+            153,
+            80,
+            243,
+            598
+        ],
+        "pre_delay": 500,
+        "action": "Click",
+        "post_delay": 500,
+        "next": [
+            "混队-抓鬼-日常-捉鬼任务-点击自动匹配"
+        ]
+    },
+    "混队-抓鬼-日常-捉鬼任务-点击自动匹配": {
+        "recognition": "OCR",
+        "expected": [
+            "自动匹配"
+        ],
+        "roi": [
+            674,
+            623,
+            209,
+            64
+        ],
+        "pre_delay": 500,
+        "action": "Click",
+        "post_delay": 500,
+        "next": [
+            "[JumpBack]混队-抓鬼-关闭便捷组队界面",
+            "[JumpBack]队伍-退出组队界面",
+            "[JumpBack]混队-抓鬼-取消推荐创建捉鬼队伍",
+            "[JumpBack]任务栏切换为队伍",
+            "[JumpBack]混队-抓鬼-匹配中",
+            "混队-抓鬼-匹配成功"
+        ]
+    },
+    "混队-抓鬼-关闭便捷组队界面": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "zonghe/guanbi1.png",
+            "zonghe/guanbi2.png"
+        ],
+        "roi": [
+            1043,
+            8,
+            143,
+            101
+        ],
+        "pre_delay": 500,
+        "action": "Click",
+        "post_delay": 500
+    },
+    "混队-抓鬼-取消推荐创建捉鬼队伍": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "zhuagui/quxiao_ZG_tuijian.png"
+        ],
+        "roi": [
+            393,
+            182,
+            476,
+            352
+        ],
+        "pre_delay": 500,
+        "action": "Click",
+        "target": [
+            454,
+            457,
+            130,
+            43
+        ],
+        "post_delay": 500
+    },
+    "混队-抓鬼-匹配中": {
+        "recognition": "And",
+        "all_of": [
+            "混队-抓鬼-匹配中-子1",
+            "混队-抓鬼-匹配中-子2"
+        ],
+        "pre_delay": 3000
+    },
+    "混队-抓鬼-匹配中-子1": {
+        "recognition": "OCR",
+        "expected": [
+            "捉鬼任务"
+        ],
+        "roi": [
+            1037,
+            162,
+            242,
+            66
+        ]
+    },
+    "混队-抓鬼-匹配中-子2": {
+        "recognition": "OCR",
+        "expected": [
+            "退出匹配"
+        ],
+        "roi": [
+            1071,
+            267,
+            170,
+            138
+        ]
+    },
+    "混队-抓鬼-匹配成功": {
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "TemplateMatch",
+                "template": [
+                    "r5/duiwu_xuetiao.png"
+                ],
+                "roi": [
+                    1036,
+                    166,
+                    239,
+                    333
+                ]
+            },
+            {
+                "recognition": "TemplateMatch",
+                "template": [
+                    "zhandou/zidong.png",
+                    "zhandou/quxiao.png"
+                ],
+                "roi": [
+                    1175,
+                    549,
+                    103,
+                    159
+                ]
+            }
+        ],
+        "timeout": 300000,
+        "next": [
+            "[JumpBack]任务栏切换为队伍",
+            "[JumpBack]队伍-退出组队界面",
+            "[JumpBack]清理主界面使用-关闭",
+            "[JumpBack]战斗中-等待100秒",
+            "混队-抓鬼-任务结束"
+        ],
+        "on_error": [
+            "tuichuduiwu"
+        ]
+    },
+    "混队-抓鬼-任务结束": {
+        "focus": "混队-抓鬼-任务结束",
+        "recognition": "Or",
+        "any_of": [
+            "混队-抓鬼-任务结束-子1",
+            "混队-抓鬼-任务结束-子2",
+            "混队-抓鬼-任务结束-子3",
+            "混队-抓鬼-任务结束-子4"
+        ],
+        "next": [
+            "混队-抓鬼-退出队伍"
+        ]
+    },
+    "混队-抓鬼-任务结束-子1": {
+        "focus": "三号位离线",
+        "recognition": "OCR",
+        "expected": [
+            "离"
+        ],
+        "roi": [
+            1039,
+            307,
+            64,
+            62
+        ]
+    },
+    "混队-抓鬼-任务结束-子2": {
+        "focus": "二号位离线",
+        "recognition": "OCR",
+        "expected": [
+            "离"
+        ],
+        "roi": [
+            1040,
+            244,
+            58,
+            56
+        ]
+    },
+    "混队-抓鬼-任务结束-子3": {
+        "focus": "二号位无人",
+        "recognition": "TemplateMatch",
+        "template": [
+            "zhuagui/wuren_2hao.png"
+        ],
+        "roi": [
+            1134,
+            262,
+            112,
+            47
+        ]
+    },
+    "混队-抓鬼-任务结束-子4": {
+        "focus": "不在队伍中",
+        "recognition": "OCR",
+        "expected": [
+            "创建"
+        ],
+        "roi": [
+            1039,
+            451,
+            117,
+            55
+        ]
+    },
+    "混队-抓鬼-退出队伍": {
+        "next": [
+            "tuichuduiwu"
+        ]
+    }
+}

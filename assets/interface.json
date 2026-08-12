@@ -287,6 +287,11 @@
             "name": "帮派任务",
             "entry": "bangpai_renwu",
             "description": "新任务，手动"
+        },
+        {
+            "name": "捉鬼（混队）",
+            "entry": "zhuogui_hundui",
+            "description": "混队捉过任务，将使用自动匹配捉鬼。停止条件5分钟未进入战斗，将退出队伍。"
         }
     ],
     "option": {
