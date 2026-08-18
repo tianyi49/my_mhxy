@@ -10,7 +10,6 @@ RapidFuzz
 StrEnum
 requests
 pydantic-core<2.43.0
-math
 
 
 zai-sdk
