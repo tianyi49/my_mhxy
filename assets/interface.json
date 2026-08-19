@@ -792,6 +792,10 @@
             "default_case": "No",
             "cases": [
                 {
+                    "name": "No",
+                    "pipeline_override": {}
+                },
+                {
                     "name": "Yes",
                     "pipeline_override": {
                         "shimen_renwu": {
@@ -800,10 +804,6 @@
                             ]
                         }
                     }
-                },
-                {
-                    "name": "No",
-                    "pipeline_override": {}
                 }
             ]
         },
