@@ -418,5 +418,89 @@
         "pre_delay": 500,
         "action": "Click",
         "post_delay": 500
+    },
+    "识别拓印": {
+        "recognition": "Or",
+        "any_of": [
+            "识别拓印-子1",
+            "识别拓印-子2"
+        ],
+        "next": [
+            "拓印完成",
+            "[JumpBack]拓印滑动"
+        ]
+    },
+    "识别拓印-子1": {
+        "recognition": "OCR",
+        "expected": [
+            "拓印",
+            "拓",
+            "印"
+        ],
+        "roi": [
+            173,
+            97,
+            133,
+            186
+        ]
+    },
+    "识别拓印-子2": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "tayin/tayin.png"
+        ],
+        "threshold": [
+            0.9
+        ],
+        "roi": [
+            173,
+            97,
+            133,
+            186
+        ]
+    },
+    "拓印滑动": {
+        "max_hit": 20,
+        "action": "Custom",
+        "custom_action": "tayin"
+    },
+    "拓印完成": {
+        "recognition": "And",
+        "all_of": [
+            "拓印完成-子1",
+            "拓印完成-子2"
+        ]
+    },
+    "拓印完成-子1": {
+        "recognition": "OCR",
+        "expected": [
+            "完成"
+        ],
+        "roi": [
+            552,
+            438,
+            121,
+            32
+        ]
+    },
+    "拓印完成-子2": {
+        "recognition": "ColorMatch",
+        "count": 800,
+        "lower": [
+            244,
+            217,
+            180
+        ],
+        "upper": [
+            247,
+            225,
+            194
+        ],
+        "roi": [
+            552,
+            438,
+            121,
+            32
+        ]
     }
 }
