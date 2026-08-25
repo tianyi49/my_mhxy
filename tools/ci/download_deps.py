@@ -94,6 +94,7 @@ def download_dependencies(deps_dir, platform_tag):
             "--platform",
             platform_tag,
             "--only-binary=:all:",
+            "--find-links", str(deps_path),
         ]
 
         print(f"执行命令: {' '.join(cmd)}")
