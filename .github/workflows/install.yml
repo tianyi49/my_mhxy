@@ -174,7 +174,16 @@ jobs:
         shell: bash
         run: |
           python tools/ci/setup_embed_python.py
-          
+      
+      # 新增：手动下载 arm64 专用 wheel
+      - name: Download opencv-python-headless for Windows ARM64 
+        if: matrix.arch == 'aarch64'
+        shell: bash
+        run: |
+          mkdir -p install/deps
+          curl -L -o install/deps/opencv_python_headless-4.10.0.84-cp37-abi3-win_arm64.whl \
+          https://files.pythonhosted.org/packages/30/c0/66f88d58500e990a9a0a5c06f98862edf1d0a3a430781218a8c193948438/opencv_python_headless-4.10.0.84-cp37-abi3-win_arm64.whl
+
       - name: Download Python dependencies
         shell: bash
         run: |
