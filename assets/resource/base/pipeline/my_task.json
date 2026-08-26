@@ -423,7 +423,8 @@
         "recognition": "Or",
         "any_of": [
             "识别拓印-子1",
-            "识别拓印-子2"
+            "识别拓印-子2",
+            "识别拓印-子3"
         ],
         "next": [
             "拓印完成",
@@ -459,17 +460,37 @@
             127
         ]
     },
+    "识别拓印-子3": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "tayin/tayin.png"
+        ],
+        "threshold": [
+            0.9
+        ],
+        "roi": [
+            149,
+            275,
+            210,
+            199
+        ]
+    },
     "拓印滑动": {
         "max_hit": 20,
         "action": "Custom",
         "custom_action": "tayin"
     },
     "拓印完成": {
+        "focus": {
+            "Node.Recognition.Succeeded": "拓印完成"
+        },
         "recognition": "And",
         "all_of": [
             "拓印完成-子1",
             "拓印完成-子2"
-        ]
+        ],
+        "pre_delay": 500,
+        "action": "Click"
     },
     "拓印完成-子1": {
         "recognition": "OCR",
