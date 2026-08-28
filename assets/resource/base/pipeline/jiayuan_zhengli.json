@@ -278,9 +278,9 @@
             173,
             72
         ],
-        "pre_delay": 1000,
+        "pre_delay": 500,
         "action": "Click",
-        "post_delay": 1000,
+        "post_delay": 800,
         "next": [
             "召唤灵点击喂养-确定",
             "召唤灵点击喂养-未识别到确定"
