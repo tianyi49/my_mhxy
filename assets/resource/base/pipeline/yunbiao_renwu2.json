@@ -135,17 +135,16 @@
         ],
         "roi": "活动-运镖-开始",
         "action": "Click",
-        "post_wait_freezes": 6000,
+        "post_delay": 1000,
+        "post_wait_freezes": 1000,
         "next": [
             "[JumpBack]点击押送普通镖银(三次)",
             "[JumpBack]运镖中",
-            "[JumpBack]战斗中-等待20秒"
-        ],
-        "on_error": [
-            "运镖完成onerror"
+            "[JumpBack]战斗中-等待20秒",
+            "运镖完成"
         ]
     },
-    "运镖完成onerror": {
+    "运镖完成": {
         "recognition": "TemplateMatch",
         "template": [
             "zonghe/jiahao.png",
