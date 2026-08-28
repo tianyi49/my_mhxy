@@ -199,7 +199,7 @@
         "rate_limit": 2000,
         "next": [
             "[JumpBack]藏宝图-主界面使用",
-            "[JumpBack]战斗中-等待100秒",
+            "[JumpBack]战斗中-等待10秒",
             "[JumpBack]自动寻路中-图片识别",
             "[JumpBack]关闭三界热点",
             "[JumpBack]战斗平衡弹窗-点击关闭"
@@ -221,6 +221,21 @@
         ],
         "action": "Click",
         "post_wait_freezes": 1000
+    },
+    "挖宝图完成判断-过渡": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "zonghe/jiahao.png",
+            "zonghe/chenghao.png",
+            "zonghe/baoguo.png",
+            "zonghe/baoguo_man.png"
+        ],
+        "roi": [
+            1197,
+            540,
+            78,
+            157
+        ]
     },
     "挖宝图完成判断": {
         "pre_wait_freezes": 100,
