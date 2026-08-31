@@ -190,6 +190,7 @@
         "action": "Click",
         "post_delay": 1000,
         "next": [
+            "识别拓印_停止",
             "[JumpBack]师门完成-九转天阶遮挡",
             "[JumpBack]师门完成-九幽遮挡",
             "[JumpBack]战斗平衡弹窗-点击关闭",

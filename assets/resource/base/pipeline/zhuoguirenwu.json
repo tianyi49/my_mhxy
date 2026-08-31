@@ -170,6 +170,7 @@
         "action": "Click",
         "post_delay": 2000,
         "next": [
+            "识别拓印_停止",
             "[JumpBack]抓鬼领取双倍弹窗",
             "[JumpBack]捉鬼-没有辅助提示-点击取消",
             "[JumpBack]抓鬼不足五人-图片识别",

@@ -138,6 +138,7 @@
         "post_delay": 1000,
         "post_wait_freezes": 1000,
         "next": [
+            "识别拓印_停止",
             "[JumpBack]点击押送普通镖银(三次)",
             "[JumpBack]运镖中",
             "[JumpBack]战斗中-等待20秒",
