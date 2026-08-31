@@ -192,8 +192,8 @@
         ],
         "action": "Click",
         "target_offset": [
-            0,
-            0,
+            3,
+            3,
             -4,
             -8
         ],
@@ -523,8 +523,8 @@
         ],
         "action": "Click",
         "target_offset": [
-            0,
-            0,
+            3,
+            3,
             -4,
             -8
         ],
@@ -658,8 +658,8 @@
         ],
         "action": "Click",
         "target_offset": [
-            0,
-            0,
+            3,
+            3,
             -4,
             -8
         ],
