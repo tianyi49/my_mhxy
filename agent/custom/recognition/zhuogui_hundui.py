@@ -1,10 +1,10 @@
 from maa.agent.agent_server import AgentServer
 from maa.custom_recognition import CustomRecognition
 from maa.context import Context
-import json
-import random
+import re
 import time
 import math
+import unicodedata
 
 from utils import logger
 
@@ -21,6 +21,48 @@ class zhuogui_hundui(CustomRecognition):
     User_points=0
     """
 
+    _OCR_ATTEMPTS = 3
+
+    @staticmethod
+    def _parse_non_negative_int(value):
+        """从配置或 OCR 文本提取非负整数，无法解析时返回 None。"""
+        if isinstance(value, bool):
+            return int(value)
+        text = unicodedata.normalize("NFKC", str(value or "")).strip()
+        match = re.search(r"\d+", text)
+        if not match:
+            return None
+        return int(match.group())
+
+    def _recognize_points(self, context: Context, name: str, roi):
+        """有限次数重试点数 OCR，避免脏文本进入 int() 导致回调崩溃。"""
+        last_text = ""
+        for attempt in range(1, self._OCR_ATTEMPTS + 1):
+            image = context.tasker.controller.post_screencap().wait().get()
+            reco = context.run_recognition(
+                name,
+                image,
+                pipeline_override={
+                    name: {
+                        "roi": roi,
+                        "expected": [""],
+                        "recognition": "OCR",
+                    }
+                },
+            )
+            if reco and reco.hit and reco.best_result:
+                last_text = reco.best_result.text
+                value = self._parse_non_negative_int(last_text)
+                if value is not None:
+                    return value
+            logger.warning(
+                f"{name} OCR 第 {attempt}/{self._OCR_ATTEMPTS} 次无有效数字: "
+                f"{last_text!r}"
+            )
+            if attempt < self._OCR_ATTEMPTS:
+                time.sleep(0.3)
+        return None
+
     def analyze(
          self,
          context: Context,
@@ -28,41 +70,27 @@ class zhuogui_hundui(CustomRecognition):
      ) -> CustomRecognition.AnalyzeResult:
         # logger.info("zhuogui_hundui")
         
-        Received_double_points = 0
-        Not_Received_double_points = 0
-        
         # 获取自定义参数
-        User_points: dict = context.get_node_data("混队-抓鬼-判断结束条件")["attach"]["User_points"]
-        Uset_time_HH: dict = context.get_node_data("混队-抓鬼-判断结束条件")["attach"]["Uset_time_HH"]
-        Uset_time_MM: dict = context.get_node_data("混队-抓鬼-判断结束条件")["attach"]["Uset_time_MM"]
-        # 已领取双倍点数Received_double_points
-        image1 = context.tasker.controller.post_screencap().wait().get()
-        reco1 = context.run_recognition(
-                        "已领取双倍点数",
-                        image1,
-                        pipeline_override={"已领取双倍点数": {"roi" : [628, 626, 53, 35],
-                                                            "expected":[""],
-                                                            "recognition": "OCR"
-                                                            }
-                                            }
-                        )
-        if not reco1 or not reco1.hit:
-            return CustomRecognition.AnalyzeResult(box=(0,0,0,0),detail="未识别到已领取双倍点数")
-        Received_double_points= reco1.best_result.text
-        # 未领取双倍点数Not_Received_double_points
-        image1 = context.tasker.controller.post_screencap().wait().get()
-        reco2 = context.run_recognition(
-                        "未领取双倍点数",
-                        image1,
-                        pipeline_override={"未领取双倍点数": {"roi" : [910, 624, 63, 37],
-                                                            "expected":[""],
-                                                            "recognition": "OCR"
-                                                            }
-                                            }
-                        )
-        if not reco2 or not reco2.hit:
-            return CustomRecognition.AnalyzeResult(box=(0,0,0,0),detail="未识别到未领取双倍点数")
-        Not_Received_double_points = reco2.best_result.text
+        attach = context.get_node_data("混队-抓鬼-判断结束条件").get("attach", {})
+        User_points = self._parse_non_negative_int(attach.get("User_points"))
+        Uset_time_HH = self._parse_non_negative_int(attach.get("Uset_time_HH"))
+        Uset_time_MM = self._parse_non_negative_int(attach.get("Uset_time_MM"))
+        if None in (User_points, Uset_time_HH, Uset_time_MM):
+            return CustomRecognition.AnalyzeResult(
+                box=None, detail="捉鬼结束条件配置不是有效整数"
+            )
+
+        Received_double_points = self._recognize_points(
+            context, "已领取双倍点数", [628, 626, 53, 35]
+        )
+        Not_Received_double_points = self._recognize_points(
+            context, "未领取双倍点数", [910, 624, 63, 37]
+        )
+        if Received_double_points is None or Not_Received_double_points is None:
+            return CustomRecognition.AnalyzeResult(
+                box=None,
+                detail=f"双倍点数连续 {self._OCR_ATTEMPTS} 次识别失败",
+            )
 
         logger.info(f"已领取双倍点数: {Received_double_points}, 未领取双倍点数: {Not_Received_double_points}")
         # 获取当前时间，并判断是否超过定时的时间Uset_time_HH：Uset_time_MM
@@ -70,11 +98,11 @@ class zhuogui_hundui(CustomRecognition):
         current_hh = current_time.tm_hour
         current_mm = current_time.tm_min
         # 判断点击领取双倍次数
-        m = 1000-int(Received_double_points)
-        max_click = math.ceil(min(m, int(Not_Received_double_points)) / 100)
+        m = max(0, 1000 - Received_double_points)
+        max_click = math.ceil(max(0, min(m, Not_Received_double_points)) / 100)
 
         # 判断是否满足结束条件
-        if int(Received_double_points) + int(Not_Received_double_points) <= int(User_points): # 活力点数小于用户指定值
+        if Received_double_points + Not_Received_double_points <= User_points: # 活力点数小于用户指定值
             logger.info(f"满足力点数小于用户指定值，任务结束")
             context.run_task("tuichuduiwu")
             return CustomRecognition.AnalyzeResult(box=(0,0,0,0),detail="活力点数小于用户指定值，捉鬼任务结束")
@@ -89,7 +117,13 @@ class zhuogui_hundui(CustomRecognition):
             logger.info(f"未满足任务结束条件，领取双倍点数，并继续开始捉鬼混队")
             context.run_task("tuichuduiwu")
             time.sleep(1)
-            context.run_task("zhuogui_hundui")
+            try:
+                context.run_task("zhuogui_hundui")
+            except Exception:
+                logger.exception("续跑捉鬼混队失败")
+                return CustomRecognition.AnalyzeResult(
+                    box=None, detail="续跑捉鬼混队失败"
+                )
             return CustomRecognition.AnalyzeResult(box=(0,0,0,0),detail="未满足结束条件，继续任务")
 
         # return CustomRecognition.AnalyzeResult(box=(0,0,0,0),detail="捉鬼任务结束")
@@ -107,7 +141,7 @@ class zhuogui_end_once(CustomRecognition):
          ) -> CustomRecognition.AnalyzeResult:
         
         image = context.tasker.controller.post_screencap().wait().get()
-        time.sleep(3000)
+        time.sleep(3)
         image2 = context.tasker.controller.post_screencap().wait().get()
         #我想对比image和image2相似度，按0.7标准，有没有函数
        

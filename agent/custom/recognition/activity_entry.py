@@ -13,6 +13,10 @@ class ActivityEntry(CustomRecognition):
 
     _DEFAULT_ROI = [316, 76, 834, 433]
     _MAX_ROW_DISTANCE = 70
+    _BUTTON_ALIASES = {
+        "参加": ("参加", "参ル"),
+        "完成": ("完成", "元成"),
+    }
 
     @staticmethod
     def _internal_node_name(task_names, button_texts):
@@ -57,7 +61,13 @@ class ActivityEntry(CustomRecognition):
             str(value).strip() for value in raw_button_texts if str(value).strip()
         ]
         roi = param.get("roi", self._DEFAULT_ROI)
-        max_row_distance = int(param.get("max_row_distance", self._MAX_ROW_DISTANCE))
+        try:
+            max_row_distance = int(
+                param.get("max_row_distance", self._MAX_ROW_DISTANCE)
+            )
+        except (TypeError, ValueError):
+            max_row_distance = self._MAX_ROW_DISTANCE
+        max_row_distance = max(1, min(max_row_distance, 300))
 
         if not task_names or not button_texts:
             return CustomRecognition.AnalyzeResult(box=None, detail="未配置活动名称或按钮文字")
@@ -86,10 +96,16 @@ class ActivityEntry(CustomRecognition):
             for result in reco.all_results
             if result.box and any(name in result.text for name in task_names)
         ]
+        accepted_button_texts = {
+            alias
+            for text in button_texts
+            for alias in self._BUTTON_ALIASES.get(text, (text,))
+        }
         buttons = [
             result
             for result in reco.all_results
-            if result.box and any(text in result.text for text in button_texts)
+            if result.box
+            and any(text in result.text for text in accepted_button_texts)
         ]
 
         best_pair = None
