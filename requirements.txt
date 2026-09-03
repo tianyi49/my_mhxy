@@ -9,6 +9,7 @@ python-Levenshtein
 RapidFuzz
 StrEnum
 requests
+charset-normalizer==3.5.1
 pydantic-core<2.43.0
 opencv-python-headless==4.10.0.84
 scikit-image

@@ -2,13 +2,17 @@ from maa.agent.agent_server import AgentServer
 from maa.custom_recognition  import CustomRecognition
 from maa.context import Context
 from utils import logger
+import hashlib
 import requests
-import json
+import re
 import time
 from zai import ZhipuAiClient
 
 @AgentServer.custom_recognition("AIAnswer")
 class AIAnswer(CustomRecognition):
+        _api_unavailable_reason = None
+        _api_config_signature = None
+
         def analyze(
          self,
          context: Context,
@@ -166,6 +170,27 @@ class AIAnswer(CustomRecognition):
                 url = UIurl
                 apiKey = UIpiKey
 
+                config_signature = (
+                    str(url),
+                    str(UImodel),
+                    hashlib.sha256(str(apiKey).encode("utf-8")).hexdigest(),
+                )
+                if self._api_config_signature != config_signature:
+                    self._api_config_signature = config_signature
+                    self._api_unavailable_reason = None
+                if self._api_unavailable_reason:
+                    return self._api_unavailable_reason
+                if not isinstance(apiKey, str) or not apiKey.strip():
+                    self._api_unavailable_reason = (
+                        "AI配置错误：未填写 API Key，请在科举乡试的 "
+                        "Seed_apikey 选项中填写有效密钥"
+                    )
+                    return self._api_unavailable_reason
+                if not isinstance(url, str) or not url.strip():
+                    return "AI配置错误：未填写 API URL"
+                if not isinstance(UImodel, str) or not UImodel.strip():
+                    return "AI配置错误：未填写模型名称"
+
                 headers = {
                     "Content-Type": "application/json",
                     "Authorization": f"Bearer {apiKey}"
@@ -184,7 +209,12 @@ class AIAnswer(CustomRecognition):
                 }
 
                 try:
-                    response = requests.post(url, headers=headers, data=json.dumps(data))
+                    response = requests.post(
+                        url,
+                        headers=headers,
+                        json=data,
+                        timeout=(5, 20),
+                    )
                     response.raise_for_status()  # 如果请求失败，则引发HTTPError
 
                     # 解析AI的回复
@@ -194,10 +224,19 @@ class AIAnswer(CustomRecognition):
                     # 验证AI的回复
                     if ai_answer in valid_answers:
                         return ai_answer
-                    else:
-                        # 如果回复不在ABCD中，留下注释
-                        return f"AI回复无效: {ai_answer}"
+                    match = re.search(r"(?:^|[^A-Z])([ABCD])(?:[^A-Z]|$)", ai_answer)
+                    if match and match.group(1) in valid_answers:
+                        return match.group(1)
+                    return f"AI回复无效: {ai_answer}"
 
+                except requests.exceptions.HTTPError as e:
+                    status_code = e.response.status_code if e.response is not None else None
+                    if status_code in (401, 403):
+                        self._api_unavailable_reason = (
+                            f"AI鉴权失败({status_code})：API Key 为空、无效或无权访问该模型"
+                        )
+                        return self._api_unavailable_reason
+                    return f"AI请求失败: HTTP {status_code or '未知'}"
                 except requests.exceptions.RequestException as e:
                     return f"请求错误: {e}"
                 except (KeyError, IndexError) as e:
@@ -205,7 +244,7 @@ class AIAnswer(CustomRecognition):
             listAnswer= get_ai_answer(question,answer)
             # logger.info(f"listAnswer为：{listAnswer}")
             # 点击box中心位置
-            def clickBox(box):
+            def clickBox(box, selected_answer, fallback=False):
                 new_context = context.clone()
                 center_x = box[0] + box[2] // 2
                 center_y = box[1] + box[3] // 2 
@@ -213,24 +252,32 @@ class AIAnswer(CustomRecognition):
                 click_job = new_context.tasker.controller.post_click(center_x, center_y)
                 click_job.wait()  # 等待点击操作完成
                 # 向用户ui界面输出日志info
-                logger.info(f"AI返回答案：{listAnswer}。识别题目：{question}，识别答案列表：{answer}")
+                if fallback:
+                    logger.info(
+                        f"{listAnswer}；本题降级选择 {selected_answer}。"
+                        f"识别题目：{question}，识别答案列表：{answer}"
+                    )
+                else:
+                    logger.info(
+                        f"AI返回答案：{selected_answer}。识别题目：{question}，"
+                        f"识别答案列表：{answer}"
+                    )
                 time.sleep(2)
             if listAnswer =="A" or listAnswer == "a":
                 abox=[509,306,269,91]
-                clickBox(abox)
+                clickBox(abox, "A")
             elif listAnswer =="B" or listAnswer == "b":
                 bbox=[825,304,270,95]
-                clickBox(bbox)
+                clickBox(bbox, "B")
             elif listAnswer =="C" or listAnswer == "c":
                 cbox= [506,408,268,88]
-                clickBox(cbox)
+                clickBox(cbox, "C")
             elif listAnswer =="D" or listAnswer == "d":
                 dbox= [831,404,265,96]
-                clickBox(dbox)
+                clickBox(dbox, "D")
             else:
-                logger.info(f"ai返回值有问题：{listAnswer}，默认选择第a答案")
                 abox=[509,306,269,91]
-                clickBox(abox)
+                clickBox(abox, "A", fallback=True)
             return CustomRecognition.AnalyzeResult(box=(0,0,0,0),detail="ai答题完成")
 
 @AgentServer.custom_recognition("zhipu")     

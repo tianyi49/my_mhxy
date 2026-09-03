@@ -614,32 +614,13 @@
         ]
     },
     "活动-秘境降妖-开始": {
-        "recognition": "And",
-        "all_of": [
-            {
-                "sub_name": "rukou",
-                "recognition": "TemplateMatch",
-                "template": [
-                    "mijing/mijing_rukou.png"
-                ],
-                "roi": [
-                    316,
-                    76,
-                    834,
-                    433
-                ],
-                "green_mask": true,
-                "threshold": 0.9
-            },
-            {
-                "recognition": "OCR",
-                "expected": [
-                    "秘境降妖"
-                ],
-                "roi": "rukou"
-            }
-        ],
-        "box_index": 0,
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "秘境降妖"
+            ]
+        },
         "next": [
             "活动-秘境降妖-开始-点击参加"
         ]

@@ -121,36 +121,30 @@
         ]
     },
     "活动-九黎-已完成": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "wujian/jiuli_yiwancheng1.png",
-            "wujian/jiuli_yiwancheng2.png"
-        ],
-        "threshold": 0.9,
-        "roi": [
-            316,
-            76,
-            834,
-            433
-        ],
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "九黎演武",
+                "九黎"
+            ],
+            "button_texts": [
+                "完成"
+            ]
+        },
         "next": [
             "panduan_zhujiemian"
         ]
     },
     "活动-九黎-开始": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "wujian/jiuliyanwu1.png",
-            "wujian/jiuliyanwu2.png",
-            "wujian/jiuliyanwu3.png"
-        ],
-        "roi": [
-            316,
-            76,
-            834,
-            433
-        ],
-        "threshold": 0.8,
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "九黎演武",
+                "九黎"
+            ]
+        },
         "next": [
             "活动-九黎-开始-点击参加"
         ]

@@ -179,20 +179,13 @@
     },
     "召唤灵梦境-等待开始": {},
     "活动-召唤灵梦境-开始": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "wanjian/zhl/zhaohuanling_kaishi1.png",
-            "wanjian/zhl/zhaohuanling_kaishi2.png",
-            "wanjian/zhl/zhaohuanling_kaishi3.png",
-            "wanjian/zhl/zhaohuanling_kaishi4.png"
-        ],
-        "roi": [
-            313,
-            69,
-            840,
-            447
-        ],
-        "threshold": 0.8,
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "召唤灵梦境"
+            ]
+        },
         "next": [
             "点击召唤灵梦境参加"
         ]

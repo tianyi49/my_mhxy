@@ -158,7 +158,6 @@
         ],
         "pre_delay": 1000,
         "action": "ClickKey",
-        "post_wait_freezes": 200,
         "key": [
             4
         ],

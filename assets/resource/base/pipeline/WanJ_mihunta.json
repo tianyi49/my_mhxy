@@ -157,18 +157,13 @@
     },
     "迷魂塔-等待开始": {},
     "活动-迷魂塔-开始": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "wanjian/mihunta_kaishi1.png",
-            "wanjian/mihunta_kaishi2.png"
-        ],
-        "roi": [
-            313,
-            69,
-            840,
-            447
-        ],
-        "threshold": 0.8,
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "迷魂塔"
+            ]
+        },
         "next": [
             "点击迷魂塔参加"
         ]

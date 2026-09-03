@@ -1,6 +1,7 @@
 {
     "kejuxiangshi": {
         "next": [
+            "活动-科举乡试-进入答题界面",
             "主界面-科举乡试",
             "[JumpBack]panduan_zhujiemian"
         ]
@@ -98,10 +99,34 @@
         ],
         "post_delay": 500,
         "next": [
+            "活动-科举乡试-进入答题界面",
+            "活动-科举乡试-已完成",
             "活动-科举乡试-开始",
             "活动-科举乡试-未到开始时间",
             "[JumpBack]baotu_huodong_down"
-        ]
+        ],
+        "on_error": []
+    },
+    "活动-科举乡试-已完成": {
+        "focus": {
+            "Node.Recognition.Succeeded": "科举乡试今日已完成"
+        },
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "科举乡试"
+            ],
+            "button_texts": [
+                "完成"
+            ],
+            "roi": [
+                316,
+                76,
+                834,
+                433
+            ]
+        }
     },
     "活动-科举乡试-未到开始时间": {
         "recognition": "TemplateMatch",
@@ -117,17 +142,29 @@
         ]
     },
     "活动-科举乡试-开始": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "richangdati/kejuxiangshi.png",
-            "richangdati/kejuxiangshi2.png",
-            "richangdati/kejuxiangshi3.png",
-            "richangdati/kejuxiangshi4.png"
-        ],
-        "threshold": 0.9,
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "科举乡试"
+            ],
+            "button_texts": [
+                "参加"
+            ],
+            "roi": [
+                316,
+                76,
+                834,
+                433
+            ]
+        },
+        "action": "Click",
+        "post_delay": 1000,
         "next": [
-            "活动-科举乡试-开始-点击参加"
-        ]
+            "识别拓印_停止",
+            "活动-科举乡试-进入答题界面"
+        ],
+        "on_error": []
     },
     "活动-科举乡试-开始-点击参加": {
         "recognition": "OCR",

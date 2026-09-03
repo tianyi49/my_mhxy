@@ -223,13 +223,15 @@
         "action": "Click"
     },
     "召唤灵室-未开启": {
-        "recognition": "TemplateMatch",
-        "template": "jiayuan/weikaiqi.png",
+        "recognition": "OCR",
+        "expected": [
+            "未开启"
+        ],
         "roi": [
             277,
             430,
             183,
-            81
+            110
         ],
         "next": [
             "卧室-点击打理",
@@ -237,13 +239,15 @@
         ]
     },
     "召唤灵室-使用家具": {
-        "recognition": "TemplateMatch",
-        "template": "jiayuan/shiyongjiaju.png",
+        "recognition": "OCR",
+        "expected": [
+            "使用家具"
+        ],
         "roi": [
             277,
             430,
             183,
-            81
+            110
         ],
         "action": "Click",
         "next": [

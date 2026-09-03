@@ -160,20 +160,13 @@
         ]
     },
     "活动-门派闯关-开始": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "wanjian/mp/menpaizhengba_kaishi1.png",
-            "wanjian/mp/menpaizhengba_kaishi2.png",
-            "wanjian/mp/menpaizhengba_kaishi3.png",
-            "wanjian/mp/menpaizhengba_kaishi4.png"
-        ],
-        "roi": [
-            313,
-            69,
-            840,
-            447
-        ],
-        "threshold": 0.8,
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "门派闯关"
+            ]
+        },
         "next": [
             "点击门派闯关参加"
         ]

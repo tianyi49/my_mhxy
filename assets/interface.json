@@ -21,10 +21,10 @@
         }
     ],
     "agent": {
-        "child_exec": "python",
+        "child_exec": "./python/python.exe",
         "child_args": [
-            "./../agent/main.py",
-            "-u"
+            "-u",
+            "./agent/main.py"
         ]
     },
     "resource": [
@@ -659,18 +659,18 @@
                     "name": "apikey",
                     "pipeline_type": "string",
                     "default": "",
-                    "description": "API密钥"
+                    "description": "API密钥（启用AI答题时必填；留空将降级选择A）"
                 },
                 {
                     "name": "url",
                     "pipeline_type": "string",
-                    "default": "",
+                    "default": "https://api.minimaxi.com/v1/chat/completions",
                     "description": "url链接"
                 },
                 {
                     "name": "model",
                     "pipeline_type": "string",
-                    "default": "",
+                    "default": "MiniMax-M3",
                     "description": "模型"
                 }
             ],
@@ -1112,8 +1112,8 @@
                         "是否使用Ai进行答题": "Yes",
                         "Seed_apikey": {
                             "apikey": "",
-                            "url": "",
-                            "model": ""
+                            "url": "https://api.minimaxi.com/v1/chat/completions",
+                            "model": "MiniMax-M3"
                         }
                     }
                 },
@@ -1201,8 +1201,8 @@
                         "是否使用Ai进行答题": "Yes",
                         "Seed_apikey": {
                             "apikey": "",
-                            "url": "",
-                            "model": ""
+                            "url": "https://api.minimaxi.com/v1/chat/completions",
+                            "model": "MiniMax-M3"
                         }
                     }
                 },
@@ -1275,8 +1275,8 @@
                         "是否使用Ai进行答题": "Yes",
                         "Seed_apikey": {
                             "apikey": "",
-                            "url": "",
-                            "model": ""
+                            "url": "https://api.minimaxi.com/v1/chat/completions",
+                            "model": "MiniMax-M3"
                         }
                     }
                 },
@@ -1324,5 +1324,6 @@
                 }
             ]
         }
-    ]
+    ],
+    "version": "v3.0.3"
 }

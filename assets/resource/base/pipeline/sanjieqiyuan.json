@@ -1,6 +1,7 @@
 {
     "sanjieqiyuan": {
         "next": [
+            "活动-三界奇缘-进入答题界面",
             "主界面-三界奇缘",
             "[JumpBack]panduan_zhujiemian"
         ]
@@ -28,9 +29,31 @@
         "post_wait_freezes": 100,
         "next": [
             "活动-三界奇缘",
+            "[JumpBack]活动-三界奇缘-关闭图片加载引导",
             "[JumpBack]活动-界面-打开失败-点击活动图片",
             "[JumpBack]战斗平衡弹窗-点击关闭"
         ]
+    },
+    "活动-三界奇缘-关闭图片加载引导": {
+        "recognition": "OCR",
+        "expected": [
+            "图片加载中",
+            "请少侠稍等片刻"
+        ],
+        "roi": [
+            450,
+            270,
+            420,
+            180
+        ],
+        "action": "Click",
+        "target": [
+            1200,
+            0,
+            80,
+            65
+        ],
+        "post_delay": 1000
     },
     "活动-三界奇缘": {
         "recognition": "TemplateMatch",
@@ -135,10 +158,12 @@
         ],
         "post_delay": 500,
         "next": [
+            "活动-三界奇缘-进入答题界面",
             "活动-三界奇缘-开始",
             "活动-三界奇缘-未到开始时间",
             "[JumpBack]baotu_huodong_down"
-        ]
+        ],
+        "on_error": []
     },
     "活动-三界奇缘-未到开始时间": {
         "recognition": "TemplateMatch",
@@ -160,23 +185,26 @@
         ]
     },
     "活动-三界奇缘-开始": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "richangdati/sanjieqiyuan.png",
-            "richangdati/sanjieqiyuan2.png",
-            "richangdati/sanjieqiyuan3.png",
-            "richangdati/sanjieqiyuan4.png"
-        ],
-        "roi": [
-            316,
-            76,
-            834,
-            433
-        ],
-        "threshold": 0.9,
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "三界奇缘"
+            ],
+            "roi": [
+                316,
+                76,
+                834,
+                433
+            ]
+        },
+        "action": "Click",
+        "post_delay": 1000,
         "next": [
-            "活动-三界奇缘-开始-点击参加"
-        ]
+            "识别拓印_停止",
+            "活动-三界奇缘-进入答题界面"
+        ],
+        "on_error": []
     },
     "活动-三界奇缘-开始-点击参加": {
         "recognition": "OCR",

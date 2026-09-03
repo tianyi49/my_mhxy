@@ -125,39 +125,29 @@
         ]
     },
     "活动-宝图任务-已完成": {
-        "recognition": "TemplateMatch",
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "宝图任务"
+            ],
+            "button_texts": [
+                "完成"
+            ]
+        },
         "pre_delay": 200,
-        "template": [
-            "baotu/hd_baotu_wancheng.png",
-            "baotu/hd_baotu_wancheng2.png"
-        ],
-        "threshold": 0.9,
-        "roi": [
-            316,
-            76,
-            834,
-            433
-        ],
-        "green_mask": true,
         "next": [
             "panduan_zhujiemian"
         ]
     },
     "活动-宝图任务-开始": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "baotu/baotu1.png",
-            "baotu/baotu2.png",
-            "baotu/baotu3.png"
-        ],
-        "roi": [
-            316,
-            76,
-            834,
-            433
-        ],
-        "green_mask": true,
-        "threshold": 0.9,
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "宝图任务"
+            ]
+        },
         "next": [
             "活动-宝图任务-开始-点击参加"
         ]

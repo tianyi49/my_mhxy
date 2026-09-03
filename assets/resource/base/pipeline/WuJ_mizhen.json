@@ -121,31 +121,30 @@
         ]
     },
     "活动-迷阵-已完成": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "wujian/mz/bangpaimizhen_yiwancheng.png"
-        ],
-        "threshold": 0.9,
-        "roi": [
-            316,
-            76,
-            834,
-            433
-        ],
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "帮派迷阵",
+                "迷阵"
+            ],
+            "button_texts": [
+                "完成"
+            ]
+        },
         "next": [
             "panduan_zhujiemian"
         ]
     },
     "活动-迷阵-开始": {
-        "recognition": "TemplateMatch",
-        "template": [],
-        "roi": [
-            316,
-            76,
-            834,
-            433
-        ],
-        "threshold": 0.9,
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "帮派迷阵",
+                "迷阵"
+            ]
+        },
         "next": [
             "活动-迷阵-开始-点击参加"
         ]

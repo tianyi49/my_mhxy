@@ -291,11 +291,11 @@ def agent():
         from utils import logger
 
         from maa.agent.agent_server import AgentServer
-        from maa.toolkit import Toolkit
+        from maa.tasker import Tasker
 
         import custom
 
-        Toolkit.init_option("./")
+        Tasker.set_log_dir("./debug")
 
         socket_id = sys.argv[-1]
         # socket_id = "abc"
