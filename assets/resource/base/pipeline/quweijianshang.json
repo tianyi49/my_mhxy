@@ -101,13 +101,15 @@
             "活动-趣味鉴赏-开始",
             "活动-趣味鉴赏-已完成",
             "[JumpBack]baotu_huodong_down"
-        ]
+        ],
+        "on_error": []
     },
     "活动-趣味鉴赏-已完成": {
         "recognition": "Custom",
         "custom_recognition": "activity_entry",
         "custom_recognition_param": {
             "task_names": [
+                "趣闻鉴赏",
                 "趣味鉴赏"
             ],
             "button_texts": [
@@ -124,6 +126,7 @@
         "custom_recognition": "activity_entry",
         "custom_recognition_param": {
             "task_names": [
+                "趣闻鉴赏",
                 "趣味鉴赏"
             ]
         },

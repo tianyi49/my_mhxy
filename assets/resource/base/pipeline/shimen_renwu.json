@@ -7,13 +7,16 @@
     },
     "师门任务开始": {
         "pre_delay": 200,
+        "timeout": 600000,
         "next": [
             "shimen_renwu2_dianji",
             "shimen_renwu2_dianji2",
             "[JumpBack]展开-首页任务栏",
             "[JumpBack]任务栏切换为任务",
+            "[JumpBack]战斗中-等待10秒",
             "[JumpBack]师门-下滑任务栏-三次"
-        ]
+        ],
+        "on_error": []
     },
     "师门-下滑任务栏-三次": {
         "max_hit": 3,
