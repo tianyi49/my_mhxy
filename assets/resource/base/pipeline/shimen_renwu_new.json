@@ -9,11 +9,12 @@
         "pre_delay": 200,
         "timeout": 600000,
         "next": [
+            "[JumpBack]战斗中-等待10秒",
+            "[JumpBack]panduan_zhujiemian_ks",
             "师门-点击师门主任务-v2",
             "师门-点击师门子任务-v2",
             "[JumpBack]展开-首页任务栏",
             "[JumpBack]任务栏切换为任务",
-            "[JumpBack]战斗中-等待10秒",
             "[JumpBack]师门-下滑任务栏-三次-v2"
         ],
         "on_error": []
