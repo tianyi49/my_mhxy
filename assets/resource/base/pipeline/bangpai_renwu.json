@@ -331,11 +331,13 @@
         ]
     },
     "放弃任务_过渡": {
-        "action": "Click",
+        "pre_delay": 500,
+        "timeout": 10000,
         "next": [
             "放弃任务_确认放弃",
             "[JumpBack]放弃任务_点击放弃"
-        ]
+        ],
+        "on_error": []
     },
     "放弃任务_点击放弃": {
         "recognition": "TemplateMatch",

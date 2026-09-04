@@ -12,7 +12,7 @@ class BangpaiRenwuDecide(CustomRecognition):
 
     对任务追踪面板 roi 做一次 OCR，三选一：
     - 命中黑名单关键词（如「金香玉」）→ 先 ``run_task("bangpai_放弃任务")`` 放弃（终点回主界面），
-      再 ``run_task("主界面-领取帮派任务")`` 重新领取，然后返回**未命中**（box=None）。JumpBack
+      确认子链路真实完成后再 ``run_task("主界面-领取帮派任务")`` 重新领取，然后返回**未命中**（box=None）。JumpBack
       弹栈回到中心节点「已领取帮派任务」，其 next 循环（间隔/单次点击）接着处理新领到的任务；
     - 无黑名单且识别到帮派任务（青龙/白虎/朱雀/玄武）→ 返回该 OCR 框，交给节点
       ``action:"Click"`` 点击，继续 pipeline 内链路；
@@ -25,6 +25,16 @@ class BangpaiRenwuDecide(CustomRecognition):
     _DEFAULT_ROI = [1034, 171, 235, 336]
     _DEFAULT_BLACKLIST = ["金香玉", "九转", "蛇胆酒", "长寿面", "珍露酒"]
     _DEFAULT_BLACKLIST_AFTER8 = ["蛇胆酒"]
+
+    @staticmethod
+    def _task_really_succeeded(detail) -> bool:
+        """排除被全局 ``on_error -> 空节点`` 掩盖的子任务失败。"""
+        return bool(
+            detail
+            and detail.status.succeeded
+            and detail.nodes
+            and all(node.completed for node in detail.nodes)
+        )
 
     def analyze(
         self,
@@ -65,8 +75,20 @@ class BangpaiRenwuDecide(CustomRecognition):
         hit_black = next((kw for kw in _black_list if kw and kw in full_text), None)
         if hit_black:
             logger.info(f"[bangpai_decide] 命中黑名单「{hit_black}」，放弃后重新领取")
-            context.run_task(self._ABANDON_ENTRY)     # 放弃，终点回主界面
-            context.run_task(self._REACQUIRE_ENTRY)   # 主界面→活动→参加→领取帮派任务
+            abandon = context.run_task(self._ABANDON_ENTRY)
+            if not self._task_really_succeeded(abandon):
+                logger.error(f"[bangpai_decide] 放弃黑名单任务失败：{hit_black}，跳过重新领取")
+                return CustomRecognition.AnalyzeResult(box=None, detail=f"黑名单:{hit_black},放弃失败")
+
+            reacquire = context.run_task(
+                self._REACQUIRE_ENTRY,
+                pipeline_override={self._REACQUIRE_ENTRY: {"on_error": []}},
+            )
+            if not self._task_really_succeeded(reacquire):
+                logger.error(f"[bangpai_decide] 黑名单任务已放弃，但重新领取失败：{hit_black}")
+                return CustomRecognition.AnalyzeResult(box=None, detail=f"黑名单:{hit_black},重新领取失败")
+
+            logger.info(f"[bangpai_decide] 黑名单任务处理完成：{hit_black}，已重新领取")
             return CustomRecognition.AnalyzeResult(box=None, detail=f"黑名单:{hit_black},已放弃并重新领取")
 
         # ② 无黑名单且识别到帮派任务（四堂名）：返回其框，交给节点 action:Click
