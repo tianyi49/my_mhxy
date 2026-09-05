@@ -147,7 +147,8 @@
         "custom_recognition": "activity_entry",
         "custom_recognition_param": {
             "task_names": [
-                "科举乡试"
+                "科举乡试",
+                "科举会试"
             ],
             "button_texts": [
                 "参加"
