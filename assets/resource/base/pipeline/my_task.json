@@ -200,72 +200,97 @@
     },
     "MyTask3": {},
     "战斗中-等待100秒": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "zhandou/zidong.png",
-            "zhandou/quxiao.png"
-        ],
-        "roi": [
-            1175,
-            549,
-            103,
-            159
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "TemplateMatch",
+                "template": [
+                    "zhandou/zidong.png",
+                    "zhandou/quxiao.png"
+                ],
+                "roi": [1175, 549, 103, 159]
+            },
+            {
+                "recognition": "OCR",
+                "expected": ["自动", "取消"],
+                "roi": [1160, 530, 120, 190]
+            }
         ],
         "pre_delay": 100000
     },
     "战斗中-等待50秒": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "zhandou/zidong.png",
-            "zhandou/quxiao.png"
-        ],
-        "roi": [
-            1175,
-            549,
-            103,
-            159
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "TemplateMatch",
+                "template": [
+                    "zhandou/zidong.png",
+                    "zhandou/quxiao.png"
+                ],
+                "roi": [1175, 549, 103, 159]
+            },
+            {
+                "recognition": "OCR",
+                "expected": ["自动", "取消"],
+                "roi": [1160, 530, 120, 190]
+            }
         ],
         "pre_delay": 50000
     },
     "战斗中-等待20秒": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "zhandou/zidong.png",
-            "zhandou/quxiao.png"
-        ],
-        "roi": [
-            1175,
-            549,
-            103,
-            159
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "TemplateMatch",
+                "template": [
+                    "zhandou/zidong.png",
+                    "zhandou/quxiao.png"
+                ],
+                "roi": [1175, 549, 103, 159]
+            },
+            {
+                "recognition": "OCR",
+                "expected": ["自动", "取消"],
+                "roi": [1160, 530, 120, 190]
+            }
         ],
         "pre_delay": 20000
     },
     "战斗中-等待10秒": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "zhandou/zidong.png",
-            "zhandou/quxiao.png"
-        ],
-        "roi": [
-            1175,
-            549,
-            103,
-            159
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "TemplateMatch",
+                "template": [
+                    "zhandou/zidong.png",
+                    "zhandou/quxiao.png"
+                ],
+                "roi": [1175, 549, 103, 159]
+            },
+            {
+                "recognition": "OCR",
+                "expected": ["自动", "取消"],
+                "roi": [1160, 530, 120, 190]
+            }
         ],
         "pre_delay": 10000
     },
     "战斗中-等待5秒": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "zhandou/zidong.png",
-            "zhandou/quxiao.png"
-        ],
-        "roi": [
-            1175,
-            549,
-            103,
-            159
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "TemplateMatch",
+                "template": [
+                    "zhandou/zidong.png",
+                    "zhandou/quxiao.png"
+                ],
+                "roi": [1175, 549, 103, 159]
+            },
+            {
+                "recognition": "OCR",
+                "expected": ["自动", "取消"],
+                "roi": [1160, 530, 120, 190]
+            }
         ],
         "pre_delay": 5000
     },

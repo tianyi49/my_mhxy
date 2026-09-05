@@ -1,8 +1,12 @@
 """所有顶层任务共用的总运行时间保护。"""
 
 from dataclasses import dataclass
+import os
+from pathlib import Path
 import threading
+import tempfile
 import time
+from typing import BinaryIO
 
 from maa.agent.agent_server import AgentServer
 from maa.context import Context, ContextEventSink
@@ -17,6 +21,7 @@ class _TaskState:
     started_at: float
     max_seconds: int
     timer: threading.Timer
+    lease: BinaryIO
     timed_out: bool = False
     stopping: bool = False
 
@@ -35,6 +40,55 @@ class _TaskExecutionGuardCore:
     def __init__(self):
         self._lock = threading.Lock()
         self._tasks: dict[int, _TaskState] = {}
+
+    @staticmethod
+    def _acquire_lease(task_id: int) -> BinaryIO | None:
+        """跨 Agent 进程只允许一个 TaskGuard 保护同一顶层任务。
+
+        MXU 同时保留多个实例时，MaaFramework 会把同一个 Tasker 事件广播给
+        多个 AgentServer。若每个进程都创建计时器，超时后会并发请求停止并
+        放大 AgentServer 反向请求竞态。文件锁随进程退出自动释放，不依赖
+        清理回调。
+        """
+        lock_path = Path(tempfile.gettempdir()) / (
+            f"maa_mhxy_task_guard_{os.getppid()}_{task_id}.lock"
+        )
+        lease = open(lock_path, "a+b")
+        try:
+            lease.seek(0, os.SEEK_END)
+            if lease.tell() == 0:
+                lease.write(b"0")
+                lease.flush()
+            lease.seek(0)
+            if os.name == "nt":
+                import msvcrt
+
+                msvcrt.locking(lease.fileno(), msvcrt.LK_NBLCK, 1)
+            else:
+                import fcntl
+
+                fcntl.flock(lease.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return lease
+        except (OSError, BlockingIOError):
+            lease.close()
+            return None
+
+    @staticmethod
+    def _release_lease(lease: BinaryIO) -> None:
+        try:
+            lease.seek(0)
+            if os.name == "nt":
+                import msvcrt
+
+                msvcrt.locking(lease.fileno(), msvcrt.LK_UNLCK, 1)
+            else:
+                import fcntl
+
+                fcntl.flock(lease.fileno(), fcntl.LOCK_UN)
+        except OSError:
+            pass
+        finally:
+            lease.close()
 
     @classmethod
     def _timeout_for(cls, entry: str) -> int:
@@ -100,6 +154,17 @@ class _TaskExecutionGuardCore:
         if entry == "MaaTaskerPostStop":
             return
 
+        with self._lock:
+            if task_id in self._tasks:
+                return
+
+        lease = self._acquire_lease(task_id)
+        if lease is None:
+            logger.debug(
+                f"[TaskGuard] task_id={task_id} 已由另一个 Agent 进程保护"
+            )
+            return
+
         max_seconds = self._timeout_for(entry)
         # Tasker 是事件回调期间的借用句柄，不能保存到 Timer 线程稍后使用。
         timer = threading.Timer(max_seconds, self._on_timeout, args=(task_id,))
@@ -109,11 +174,9 @@ class _TaskExecutionGuardCore:
             started_at=time.monotonic(),
             max_seconds=max_seconds,
             timer=timer,
+            lease=lease,
         )
         with self._lock:
-            previous = self._tasks.pop(task_id, None)
-            if previous is not None:
-                previous.timer.cancel()
             self._tasks[task_id] = state
         timer.start()
         logger.info(
@@ -126,6 +189,7 @@ class _TaskExecutionGuardCore:
             state = self._tasks.pop(task_id, None)
         if state is not None:
             state.timer.cancel()
+            self._release_lease(state.lease)
 
 
 _TASK_GUARD = _TaskExecutionGuardCore()

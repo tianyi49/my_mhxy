@@ -43,7 +43,7 @@
     "shimen_renwu2_dianji": {
         "recognition": "OCR",
         "expected": [
-            "^师门.*"
+            "师门"
         ],
         "roi": [
             1035,
@@ -64,7 +64,7 @@
     "点击师门任务失败-再次点击": {
         "recognition": "OCR",
         "expected": [
-            "^师门.*"
+            "师门"
         ],
         "roi": [
             1035,
@@ -80,7 +80,7 @@
         "pre_delay": 500,
         "recognition": "OCR",
         "expected": [
-            "^师门.*"
+            "师门"
         ],
         "threshold": 0.9,
         "roi": [
@@ -140,7 +140,7 @@
         "pre_delay": 500,
         "recognition": "OCR",
         "expected": [
-            "^师门.*"
+            "师门"
         ],
         "threshold": 0.9,
         "roi": [
