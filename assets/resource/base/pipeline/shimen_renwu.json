@@ -10,6 +10,7 @@
         "timeout": 600000,
         "next": [
             "[JumpBack]战斗中-等待10秒",
+            "[JumpBack]师门-关闭外观展厅",
             "[JumpBack]panduan_zhujiemian_ks",
             "shimen_renwu2_dianji",
             "shimen_renwu2_dianji2",
@@ -57,8 +58,7 @@
         "next": [
             "识别拓印_停止",
             "师门-点击去完成",
-            "[JumpBack]识别拓印",
-            "[JumpBack]点击师门任务失败-再次点击"
+            "师门-进行中状态机-v2"
         ]
     },
     "点击师门任务失败-再次点击": {

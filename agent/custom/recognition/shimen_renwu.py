@@ -77,7 +77,7 @@ class ShimenRenwuDecide(CustomRecognition):
         x, y, w, h = self._DEFAULT_ROI
         dx = random.randint(-self._ROI_JITTER, self._ROI_JITTER)
         dy = random.randint(-self._ROI_JITTER, self._ROI_JITTER)
-        return [x + dx, y + dy, w + dx, h + dy]
+        return [x + dx, y + dy, w, h]
 
     def _reset_miss_streak(self) -> None:
         """任意命中分支（打造/师门点击）调用，归零连续未命中计数。"""

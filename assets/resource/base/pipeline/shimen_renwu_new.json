@@ -10,6 +10,7 @@
         "timeout": 600000,
         "next": [
             "[JumpBack]战斗中-等待10秒",
+            "[JumpBack]师门-关闭外观展厅",
             "[JumpBack]panduan_zhujiemian_ks",
             "师门-点击师门主任务-v2",
             "师门-点击师门子任务-v2",
@@ -79,7 +80,7 @@
         "pre_delay": 500,
         "recognition": "OCR",
         "expected": [
-            "^师门.*"
+            "师门"
         ],
         "threshold": 0.7,
         "roi": [
@@ -123,6 +124,7 @@
             "[JumpBack]师门任务-任务分支-抄本",
             "[JumpBack]任务分支-摆摊购买",
             "[JumpBack]师门任务-任务分支-问答",
+            "[JumpBack]师门-关闭外观展厅",
             "[JumpBack]清理主界面使用-关闭",
             "[JumpBack]战斗中-等待10秒",
             "[JumpBack]师门任务-单次点击-v2",
@@ -139,6 +141,25 @@
     "师门任务-单次点击-v2": {
         "recognition": "Custom",
         "custom_recognition": "shimen_renwu_decide"
+    },
+    "师门-关闭外观展厅": {
+        "recognition": "OCR",
+        "expected": [
+            "我要试穿",
+            "保存穿搭",
+            "外观展厅"
+        ],
+        "roi": [
+            120,
+            0,
+            1100,
+            720
+        ],
+        "action": "ClickKey",
+        "key": [
+            4
+        ],
+        "post_delay": 1000
     },
     "师门-间隔3秒-最大10分钟": {
         "max_hit": 200,
@@ -264,7 +285,7 @@
     "师门任务-对话-点击": {
         "recognition": "OCR",
         "expected": [
-            "师门(任务|寻趣|历练|集物|赐教|师查)",
+            "师门",
             "首席目",
             "首席请",
             "请赐教",
