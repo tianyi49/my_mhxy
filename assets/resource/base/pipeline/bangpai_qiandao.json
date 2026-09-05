@@ -1,6 +1,9 @@
 {
     "bangpai_qiandao": {
         "next": [
+            "打开帮派界面成功",
+            "[JumpBack]战斗中-等待10秒",
+            "[JumpBack]panduan_zhujiemian_ks",
             "帮派签到-加号",
             "帮派签到-乘号",
             "[JumpBack]panduan_zhujiemian"
@@ -98,6 +101,10 @@
             116
         ],
         "next": [
+            "帮派签到-点击签到",
+            "帮派签到-点击领取分红",
+            "帮派签到-分红已领取",
+            "帮派签到-已签到完成",
             "帮派签到-点击福利"
         ]
     },
@@ -113,7 +120,10 @@
         "action": "Click",
         "post_delay": 1000,
         "next": [
-            "帮派签到-点击签到"
+            "帮派签到-点击签到",
+            "帮派签到-点击领取分红",
+            "帮派签到-分红已领取",
+            "帮派签到-已签到完成"
         ]
     },
     "帮派签到-点击签到": {
@@ -128,8 +138,11 @@
             63
         ],
         "action": "Click",
+        "post_delay": 1500,
         "next": [
             "帮派签到-点击领取分红",
+            "帮派签到-分红已领取",
+            "帮派签到-已签到完成",
             "panduan_zhujiemian"
         ]
     },
@@ -145,8 +158,10 @@
             61
         ],
         "action": "Click",
+        "post_delay": 1000,
         "next": [
-            "帮派签到-领取分红-确认"
+            "帮派签到-领取分红-确认",
+            "帮派签到-分红已领取"
         ]
     },
     "帮派签到-领取分红-确认": {
@@ -161,6 +176,37 @@
             64
         ],
         "action": "Click",
+        "post_delay": 1000,
+        "next": [
+            "panduan_zhujiemian"
+        ]
+    },
+    "帮派签到-已签到完成": {
+        "recognition": "OCR",
+        "expected": [
+            "已签到"
+        ],
+        "roi": [
+            882,
+            461,
+            195,
+            63
+        ],
+        "next": [
+            "panduan_zhujiemian"
+        ]
+    },
+    "帮派签到-分红已领取": {
+        "recognition": "OCR",
+        "expected": [
+            "已领取"
+        ],
+        "roi": [
+            880,
+            609,
+            189,
+            61
+        ],
         "next": [
             "panduan_zhujiemian"
         ]
