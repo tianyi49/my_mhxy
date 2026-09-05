@@ -84,6 +84,16 @@ class _TaskExecutionGuardCore:
 
         self._request_stop(tasker, task_id, reason)
 
+    def _is_timed_out(self, task_id: int) -> bool:
+        """纯 Python 判断任务是否到期，不触发任何 AgentServer 反向请求。"""
+        with self._lock:
+            state = self._tasks.get(task_id)
+            if state is None or state.stopping:
+                return False
+            return state.timed_out or (
+                time.monotonic() - state.started_at >= state.max_seconds
+            )
+
     def _start_task(self, details: dict) -> None:
         task_id = int(details["task_id"])
         entry = str(details.get("entry", ""))
@@ -134,9 +144,19 @@ class TaskExecutionGuard(TaskerEventSink):
 
 @AgentServer.context_sink()
 class TaskExecutionGuardContextSink(ContextEventSink):
-    """利用高频节点事件，在框架回调线程内安全执行超时停止。"""
+    """仅在确已超时时才把原始 Context 句柄转换为 Python 对象。"""
 
-    def on_raw_notification(self, context: Context, msg: str, details: dict) -> None:
+    def _on_raw_notification(self, handle, msg: str, details: dict) -> None:
+        # ContextEventSink 的默认实现会为每个节点事件构造 Context；构造过程会
+        # 发起 _ContextTaskerReverseRequest，并可能与其他 sink 的控制器反向请求
+        # 并发，导致旧版 AgentServer 报 unexpected msg。未超时时必须直接返回。
         task_id = details.get("task_id")
-        if task_id is not None:
-            _TASK_GUARD._stop_if_timed_out(context.tasker, int(task_id))
+        if task_id is None:
+            return
+
+        task_id = int(task_id)
+        if not _TASK_GUARD._is_timed_out(task_id):
+            return
+
+        context = Context(handle=handle)
+        _TASK_GUARD._stop_if_timed_out(context.tasker, task_id)
