@@ -98,7 +98,7 @@ class LdInputText(CustomAction):
                         "--index",
                         str(index),
                         "--key",
-                        "call.keyboard",
+                        "call.input",
                         "--value",
                         text,
                     ],
