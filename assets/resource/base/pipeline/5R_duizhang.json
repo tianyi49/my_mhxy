@@ -159,7 +159,7 @@
             }
         ],
         "action": "Click",
-        "post_delay": 500,
+        "post_delay": 1500,
         "next": [
             "邀请队员-输入队员名称1",
             "邀请队员-输入队员名称2",
@@ -172,8 +172,11 @@
             "Node.Recognition.Succeeded": "邀请队员1号"
         },
         "max_hit": 1,
-        "action": "InputText",
-        "input_text": "",
+        "action": "Custom",
+        "custom_action": "ld_input_text",
+        "custom_action_param": {
+            "text": ""
+        },
         "next": [
             "邀请队员-输入队员名称-确认"
         ]
@@ -183,8 +186,11 @@
             "Node.Recognition.Succeeded": "邀请队员2号"
         },
         "max_hit": 1,
-        "action": "InputText",
-        "input_text": "",
+        "action": "Custom",
+        "custom_action": "ld_input_text",
+        "custom_action_param": {
+            "text": ""
+        },
         "next": [
             "邀请队员-输入队员名称-确认"
         ]
@@ -194,8 +200,11 @@
             "Node.Recognition.Succeeded": "邀请队员3号"
         },
         "max_hit": 1,
-        "action": "InputText",
-        "input_text": "",
+        "action": "Custom",
+        "custom_action": "ld_input_text",
+        "custom_action_param": {
+            "text": ""
+        },
         "next": [
             "邀请队员-输入队员名称-确认"
         ]
@@ -205,8 +214,11 @@
             "Node.Recognition.Succeeded": "邀请队员4号"
         },
         "max_hit": 1,
-        "action": "InputText",
-        "input_text": "",
+        "action": "Custom",
+        "custom_action": "ld_input_text",
+        "custom_action_param": {
+            "text": ""
+        },
         "next": [
             "邀请队员-输入队员名称-确认"
         ]
