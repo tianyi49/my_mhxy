@@ -98,12 +98,36 @@
     },
     "panduan_zhujiemian": {
         "next": [
+            "[JumpBack]登录页退出确认-取消",
+            "[JumpBack]账号已在其他设备登录-确定",
+            "[JumpBack]账号登录页-登录",
+            "[JumpBack]点击登录游戏",
             "[JumpBack]amazing_discount",
             "[JumpBack]close_exit_confirm",
             "[JumpBack]panduan_zhujiemian_ks",
             "[JumpBack]panduan_zhujiemian_restart",
             "zai_zhujiemian"
         ]
+    },
+    "账号已在其他设备登录-确定": {
+        "recognition": "OCR",
+        "expected": [
+            "您的账号已经在其他设备登录"
+        ],
+        "roi": [
+            407,
+            285,
+            468,
+            87
+        ],
+        "action": "Click",
+        "target": [
+            560,
+            385,
+            160,
+            65
+        ],
+        "post_delay": 3000
     },
     "close_exit_confirm": {
         "recognition": "TemplateMatch",

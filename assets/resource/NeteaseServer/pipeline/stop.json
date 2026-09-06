@@ -1,7 +1,8 @@
 {
     "停止游戏": {
-        "action": "StopApp",
-        "package": "com.netease.my.mj",
+        "action": "Shell",
+        "cmd": "am force-stop com.netease.my.mj",
+        "shell_timeout": 20000,
         "on_error": [],
         "post_delay": 2000
     }

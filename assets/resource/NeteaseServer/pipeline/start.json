@@ -1,7 +1,8 @@
 {
     "启动游戏": {
-        "action": "StartApp",
-        "package": "com.netease.my.mj",
+        "action": "Shell",
+        "cmd": "am start -n com.netease.my.mj/.ic_launcher",
+        "shell_timeout": 20000,
         "on_error": []
     }
 }

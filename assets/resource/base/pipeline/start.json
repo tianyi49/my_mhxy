@@ -9,12 +9,52 @@
         "package": "com.netease.myq",
         "post_delay": 20000,
         "next": [
+            "[JumpBack]登录页退出确认-取消",
+            "[JumpBack]账号已在其他设备登录-确定",
+            "[JumpBack]账号登录页-登录",
             "点击登录游戏",
             "主界面",
             "[JumpBack]更新客户端",
             "[JumpBack]正在下载本周更新",
             "[JumpBack]登录等待10秒"
         ]
+    },
+    "账号登录页-登录": {
+        "recognition": "OCR",
+        "expected": [
+            "登录"
+        ],
+        "roi": [
+            360,
+            390,
+            560,
+            105
+        ],
+        "action": "Click",
+        "post_delay": 25000,
+        "next": [
+            "点击登录游戏"
+        ]
+    },
+    "登录页退出确认-取消": {
+        "recognition": "OCR",
+        "expected": [
+            "是否要退出游戏"
+        ],
+        "roi": [
+            430,
+            285,
+            420,
+            90
+        ],
+        "action": "Click",
+        "target": [
+            455,
+            385,
+            160,
+            65
+        ],
+        "post_delay": 1000
     },
     "更新客户端": {
         "recognition": "Or",
