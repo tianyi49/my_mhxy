@@ -20,12 +20,16 @@ def _controller_config() -> dict:
     return value if isinstance(value, dict) else {}
 
 
-def _ldplayer_details() -> tuple[Path, int] | None:
-    controller = _controller_config()
-    candidates = [controller]
-    adb = controller.get("adb")
-    if isinstance(adb, dict):
-        candidates.append(adb)
+def _ldplayer_details(controller_info: dict | None = None) -> tuple[Path, int] | None:
+    """从实时控制器信息或 PI_CONTROLLER 定位雷电控制台及实例。"""
+    candidates = []
+    for controller in (controller_info, _controller_config()):
+        if not isinstance(controller, dict):
+            continue
+        candidates.append(controller)
+        adb = controller.get("adb")
+        if isinstance(adb, dict):
+            candidates.append(adb)
 
     for candidate in candidates:
         config = candidate.get("config")
@@ -42,6 +46,15 @@ def _ldplayer_details() -> tuple[Path, int] | None:
         console = Path(str(ld.get("path", ""))) / "ldconsole.exe"
         if console.is_file():
             return console, index
+
+    # 一些 MXU 版本只提供 adb_path，不带 extras.ld；雷电的 adb 和控制台同目录。
+    for candidate in candidates:
+        adb_path = candidate.get("adb_path") or candidate.get("path")
+        if not adb_path:
+            continue
+        console = Path(str(adb_path)).parent / "ldconsole.exe"
+        if console.is_file():
+            return console, 0
     return None
 
 
@@ -68,7 +81,13 @@ class LdInputText(CustomAction):
             logger.error("[LdInputText] 队员名称格式无效")
             return CustomAction.RunResult(success=False)
 
-        ldplayer = _ldplayer_details()
+        try:
+            controller_info = context.tasker.controller.info
+        except (RuntimeError, ValueError, TypeError, OSError):
+            logger.warning("[LdInputText] 无法读取实时控制器信息，尝试环境配置")
+            controller_info = None
+
+        ldplayer = _ldplayer_details(controller_info)
         if ldplayer is not None:
             console, index = ldplayer
             try:
