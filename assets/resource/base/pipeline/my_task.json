@@ -99,8 +99,9 @@
     "panduan_zhujiemian": {
         "next": [
             "[JumpBack]amazing_discount",
-            "[JumpBack]panduan_zhujiemian_ks",
             "[JumpBack]close_exit_confirm",
+            "[JumpBack]panduan_zhujiemian_ks",
+            "[JumpBack]panduan_zhujiemian_restart",
             "zai_zhujiemian"
         ]
     },
@@ -152,9 +153,23 @@
         "action": "Click"
     },
     "zai_zhujiemian": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "zonghe/jiahao.png",
+            "zonghe/chenghao.png",
+            "zonghe/baoguo.png",
+            "zonghe/baoguo_man.png"
+        ],
+        "roi": [
+            1197,
+            540,
+            78,
+            157
+        ],
         "pre_delay": 1000
     },
     "panduan_zhujiemian_ks": {
+        "max_hit": 5,
         "inverse": true,
         "recognition": "TemplateMatch",
         "template": [
@@ -175,6 +190,15 @@
             4
         ],
         "post_delay": 500
+    },
+    "panduan_zhujiemian_restart": {
+        "max_hit": 1,
+        "focus": {
+            "Node.PipelineNode.Starting": "连续返回仍未识别到主界面，按当前资源渠道重新拉起游戏"
+        },
+        "next": [
+            "启动游戏"
+        ]
     },
     "关闭X9联赛弹窗": {
         "recognition": "TemplateMatch",
