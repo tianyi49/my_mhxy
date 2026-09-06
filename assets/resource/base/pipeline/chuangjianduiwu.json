@@ -110,6 +110,7 @@
             "[JumpBack]队伍-设置目标"
         ]
     },
+    "队伍-仅创建完成": {},
     "队伍-设置目标": {
         "recognition": "TemplateMatch",
         "template": [
