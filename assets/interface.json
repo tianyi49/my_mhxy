@@ -75,7 +75,8 @@
             "entry": "chuangjianduiwu",
             "option": [
                 "创建（副本/捉鬼）任务",
-                "任务描述(用户输入)"
+                "任务描述(用户输入)",
+                "创建队伍-是否自动匹配"
             ],
             "description": "./docs/description/chuangjianduiwu.md"
         },
@@ -196,7 +197,8 @@
             "entry": "chuangjianduiwu",
             "option": [
                 "创建（副本/捉鬼）任务",
-                "任务描述(用户输入)"
+                "任务描述(用户输入)",
+                "创建队伍-是否自动匹配"
             ],
             "description": "默认创建副本任务，需手动输入任务描述，默认为空"
         },
@@ -368,6 +370,31 @@
                     "input_text": "{任务描述}"
                 }
             }
+        },
+        "创建队伍-是否自动匹配": {
+            "type": "switch",
+            "cases": [
+                {
+                    "name": "开启自动匹配",
+                    "pipeline_override": {}
+                },
+                {
+                    "name": "不自动匹配",
+                    "pipeline_override": {
+                        "队伍-处理自动匹配选项": {
+                            "next": [
+                                "队伍-取消默认自动匹配"
+                            ]
+                        },
+                        "队伍-目标已设置": {
+                            "next": [
+                                "队伍-人员已满",
+                                "[JumpBack]队伍-点击一键喊话-当前"
+                            ]
+                        }
+                    }
+                }
+            ]
         },
         "320或3本": {
             "type": "select",
