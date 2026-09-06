@@ -1000,7 +1000,17 @@
                         "text": "{队员1}"
                     }
                 },
+                "邀请队员-选择搜索结果1": {
+                    "custom_action_param": {
+                        "text": "{队员1}"
+                    }
+                },
                 "邀请队员-输入队员名称2": {
+                    "custom_action_param": {
+                        "text": "{队员2}"
+                    }
+                },
+                "邀请队员-选择搜索结果2": {
                     "custom_action_param": {
                         "text": "{队员2}"
                     }
@@ -1010,7 +1020,17 @@
                         "text": "{队员3}"
                     }
                 },
+                "邀请队员-选择搜索结果3": {
+                    "custom_action_param": {
+                        "text": "{队员3}"
+                    }
+                },
                 "邀请队员-输入队员名称4": {
+                    "custom_action_param": {
+                        "text": "{队员4}"
+                    }
+                },
+                "邀请队员-选择搜索结果4": {
                     "custom_action_param": {
                         "text": "{队员4}"
                     }

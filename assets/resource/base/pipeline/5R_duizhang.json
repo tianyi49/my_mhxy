@@ -178,7 +178,7 @@
             "text": ""
         },
         "next": [
-            "邀请队员-输入队员名称-确认"
+            "邀请队员-选择搜索结果1"
         ]
     },
     "邀请队员-输入队员名称2": {
@@ -192,7 +192,7 @@
             "text": ""
         },
         "next": [
-            "邀请队员-输入队员名称-确认"
+            "邀请队员-选择搜索结果2"
         ]
     },
     "邀请队员-输入队员名称3": {
@@ -206,7 +206,7 @@
             "text": ""
         },
         "next": [
-            "邀请队员-输入队员名称-确认"
+            "邀请队员-选择搜索结果3"
         ]
     },
     "邀请队员-输入队员名称4": {
@@ -220,7 +220,64 @@
             "text": ""
         },
         "next": [
-            "邀请队员-输入队员名称-确认"
+            "邀请队员-选择搜索结果4"
+        ]
+    },
+    "邀请队员-识别全部搜索结果": {
+        "recognition": "OCR",
+        "roi": [
+            153,
+            258,
+            408,
+            340
+        ]
+    },
+    "邀请队员-选择搜索结果1": {
+        "action": "Custom",
+        "custom_action": "select_invite_result",
+        "custom_action_param": {
+            "text": ""
+        },
+        "post_delay": 500,
+        "next": [
+            "邀请队员-点击邀请入队",
+            "邀请队员-队员已经在队伍中"
+        ]
+    },
+    "邀请队员-选择搜索结果2": {
+        "action": "Custom",
+        "custom_action": "select_invite_result",
+        "custom_action_param": {
+            "text": ""
+        },
+        "post_delay": 500,
+        "next": [
+            "邀请队员-点击邀请入队",
+            "邀请队员-队员已经在队伍中"
+        ]
+    },
+    "邀请队员-选择搜索结果3": {
+        "action": "Custom",
+        "custom_action": "select_invite_result",
+        "custom_action_param": {
+            "text": ""
+        },
+        "post_delay": 500,
+        "next": [
+            "邀请队员-点击邀请入队",
+            "邀请队员-队员已经在队伍中"
+        ]
+    },
+    "邀请队员-选择搜索结果4": {
+        "action": "Custom",
+        "custom_action": "select_invite_result",
+        "custom_action_param": {
+            "text": ""
+        },
+        "post_delay": 500,
+        "next": [
+            "邀请队员-点击邀请入队",
+            "邀请队员-队员已经在队伍中"
         ]
     },
     "邀请队员-输入队员名称-确认": {
