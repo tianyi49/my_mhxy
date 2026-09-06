@@ -301,8 +301,13 @@
         ]
     },
     "队伍-任务描述-用户输入": {
-        "action": "InputText",
-        "input_text": "",
+        "action": "Custom",
+        "custom_action": "ld_input_text",
+        "custom_action_param": {
+            "text": "",
+            "allow_empty": true,
+            "max_length": 10
+        },
         "post_delay": 2000,
         "next": [
             "队伍-输入框确定"

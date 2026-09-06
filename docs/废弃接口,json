@@ -18,7 +18,10 @@
             "default": "",
             "pipeline_override": {
                 "输入账号-输入账号内容": {
-                    "input_text": "{zhanghao}"
+                    "custom_action_param": {
+                        "text": "{zhanghao}",
+                        "max_length": 128
+                    }
                 }
             }
         },
@@ -28,7 +31,10 @@
             "default": "",
             "pipeline_override": {
                 "输入密码-输入密码内容": {
-                    "input_text": "{mima}"
+                    "custom_action_param": {
+                        "text": "{mima}",
+                        "max_length": 128
+                    }
                 }
             }
         },

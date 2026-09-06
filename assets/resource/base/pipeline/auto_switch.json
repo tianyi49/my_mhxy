@@ -157,8 +157,12 @@
         ]
     },
     "输入账号-输入账号内容": {
-        "action": "InputText",
-        "input_text": ""
+        "action": "Custom",
+        "custom_action": "ld_input_text",
+        "custom_action_param": {
+            "text": "",
+            "max_length": 128
+        }
     },
     "输入密码": {
         "recognition": "OCR",
@@ -178,8 +182,12 @@
         ]
     },
     "输入密码-输入密码内容": {
-        "action": "InputText",
-        "input_text": ""
+        "action": "Custom",
+        "custom_action": "ld_input_text",
+        "custom_action_param": {
+            "text": "",
+            "max_length": 128
+        }
     },
     "输入账号密码完成": {
         "inverse": true,

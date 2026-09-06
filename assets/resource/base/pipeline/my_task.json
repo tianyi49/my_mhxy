@@ -428,8 +428,11 @@
         ]
     },
     "shuru": {
-        "action": "InputText",
-        "input_text": "这是一个测试输入"
+        "action": "Custom",
+        "custom_action": "ld_input_text",
+        "custom_action_param": {
+            "text": "这是一个测试输入"
+        }
     },
     "启动梦幻西游手游": {
         "action": "StartApp",

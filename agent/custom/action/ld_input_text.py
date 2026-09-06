@@ -1,4 +1,4 @@
-"""可靠地向模拟器输入中文文本。"""
+"""可靠地向模拟器中的游戏输入框写入文本。"""
 
 import json
 import os
@@ -60,7 +60,7 @@ def _ldplayer_details(controller_info: dict | None = None) -> tuple[Path, int] |
 
 @AgentServer.custom_action("ld_input_text")
 class LdInputText(CustomAction):
-    """优先使用雷电 call.keyboard，解决通用输入无法写入中文的问题。"""
+    """优先使用雷电 call.input，解决通用输入无法可靠写入文本的问题。"""
 
     def run(
         self,
@@ -73,12 +73,25 @@ class LdInputText(CustomAction):
             logger.error("[LdInputText] 输入参数不是有效 JSON")
             return CustomAction.RunResult(success=False)
 
-        text = str(param.get("text", "")).strip() if isinstance(param, dict) else ""
-        if not text:
-            # 空名字表示邀请列表到此结束，由现有 max_hit 分支正常收尾。
+        if not isinstance(param, dict):
+            logger.error("[LdInputText] 输入参数必须是 JSON 对象")
             return CustomAction.RunResult(success=False)
-        if any(char in text for char in "\r\n\0") or len(text) > 32:
-            logger.error("[LdInputText] 队员名称格式无效")
+
+        # 账号或密码可能合法地包含首尾空格，统一输入动作必须原样保留内容。
+        text = str(param.get("text", ""))
+        allow_empty = bool(param.get("allow_empty", False))
+        try:
+            max_length = int(param.get("max_length", 128))
+        except (TypeError, ValueError):
+            max_length = 128
+        max_length = min(max(max_length, 1), 512)
+
+        if not text:
+            return CustomAction.RunResult(success=allow_empty)
+        if any(char in text for char in "\r\n\0") or len(text) > max_length:
+            logger.error(
+                f"[LdInputText] 输入文本格式无效（最大长度={max_length}）"
+            )
             return CustomAction.RunResult(success=False)
 
         try:
@@ -114,7 +127,8 @@ class LdInputText(CustomAction):
                 return CustomAction.RunResult(success=False)
 
             if result.returncode == 0:
-                logger.info(f"[LdInputText] 已通过雷电输入队员名称：{text}")
+                # 该动作也用于账号和密码；日志不得输出实际内容。
+                logger.info(f"[LdInputText] 已通过雷电输入文本（长度={len(text)}）")
                 return CustomAction.RunResult(success=True)
             logger.error(
                 f"[LdInputText] 雷电中文输入返回错误码 {result.returncode}"
@@ -122,5 +136,9 @@ class LdInputText(CustomAction):
             return CustomAction.RunResult(success=False)
 
         logger.warning("[LdInputText] 未检测到雷电配置，回退 MaaFramework 通用输入")
-        job = context.tasker.controller.post_input_text(text).wait()
+        try:
+            job = context.tasker.controller.post_input_text(text).wait()
+        except (RuntimeError, ValueError, TypeError, OSError):
+            logger.exception("[LdInputText] MaaFramework 通用输入调用失败")
+            return CustomAction.RunResult(success=False)
         return CustomAction.RunResult(success=job.status.succeeded)

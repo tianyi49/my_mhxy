@@ -367,7 +367,11 @@
             ],
             "pipeline_override": {
                 "队伍-任务描述-用户输入": {
-                    "input_text": "{任务描述}"
+                    "custom_action_param": {
+                        "text": "{任务描述}",
+                        "allow_empty": true,
+                        "max_length": 10
+                    }
                 }
             }
         },
