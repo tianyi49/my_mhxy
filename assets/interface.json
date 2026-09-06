@@ -996,6 +996,9 @@
             ],
             "pipeline_override": {
                 "邀请队员-输入队员名称1": {
+                    "custom_recognition_param": {
+                        "text": "{队员1}"
+                    },
                     "custom_action_param": {
                         "text": "{队员1}"
                     }
@@ -1006,6 +1009,9 @@
                     }
                 },
                 "邀请队员-输入队员名称2": {
+                    "custom_recognition_param": {
+                        "text": "{队员2}"
+                    },
                     "custom_action_param": {
                         "text": "{队员2}"
                     }
@@ -1016,6 +1022,9 @@
                     }
                 },
                 "邀请队员-输入队员名称3": {
+                    "custom_recognition_param": {
+                        "text": "{队员3}"
+                    },
                     "custom_action_param": {
                         "text": "{队员3}"
                     }
@@ -1026,6 +1035,9 @@
                     }
                 },
                 "邀请队员-输入队员名称4": {
+                    "custom_recognition_param": {
+                        "text": "{队员4}"
+                    },
                     "custom_action_param": {
                         "text": "{队员4}"
                     }

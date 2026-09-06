@@ -172,6 +172,11 @@
             "Node.Recognition.Succeeded": "邀请队员1号"
         },
         "max_hit": 1,
+        "recognition": "Custom",
+        "custom_recognition": "non_empty_text",
+        "custom_recognition_param": {
+            "text": ""
+        },
         "action": "Custom",
         "custom_action": "ld_input_text",
         "custom_action_param": {
@@ -186,6 +191,11 @@
             "Node.Recognition.Succeeded": "邀请队员2号"
         },
         "max_hit": 1,
+        "recognition": "Custom",
+        "custom_recognition": "non_empty_text",
+        "custom_recognition_param": {
+            "text": ""
+        },
         "action": "Custom",
         "custom_action": "ld_input_text",
         "custom_action_param": {
@@ -200,6 +210,11 @@
             "Node.Recognition.Succeeded": "邀请队员3号"
         },
         "max_hit": 1,
+        "recognition": "Custom",
+        "custom_recognition": "non_empty_text",
+        "custom_recognition_param": {
+            "text": ""
+        },
         "action": "Custom",
         "custom_action": "ld_input_text",
         "custom_action_param": {
@@ -214,6 +229,11 @@
             "Node.Recognition.Succeeded": "邀请队员4号"
         },
         "max_hit": 1,
+        "recognition": "Custom",
+        "custom_recognition": "non_empty_text",
+        "custom_recognition_param": {
+            "text": ""
+        },
         "action": "Custom",
         "custom_action": "ld_input_text",
         "custom_action_param": {

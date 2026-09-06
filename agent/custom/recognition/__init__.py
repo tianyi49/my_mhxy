@@ -8,3 +8,4 @@ from .bangpai_renwu import *
 from .shimen_renwu import *
 from .zhuogui_hundui import *
 from .activity_entry import *
+from .non_empty_text import *
