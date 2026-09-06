@@ -30,6 +30,7 @@ class _TaskExecutionGuardCore:
     """在 Tasker 与 Context 两类事件接收器之间共享超时状态。"""
 
     DEFAULT_MAX_SECONDS = 2 * 60 * 60
+    CRITICAL_ENTRIES = {"start"}
     ENTRY_TIMEOUTS = {
         "sanjieqiyuan": 20 * 60,
         "kejuxiangshi": 20 * 60,
@@ -191,6 +192,26 @@ class _TaskExecutionGuardCore:
             state.timer.cancel()
             self._release_lease(state.lease)
 
+    def _stop_if_critical_failed(self, tasker: Tasker, details: dict) -> None:
+        """关键前置任务失败时停止已预先提交的剩余任务。"""
+        task_id = int(details["task_id"])
+        with self._lock:
+            state = self._tasks.get(task_id)
+            if (
+                state is None
+                or state.stopping
+                or state.entry not in self.CRITICAL_ENTRIES
+            ):
+                return
+            state.stopping = True
+            entry = state.entry
+
+        self._request_stop(
+            tasker,
+            task_id,
+            f"关键前置任务 {entry} 执行失败，取消后续任务",
+        )
+
 
 _TASK_GUARD = _TaskExecutionGuardCore()
 
@@ -202,7 +223,10 @@ class TaskExecutionGuard(TaskerEventSink):
     def on_raw_notification(self, tasker: Tasker, msg: str, details: dict) -> None:
         if msg == "Tasker.Task.Starting":
             _TASK_GUARD._start_task(details)
-        elif msg in ("Tasker.Task.Succeeded", "Tasker.Task.Failed"):
+        elif msg == "Tasker.Task.Failed":
+            _TASK_GUARD._stop_if_critical_failed(tasker, details)
+            _TASK_GUARD._finish_task(details)
+        elif msg == "Tasker.Task.Succeeded":
             _TASK_GUARD._finish_task(details)
 
 
