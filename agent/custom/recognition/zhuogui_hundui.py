@@ -22,6 +22,9 @@ class zhuogui_hundui(CustomRecognition):
     """
 
     _OCR_ATTEMPTS = 3
+    _DEFAULT_USER_POINTS = 0
+    _DEFAULT_END_HOUR = 23
+    _DEFAULT_END_MINUTE = 30
 
     @staticmethod
     def _parse_non_negative_int(value):
@@ -33,6 +36,13 @@ class zhuogui_hundui(CustomRecognition):
         if not match:
             return None
         return int(match.group())
+
+    @classmethod
+    def _parse_config_int(cls, value, default):
+        """空白输入沿用界面默认值，非空脏值仍作为配置错误处理。"""
+        if value is None or not str(value).strip():
+            return default
+        return cls._parse_non_negative_int(value)
 
     def _recognize_points(self, context: Context, name: str, roi):
         """有限次数重试点数 OCR，避免脏文本进入 int() 导致回调崩溃。"""
@@ -72,9 +82,15 @@ class zhuogui_hundui(CustomRecognition):
         
         # 获取自定义参数
         attach = context.get_node_data("混队-抓鬼-判断结束条件").get("attach", {})
-        User_points = self._parse_non_negative_int(attach.get("User_points"))
-        Uset_time_HH = self._parse_non_negative_int(attach.get("Uset_time_HH"))
-        Uset_time_MM = self._parse_non_negative_int(attach.get("Uset_time_MM"))
+        User_points = self._parse_config_int(
+            attach.get("User_points"), self._DEFAULT_USER_POINTS
+        )
+        Uset_time_HH = self._parse_config_int(
+            attach.get("Uset_time_HH"), self._DEFAULT_END_HOUR
+        )
+        Uset_time_MM = self._parse_config_int(
+            attach.get("Uset_time_MM"), self._DEFAULT_END_MINUTE
+        )
         if None in (User_points, Uset_time_HH, Uset_time_MM):
             return CustomRecognition.AnalyzeResult(
                 box=None, detail="捉鬼结束条件配置不是有效整数"

@@ -164,7 +164,9 @@
             "活动-三界奇缘-未到开始时间",
             "[JumpBack]baotu_huodong_down"
         ],
-        "on_error": []
+        "on_error": [
+            "活动-扫描结束未找到任务-返回主界面"
+        ]
     },
     "活动-三界奇缘-已完成": {
         "focus": {

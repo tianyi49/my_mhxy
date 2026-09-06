@@ -68,6 +68,19 @@
             4
         ]
     },
+    "活动-扫描结束未找到任务-返回主界面": {
+        "focus": {
+            "Node.PipelineNode.Starting": "活动面板已扫描完，当前任务未开放，按正常跳过处理"
+        },
+        "action": "ClickKey",
+        "key": [
+            4
+        ],
+        "post_delay": 500,
+        "next": [
+            "panduan_zhujiemian"
+        ]
+    },
     "主界面": {
         "recognition": "TemplateMatch",
         "template": [
