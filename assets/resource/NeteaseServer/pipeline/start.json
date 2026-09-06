@@ -1,6 +1,7 @@
 {
     "启动游戏": {
         "action": "StartApp",
-        "package": "com.netease.my"
+        "package": "com.netease.my.mj",
+        "on_error": []
     }
 }
