@@ -154,16 +154,16 @@
     },
     "钟馗-捉鬼任务-循环": {
         "focus": {
-            "Node.Action.Succeeded": "{name}开始执行,领取抓鬼任务成功，开始本轮抓鬼"
+            "Node.Recognition.Succeeded": "{name}识别到钟馗右侧捉鬼入口，正在领取"
         },
         "recognition": "OCR",
         "expected": [
             "捉鬼任务"
         ],
         "roi": [
-            430,
+            925,
             73,
-            807,
+            312,
             482
         ],
         "pre_delay": 500,
@@ -174,10 +174,12 @@
             "[JumpBack]抓鬼领取双倍弹窗",
             "[JumpBack]捉鬼-没有辅助提示-点击取消",
             "[JumpBack]抓鬼不足五人-图片识别",
+            "[JumpBack]捉鬼-领取任务失败-再次尝试领取-点击捉鬼任务",
             "[JumpBack]展开-首页任务栏",
             "[JumpBack]任务栏切换为任务",
             "点击任务栏-捉鬼任务",
-            "[JumpBack]捉鬼-下滑任务栏"
+            "[JumpBack]捉鬼-下滑任务栏",
+            "[JumpBack]捉鬼-领取任务失败-再次尝试领取-打开小地图"
         ]
     },
     "展开-首页任务栏": {
@@ -290,7 +292,7 @@
         ]
     },
     "捉鬼-领取任务失败-再次尝试领取-打开小地图": {
-        "max_hit": 1,
+        "max_hit": 4,
         "pre_delay": 500,
         "action": "ClickKey",
         "key": [
@@ -347,6 +349,10 @@
         ]
     },
     "捉鬼-领取任务失败-再次尝试领取-点击捉鬼任务": {
+        "focus": {
+            "Node.Recognition.Succeeded": "未检测到捉鬼任务追踪，重新点击钟馗右侧捉鬼入口"
+        },
+        "max_hit": 3,
         "recognition": "OCR",
         "expected": [
             "捉鬼任务"
@@ -358,9 +364,13 @@
             482
         ],
         "pre_delay": 500,
-        "action": "Click"
+        "action": "Click",
+        "post_delay": 2000
     },
     "点击任务栏-捉鬼任务": {
+        "focus": {
+            "Node.Recognition.Succeeded": "检测到捉鬼任务追踪，确认领取成功"
+        },
         "recognition": "OCR",
         "expected": [
             "捉鬼[(（]\\d*/\\d*[)）]",
