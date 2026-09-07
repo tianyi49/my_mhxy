@@ -123,6 +123,10 @@
         ]
     },
     "登录等待10秒": {
+        "max_hit": 30,
+        "focus": {
+            "Node.PipelineNode.Failed": "启动游戏等待超过5分钟，结束本次启动，避免阻塞定时任务"
+        },
         "pre_delay": 10000
     }
 }

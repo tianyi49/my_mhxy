@@ -31,9 +31,13 @@ class _TaskExecutionGuardCore:
 
     DEFAULT_MAX_SECONDS = 2 * 60 * 60
     ENTRY_TIMEOUTS = {
+        # 启动游戏是整条定时任务的关键前置。登录界面长期无响应时尽快
+        # 终止整条队列，避免一个启动节点占住后续任务数小时。
+        "start": 10 * 60,
         "sanjieqiyuan": 20 * 60,
         "kejuxiangshi": 20 * 60,
-        "zhuogui_hundui": 8 * 60 * 60,
+        # 混队允许长时间运行，但异常情况下最多只允许占用 6 小时。
+        "zhuogui_hundui": 6 * 60 * 60,
         "my_task": 8 * 60 * 60,
     }
 
