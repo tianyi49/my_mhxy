@@ -233,9 +233,14 @@
             183,
             110
         ],
+        "action": "ClickKey",
+        "key": [
+            4
+        ],
+        "post_delay": 1000,
         "next": [
             "卧室-点击打理",
-            "[JumpBack]panduan_zhujiemian"
+            "家园整理-安全结束"
         ]
     },
     "召唤灵室-使用家具": {
@@ -322,7 +327,7 @@
         "pre_delay": 2000,
         "next": [
             "卧室-点击打理",
-            "[JumpBack]panduan_zhujiemian"
+            "家园整理-关闭界面后结束"
         ]
     },
     "卧室-点击打理": {
@@ -402,8 +407,9 @@
         "key": [
             4
         ],
+        "post_delay": 1000,
         "next": [
-            "panduan_zhujiemian"
+            "家园整理-安全结束"
         ]
     },
     "点击卧室家具": {
@@ -504,8 +510,28 @@
             254,
             60
         ],
+        "action": "ClickKey",
+        "key": [
+            4
+        ],
+        "post_delay": 1000,
         "next": [
-            "panduan_zhujiemian"
+            "家园整理-安全结束"
         ]
+    },
+    "家园整理-关闭界面后结束": {
+        "action": "ClickKey",
+        "key": [
+            4
+        ],
+        "post_delay": 1000,
+        "next": [
+            "家园整理-安全结束"
+        ]
+    },
+    "家园整理-安全结束": {
+        "focus": {
+            "Node.PipelineNode.Starting": "家园整理已安全结束，继续执行后续任务"
+        }
     }
 }
