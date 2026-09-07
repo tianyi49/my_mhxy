@@ -145,6 +145,50 @@ class zhuogui_hundui(CustomRecognition):
         # return CustomRecognition.AnalyzeResult(box=(0,0,0,0),detail="捉鬼任务结束")
 
 
+@AgentServer.custom_recognition("zhuogui_time_guard")
+class ZhuoguiTimeGuard(CustomRecognition):
+    """在混队仍正常运行时检查结束时间，避免只能等队伍解散才生效。"""
+
+    def analyze(
+        self,
+        context: Context,
+        argv: CustomRecognition.AnalyzeArg,
+    ) -> CustomRecognition.AnalyzeResult:
+        attach = context.get_node_data("混队-抓鬼-判断结束条件").get(
+            "attach", {}
+        )
+        end_hour = zhuogui_hundui._parse_config_int(
+            attach.get("Uset_time_HH"), zhuogui_hundui._DEFAULT_END_HOUR
+        )
+        end_minute = zhuogui_hundui._parse_config_int(
+            attach.get("Uset_time_MM"), zhuogui_hundui._DEFAULT_END_MINUTE
+        )
+        if end_hour is None or end_minute is None:
+            return CustomRecognition.AnalyzeResult(
+                box=None, detail="捉鬼结束时间配置不是有效整数"
+            )
+
+        current_time = time.localtime()
+        is_after_end = current_time.tm_hour > end_hour or (
+            current_time.tm_hour == end_hour
+            and current_time.tm_min > end_minute
+        )
+        if not is_after_end:
+            return CustomRecognition.AnalyzeResult(
+                box=None,
+                detail=f"当前未到捉鬼结束时间 {end_hour:02d}:{end_minute:02d}",
+            )
+
+        logger.info(
+            f"当前时间已超过 {end_hour:02d}:{end_minute:02d}，"
+            "结束混队捉鬼"
+        )
+        return CustomRecognition.AnalyzeResult(
+            box=(0, 0, 0, 0),
+            detail="已到用户指定结束时间，退出队伍并结束混队捉鬼",
+        )
+
+
 @AgentServer.custom_recognition("zhuogui_end_once")
 class zhuogui_end_once(CustomRecognition):
     """

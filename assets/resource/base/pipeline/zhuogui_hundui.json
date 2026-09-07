@@ -323,6 +323,7 @@
             "[JumpBack]队伍-退出组队界面",
             "[JumpBack]清理主界面使用-关闭",
             "[JumpBack]战斗中-等待100秒",
+            "混队-抓鬼-时间到停止",
             "混队-抓鬼-任务结束"
         ],
         "on_error": [
@@ -337,19 +338,52 @@
             "[JumpBack]zhuogui_hundui"
         ]
     },
+    "混队-抓鬼-时间到停止": {
+        "focus": {
+            "Node.Recognition.Succeeded": "已到配置的结束时间，退出队伍并结束混队捉鬼"
+        },
+        "recognition": "Custom",
+        "custom_recognition": "zhuogui_time_guard",
+        "next": [
+            "tuichuduiwu"
+        ]
+    },
     "混队-抓鬼-任务结束": {
         "focus": {
             "Node.Recognition.Succeeded": "混队-抓鬼-任务本轮结束"
         },
         "recognition": "Or",
         "any_of": [
-            "混队-抓鬼-任务结束-子1",
-            "混队-抓鬼-任务结束-子2",
-            "混队-抓鬼-任务结束-子3",
+            "混队-抓鬼-任务结束-队员异常",
             "混队-抓鬼-任务结束-子4"
         ],
         "next": [
             "混队-抓鬼-单轮结束过渡"
+        ]
+    },
+    "混队-抓鬼-任务结束-队员异常": {
+        "recognition": "And",
+        "all_of": [
+            "混队-抓鬼-任务结束-队伍面板存在",
+            "混队-抓鬼-任务结束-队员异常标识"
+        ]
+    },
+    "混队-抓鬼-任务结束-队伍面板存在": {
+        "recognition": "TemplateMatch",
+        "template": "r5/duiwu_xuetiao.png",
+        "roi": [
+            1036,
+            166,
+            239,
+            333
+        ]
+    },
+    "混队-抓鬼-任务结束-队员异常标识": {
+        "recognition": "Or",
+        "any_of": [
+            "混队-抓鬼-任务结束-子1",
+            "混队-抓鬼-任务结束-子2",
+            "混队-抓鬼-任务结束-子3"
         ]
     },
     "混队-抓鬼-任务结束-子1": {
