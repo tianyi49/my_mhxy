@@ -4,6 +4,8 @@ from maa.context import Context
 import re
 import time
 import math
+import json
+import threading
 import unicodedata
 
 from utils import logger
@@ -186,6 +188,137 @@ class ZhuoguiTimeGuard(CustomRecognition):
         return CustomRecognition.AnalyzeResult(
             box=(0, 0, 0, 0),
             detail="已到用户指定结束时间，退出队伍并结束混队捉鬼",
+        )
+
+
+@AgentServer.custom_recognition("zhuogui_team_watchdog")
+class ZhuoguiTeamWatchdog(CustomRecognition):
+    """连续没有捉鬼进度时触发退队重匹配。
+
+    队伍血条只能证明角色仍在队伍中，不能证明队伍还在执行捉鬼。
+    战斗或自动寻路会刷新进度；只有右侧捉鬼任务但长期不推进时，
+    也会在更宽松的时间窗后重匹配。
+    """
+
+    _DEFAULT_IDLE_TIMEOUT = 180
+    _DEFAULT_TASK_ONLY_TIMEOUT = 300
+    _STATE_TTL = 8 * 60 * 60
+    _states = {}
+    _lock = threading.Lock()
+    _PROGRESS_RECOGNITIONS = (
+        "混队-抓鬼-有效状态-战斗中",
+        "混队-抓鬼-有效状态-自动寻路",
+    )
+    _TASK_RECOGNITION = "混队-抓鬼-有效状态-任务追踪"
+
+    @classmethod
+    def _prune_states(cls, now):
+        expired = [
+            task_id
+            for task_id, state in cls._states.items()
+            if now - state["last_seen"] > cls._STATE_TTL
+        ]
+        for task_id in expired:
+            cls._states.pop(task_id, None)
+
+    def analyze(
+        self,
+        context: Context,
+        argv: CustomRecognition.AnalyzeArg,
+    ) -> CustomRecognition.AnalyzeResult:
+        try:
+            param = json.loads(argv.custom_recognition_param or "{}")
+        except (TypeError, json.JSONDecodeError):
+            param = {}
+        idle_timeout = zhuogui_hundui._parse_non_negative_int(
+            param.get("idle_timeout")
+        )
+        if not idle_timeout:
+            idle_timeout = self._DEFAULT_IDLE_TIMEOUT
+        task_only_timeout = zhuogui_hundui._parse_non_negative_int(
+            param.get("task_only_timeout")
+        )
+        if not task_only_timeout:
+            task_only_timeout = self._DEFAULT_TASK_ONLY_TIMEOUT
+
+        progress_name = None
+        for name in self._PROGRESS_RECOGNITIONS:
+            reco = context.run_recognition(name, argv.image)
+            if reco and reco.hit:
+                progress_name = name
+                break
+        task_reco = context.run_recognition(self._TASK_RECOGNITION, argv.image)
+        has_task = bool(task_reco and task_reco.hit)
+
+        now = time.monotonic()
+        task_id = argv.task_detail.task_id
+        with self._lock:
+            self._prune_states(now)
+            state = self._states.get(task_id)
+
+            if progress_name:
+                if state and now - state["idle_since"] >= 30:
+                    logger.info(
+                        f"[ZhuoguiWatchdog] task_id={task_id} 恢复有效状态："
+                        f"{progress_name}"
+                    )
+                self._states[task_id] = {
+                    "idle_since": now,
+                    "last_seen": now,
+                    "last_log": now,
+                }
+                return CustomRecognition.AnalyzeResult(
+                    box=None,
+                    detail={"progress": progress_name},
+                )
+
+            current_timeout = task_only_timeout if has_task else idle_timeout
+
+            if state is None:
+                state = {
+                    "idle_since": now,
+                    "last_seen": now,
+                    "last_log": now,
+                }
+                self._states[task_id] = state
+                logger.warning(
+                    f"[ZhuoguiWatchdog] task_id={task_id} 未检测到战斗或"
+                    f"自动寻路，开始 {current_timeout} 秒停滞计时"
+                    f"（捉鬼任务追踪={'存在' if has_task else '不存在'}）"
+                )
+            else:
+                state["last_seen"] = now
+
+            idle_seconds = now - state["idle_since"]
+            if idle_seconds < current_timeout:
+                if now - state["last_log"] >= 60:
+                    state["last_log"] = now
+                    logger.warning(
+                        f"[ZhuoguiWatchdog] task_id={task_id} 已连续 "
+                        f"{int(idle_seconds)} 秒无战斗或自动寻路"
+                    )
+                return CustomRecognition.AnalyzeResult(
+                    box=None,
+                    detail={
+                        "idle_seconds": int(idle_seconds),
+                        "idle_timeout": current_timeout,
+                        "has_task": has_task,
+                    },
+                )
+
+            self._states.pop(task_id, None)
+
+        logger.error(
+            f"[ZhuoguiWatchdog] task_id={task_id} 连续 "
+            f"{int(idle_seconds)} 秒无战斗或自动寻路，退出当前队伍并重新匹配"
+        )
+        return CustomRecognition.AnalyzeResult(
+            box=(0, 0, 0, 0),
+            detail={
+                "idle_seconds": int(idle_seconds),
+                "has_task": has_task,
+                "action": "leave_and_rematch",
+            },
         )
 
 

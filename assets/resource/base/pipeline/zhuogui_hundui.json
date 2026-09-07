@@ -319,12 +319,13 @@
         ],
         "timeout": 300000,
         "next": [
+            "混队-抓鬼-时间到停止",
+            "混队-抓鬼-状态异常重新匹配",
+            "混队-抓鬼-任务结束",
+            "[JumpBack]战斗中-等待100秒",
             "[JumpBack]任务栏切换为队伍",
             "[JumpBack]队伍-退出组队界面",
-            "[JumpBack]清理主界面使用-关闭",
-            "[JumpBack]战斗中-等待100秒",
-            "混队-抓鬼-时间到停止",
-            "混队-抓鬼-任务结束"
+            "[JumpBack]清理主界面使用-关闭"
         ],
         "on_error": [
             "混队-抓鬼-匹配超时恢复"
@@ -346,6 +347,71 @@
         "custom_recognition": "zhuogui_time_guard",
         "next": [
             "tuichuduiwu"
+        ]
+    },
+    "混队-抓鬼-状态异常重新匹配": {
+        "focus": {
+            "Node.Recognition.Succeeded": "混队长时间无有效捉鬼状态，退出当前队伍并重新匹配"
+        },
+        "recognition": "Custom",
+        "custom_recognition": "zhuogui_team_watchdog",
+        "custom_recognition_param": {
+            "idle_timeout": 180,
+            "task_only_timeout": 300
+        },
+        "next": [
+            "混队-抓鬼-执行异常重匹配"
+        ]
+    },
+    "混队-抓鬼-执行异常重匹配": {
+        "focus": {
+            "Node.PipelineNode.Starting": "混队状态停滞，退出队伍后开始新一轮混队"
+        },
+        "next": [
+            "[JumpBack]tuichuduiwu",
+            "zhuogui_hundui"
+        ]
+    },
+    "混队-抓鬼-有效状态-战斗中": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "zhandou/zidong.png",
+            "zhandou/quxiao.png"
+        ],
+        "roi": [
+            1175,
+            549,
+            103,
+            159
+        ]
+    },
+    "混队-抓鬼-有效状态-自动寻路": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "zonghe/zidongxunlu1.png",
+            "zonghe/zidongxunlu2.png",
+            "zonghe/zidongxunlu3.png",
+            "zonghe/zidongxunlu4.png"
+        ],
+        "roi": [
+            257,
+            133,
+            770,
+            461
+        ]
+    },
+    "混队-抓鬼-有效状态-任务追踪": {
+        "recognition": "OCR",
+        "expected": [
+            "捉鬼[(（]\\d*/\\d*[)）]",
+            "捉拿.*鬼",
+            "千年厉鬼"
+        ],
+        "roi": [
+            1035,
+            170,
+            243,
+            334
         ]
     },
     "混队-抓鬼-任务结束": {
