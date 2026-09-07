@@ -167,7 +167,7 @@
         "post_delay": 1000,
         "next": [
             "点击藏宝图",
-            "整理完成",
+            "挖宝图完成",
             "[JumpBack]背包向上滑动10次"
         ]
     },
@@ -210,6 +210,9 @@
         ]
     },
     "藏宝图-主界面使用": {
+        "focus": {
+            "Node.Action.Succeeded": "已使用藏宝图，等待寻路或战斗结束"
+        },
         "recognition": "OCR",
         "expected": [
             "使用"
@@ -267,11 +270,11 @@
         ]
     },
     "挖宝图完成": {
+        "focus": {
+            "Node.Recognition.Succeeded": "背包已扫描到底且未发现藏宝图，挖宝完成"
+        },
         "recognition": "TemplateMatch",
-        "template": [
-            "beibao/beibao_konggezi.png",
-            "beibao/beibao_diduan.png"
-        ],
+        "template": "beibao/beibao_diduan.png",
         "roi": [
             905,
             543,

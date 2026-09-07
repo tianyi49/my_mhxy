@@ -133,7 +133,15 @@
             "识别拓印_停止",
             "[JumpBack]清理主界面使用-关闭",
             "[JumpBack]点击运镖任务NPC",
-            "[JumpBack]点击押送普通镖银(三次)",
+            "点击押送普通镖银(三次)"
+        ]
+    },
+    "运镖执行循环": {
+        "pre_delay": 3000,
+        "next": [
+            "识别拓印_停止",
+            "[JumpBack]清理主界面使用-关闭",
+            "[JumpBack]点击运镖任务NPC",
             "[JumpBack]运镖中",
             "[JumpBack]战斗中-等待20秒",
             "运镖完成"
@@ -154,6 +162,17 @@
         "post_delay": 1000
     },
     "运镖完成": {
+        "focus": {
+            "Node.Recognition.Succeeded": "运镖已确认接取，且任务标识已消失，运镖完成"
+        },
+        "recognition": "And",
+        "all_of": [
+            "运镖完成-主界面",
+            "运镖完成-任务已消失"
+        ],
+        "pre_delay": 3000
+    },
+    "运镖完成-主界面": {
         "recognition": "TemplateMatch",
         "template": [
             "zonghe/jiahao.png",
@@ -166,6 +185,38 @@
             540,
             78,
             157
+        ]
+    },
+    "运镖完成-任务已消失": {
+        "recognition": "Or",
+        "inverse": true,
+        "any_of": [
+            {
+                "recognition": "OCR",
+                "expected": [
+                    "距离运镖完成",
+                    "距离运镖完成："
+                ],
+                "roi": [
+                    140,
+                    0,
+                    260,
+                    65
+                ]
+            },
+            {
+                "recognition": "OCR",
+                "expected": [
+                    "运镖任务",
+                    "运镖"
+                ],
+                "roi": [
+                    1034,
+                    171,
+                    235,
+                    336
+                ]
+            }
         ]
     },
     "运镖中": {
@@ -202,6 +253,9 @@
         ]
     },
     "点击押送普通镖_确定": {
+        "focus": {
+            "Node.Action.Succeeded": "已确认押送普通镖银，开始等待运镖完成"
+        },
         "recognition": "OCR",
         "expected": [
             "确定"
@@ -214,6 +268,9 @@
         ],
         "pre_delay": 1000,
         "action": "Click",
-        "post_delay": 1000
+        "post_delay": 3000,
+        "next": [
+            "运镖执行循环"
+        ]
     }
 }
