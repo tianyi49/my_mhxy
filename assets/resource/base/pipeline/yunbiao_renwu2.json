@@ -129,12 +129,28 @@
         "action": "Click",
         "post_delay": 1000,
         "post_wait_freezes": 1000,
+        "timeout": 120000,
         "next": [
             "识别拓印_停止",
             "[JumpBack]清理主界面使用-关闭",
             "[JumpBack]点击运镖任务NPC",
             "点击押送普通镖银(三次)"
+        ],
+        "on_error": [
+            "运镖接取失败重试"
         ]
+    },
+    "运镖接取失败重试": {
+        "focus": {
+            "Node.PipelineNode.Starting": "未确认接取普通运镖，重新进入活动面板尝试",
+            "Node.PipelineNode.Failed": "普通运镖有限次数重试耗尽，本次任务失败"
+        },
+        "max_hit": 2,
+        "pre_delay": 2000,
+        "next": [
+            "yunbiao_renwu2"
+        ],
+        "on_error": []
     },
     "运镖执行循环": {
         "pre_delay": 3000,
@@ -150,7 +166,7 @@
     "点击运镖任务NPC": {
         "recognition": "OCR",
         "expected": [
-            "运镖任务"
+            "运镖任.*"
         ],
         "roi": [
             350,
@@ -159,7 +175,13 @@
             220
         ],
         "action": "Click",
-        "post_delay": 1000
+        "target_offset": [
+            35,
+            15,
+            -70,
+            -30
+        ],
+        "post_delay": 1500
     },
     "运镖完成": {
         "focus": {
@@ -237,7 +259,7 @@
         "max_hit": 3,
         "recognition": "OCR",
         "expected": [
-            "押送普通镖银"
+            "押送普通.*镖银"
         ],
         "roi": [
             933,
@@ -270,7 +292,54 @@
         "action": "Click",
         "post_delay": 3000,
         "next": [
+            "运镖已开始"
+        ],
+        "on_error": [
+            "运镖接取失败重试"
+        ]
+    },
+    "运镖已开始": {
+        "focus": {
+            "Node.Recognition.Succeeded": "已检测到运镖倒计时或任务追踪，确认普通运镖接取成功",
+            "Node.PipelineNode.Failed": "点击确认后未检测到运镖状态，重新接取"
+        },
+        "recognition": "Or",
+        "any_of": [
+            "运镖已开始-倒计时",
+            "运镖已开始-任务追踪"
+        ],
+        "timeout": 60000,
+        "next": [
             "运镖执行循环"
+        ],
+        "on_error": [
+            "运镖接取失败重试"
+        ]
+    },
+    "运镖已开始-倒计时": {
+        "recognition": "OCR",
+        "expected": [
+            "距离运镖完成",
+            "距离运镖完成："
+        ],
+        "roi": [
+            140,
+            0,
+            260,
+            65
+        ]
+    },
+    "运镖已开始-任务追踪": {
+        "recognition": "OCR",
+        "expected": [
+            "运镖任务",
+            "运镖"
+        ],
+        "roi": [
+            1034,
+            171,
+            235,
+            336
         ]
     }
 }
