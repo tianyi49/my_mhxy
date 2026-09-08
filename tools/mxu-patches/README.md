@@ -15,8 +15,12 @@ Set-Location mxu-build
 git apply ..\my_mhxy\tools\mxu-patches\mxu-v2.5.2-instance-callback-routing.patch
 pnpm install --frozen-lockfile
 pnpm build
-cargo build --release --manifest-path src-tauri\Cargo.toml
+pnpm tauri build --no-bundle
 ```
 
 构建产物位于 `src-tauri\target\release\mxu.exe`。发布到运行目录时将其重命名为
 `Maa_MHXY_MG.exe`。
+
+补丁会为发布构建启用 Tauri 的 `custom-protocol`。不要直接运行未启用该特性的
+`cargo build --release`，否则程序会加载 `tauri.conf.json` 中的 Vite 开发地址
+`http://localhost:1420`，并显示 `ERR_CONNECTION_REFUSED`。

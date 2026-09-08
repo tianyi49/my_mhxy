@@ -16,7 +16,7 @@ index 326ffe3..7e4cd86 100644
 --- a/src-tauri/Cargo.lock
 +++ b/src-tauri/Cargo.lock
 @@ -3127,7 +3127,7 @@ dependencies = [
-
+ 
  [[package]]
  name = "mxu"
 -version = "0.1.0"
@@ -25,7 +25,7 @@ index 326ffe3..7e4cd86 100644
   "axum",
   "base64 0.22.1",
 diff --git a/src-tauri/Cargo.toml b/src-tauri/Cargo.toml
-index a1c34f0..9a2712f 100644
+index a1c34f0..8ee5bfe 100644
 --- a/src-tauri/Cargo.toml
 +++ b/src-tauri/Cargo.toml
 @@ -1,6 +1,6 @@
@@ -36,13 +36,24 @@ index a1c34f0..9a2712f 100644
  description = "A Tauri App"
  authors = ["you"]
  edition = "2021"
+@@ -14,6 +14,10 @@ edition = "2021"
+ name = "mxu_lib"
+ crate-type = ["staticlib", "cdylib", "rlib"]
+ 
++[features]
++default = ["custom-protocol"]
++custom-protocol = ["tauri/custom-protocol"]
++
+ [build-dependencies]
+ tauri-build = { version = "2", features = [] }
+ 
 diff --git a/src-tauri/src/commands/maa_agent.rs b/src-tauri/src/commands/maa_agent.rs
 index d276381..ce5a4c4 100644
 --- a/src-tauri/src/commands/maa_agent.rs
 +++ b/src-tauri/src/commands/maa_agent.rs
 @@ -20,7 +20,9 @@ use maa_framework::resource::Resource;
  use maa_framework::tasker::Tasker;
-
+ 
  use super::types::{AgentConfig, ControllerInfo, MaaState, TaskConfig};
 -use super::utils::{emit_callback_event, get_logs_dir, handle_task_callback, normalize_path};
 +use super::utils::{
@@ -79,13 +90,13 @@ index be55ddb..1e2a8da 100644
  };
 -use super::utils::{emit_callback_event, get_maafw_dir, handle_task_callback, normalize_path};
 +use super::utils::{get_maafw_dir, handle_task_callback, normalize_path};
-
+ 
  /// MaaFramework 最小支持版本
  const MIN_MAAFW_VERSION: &str = "5.12.1";
 @@ -1023,7 +1023,7 @@ pub async fn connect_controller_impl(
              }
          };
-
+ 
 -        // 注册回调（使用 on_event 抽象，Tauri 命令传入 emit_callback_event，HTTP 处理器传入无操作或 WebSocket 推送）
 +        // 注册回调（使用 on_event 抽象，Tauri 命令携带实例标识，HTTP 处理器通过 WebSocket 推送）
          let on_event_clone = on_event.clone();
@@ -140,7 +151,7 @@ index be55ddb..1e2a8da 100644
 +                );
              })
              .map_err(|e| e.to_string())?;
-
+ 
 @@ -1367,7 +1390,12 @@ pub fn run_task_impl(
              .add_context_sink(move |msg, detail| {
                  // 遥测：把失败节点挂到任务 Span 下，形成失败链路
@@ -154,7 +165,7 @@ index be55ddb..1e2a8da 100644
 +                );
              })
              .map_err(|e| e.to_string())?;
-
+ 
 diff --git a/src-tauri/src/commands/types.rs b/src-tauri/src/commands/types.rs
 index 1550421..dce7bd4 100644
 --- a/src-tauri/src/commands/types.rs
@@ -174,7 +185,7 @@ index 84e0ab2..9a33b22 100644
 @@ -8,21 +8,32 @@ use std::path::PathBuf;
  use std::sync::Arc;
  use tauri::{AppHandle, Emitter, Manager};
-
+ 
 -/// 发送回调事件到前端（Tauri WebView + WebSocket 浏览器客户端）
 -pub fn emit_callback_event<S: Into<String>>(app: &AppHandle, message: S, details: S) {
 +/// 发送带实例归属的回调，避免多实例运行时把日志写入当前活动标签页。
@@ -187,7 +198,7 @@ index 84e0ab2..9a33b22 100644
      let message = message.into();
      let details = details.into();
 +    let instance_id = instance_id.map(str::to_string);
-
+ 
      // 广播到所有 WebSocket 客户端
      if let Some(ws) = app.try_state::<Arc<WsBroadcast>>() {
          ws.send(WsEvent::MaaCallback {
@@ -196,7 +207,7 @@ index 84e0ab2..9a33b22 100644
              details: details.clone(),
          });
      }
-
+ 
      // 发送到 Tauri WebView
 -    let event = MaaCallbackEvent { message, details };
 +    let event = MaaCallbackEvent {
@@ -208,7 +219,7 @@ index 84e0ab2..9a33b22 100644
          log::error!("Failed to emit maa-callback: {}", e);
      }
 @@ -52,7 +63,7 @@ pub fn emit_state_changed(app: &AppHandle, instance_id: &str, kind: &str) {
-
+ 
  /// 处理 MaaFramework 任务回调，在 Rust 侧更新 TaskRunState（单一真相来源）
  ///
 -/// 应在 tasker sink 中调用，在 `emit_callback_event` 之前处理任务状态变更。
@@ -223,11 +234,11 @@ index f5db780..c341e2f 100644
 @@ -63,7 +63,7 @@ pub fn run() {
              // 创建 AppConfigState：加载 interface.json 和配置文件
              let app_config = Arc::new(AppConfigState::default());
-
+ 
 -            // 创建 WebSocket 广播器（容量 256，被 emit_callback_event/emit_agent_output 共用）
 +            // 创建 WebSocket 广播器（容量 256，被 Maa 回调事件与 agent 输出共用）
              let ws_broadcast = Arc::new(WsBroadcast::new(256));
-
+ 
              // 加载 interface.json（含 import 处理和翻译）
 diff --git a/src-tauri/src/web_server.rs b/src-tauri/src/web_server.rs
 index e5c9dc8..c6af64a 100644
@@ -241,10 +252,10 @@ index e5c9dc8..c6af64a 100644
 +    utils::{emit_config_changed, emit_state_changed},
  };
  use crate::ws_broadcast::WsBroadcast;
-
+ 
 @@ -818,8 +818,14 @@ async fn handle_connect_controller(
      ensure_instance_exists(&state.maa_state, &instance_id);
-
+ 
      let app_handle = state.app_handle.clone();
 +    let callback_instance_id = instance_id.clone();
      let on_event = Arc::new(move |msg: &str, detail: &str| {
@@ -256,11 +267,11 @@ index e5c9dc8..c6af64a 100644
 +            detail,
 +        );
      });
-
+ 
      match connect_controller_impl(state.maa_state, instance_id.clone(), config, on_event).await {
 @@ -860,9 +866,15 @@ async fn handle_load_resource(
      };
-
+ 
      let app_handle = state.app_handle.clone();
 +    let callback_instance_id = instance_id.clone();
      let on_event: Arc<dyn Fn(&str, &str) + Send + Sync + 'static> =
@@ -273,7 +284,7 @@ index e5c9dc8..c6af64a 100644
 +                detail,
 +            );
          });
-
+ 
      match load_resource_impl(
 diff --git a/src-tauri/src/ws_broadcast.rs b/src-tauri/src/ws_broadcast.rs
 index 7613d4f..67b66bb 100644
@@ -289,7 +300,7 @@ index 7613d4f..67b66bb 100644
 +        message: String,
 +        details: String,
 +    },
-
+ 
      /// Agent 子进程输出（对应 Tauri `maa-agent-output` 事件）
      #[serde(rename = "maa-agent-output")]
 diff --git a/src-tauri/tauri.conf.json b/src-tauri/tauri.conf.json
@@ -310,7 +321,7 @@ index cf1e9ad..c189edd 100644
 --- a/src/services/maaService.ts
 +++ b/src/services/maaService.ts
 @@ -81,6 +81,8 @@ async function syncMaaVersionToStore(version: string): Promise<void> {
-
+ 
  /** MaaFramework 回调事件载荷 */
  export interface MaaCallbackEvent {
 +  /** 产生该回调的实例；旧后端可能不提供 */
@@ -344,11 +355,11 @@ index cf1e9ad..c189edd 100644
          }
        });
      }
-
+ 
      return await listen<MaaCallbackEvent>('maa-callback', (event) => {
 -      const { message, details } = event.payload;
 +      const { instance_id, message, details } = event.payload;
-
+ 
        try {
          const parsedDetails = JSON.parse(details) as MaaCallbackDetails;
 -        callback(message, parsedDetails);
@@ -366,7 +377,7 @@ index 2fece42..9e8362d 100644
 +++ b/src/services/wsService.ts
 @@ -15,6 +15,7 @@ const log = createLogger('wsService');
  // ============================================================================
-
+ 
  export interface WsMaaCallbackPayload {
 +  instance_id?: string;
    message: string;
@@ -375,14 +386,14 @@ index 2fece42..9e8362d 100644
 @@ -35,7 +36,7 @@ export type WsMessage =
  // 订阅者类型
  // ============================================================================
-
+ 
 -type MaaCallbackHandler = (message: string, details: string) => void;
 +type MaaCallbackHandler = (instanceId: string | undefined, message: string, details: string) => void;
  type AgentOutputHandler = (instanceId: string, stream: string, line: string) => void;
  type ConfigChangedHandler = () => void;
  type StateChangedHandler = (instanceId: string, kind: string) => void;
 @@ -168,7 +169,9 @@ function onMessage(event: MessageEvent) {
-
+ 
    switch (msg.type) {
      case 'maa-callback':
 -      maaCallbackHandlers.forEach((h) => h(msg.payload.message, msg.payload.details));
@@ -404,7 +415,7 @@ index d7a33db..fde9b79 100644
 +        const unlisten = await maaService.onCallback((message, details, callbackInstanceId) => {
            // 组件已卸载则忽略
            if (cancelled) return;
-
+ 
 -          // 获取当前活动实例 ID
 -          const currentActiveId = useAppStore.getState().activeInstanceId;
 -          if (!currentActiveId) return;
@@ -412,7 +423,7 @@ index d7a33db..fde9b79 100644
 +          const targetInstanceId =
 +            callbackInstanceId || useAppStore.getState().activeInstanceId;
 +          if (!targetInstanceId) return;
-
+ 
            // 根据消息类型处理
            handleCallback(
 -            currentActiveId,
