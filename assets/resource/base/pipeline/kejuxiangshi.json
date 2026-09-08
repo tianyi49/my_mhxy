@@ -100,12 +100,41 @@
         "post_delay": 500,
         "next": [
             "活动-科举乡试-进入答题界面",
+            "活动-科举乡试-未开放时间OCR",
             "活动-科举乡试-已完成",
             "活动-科举乡试-开始",
             "活动-科举乡试-未到开始时间",
             "[JumpBack]baotu_huodong_down"
         ],
         "on_error": [
+            "活动-扫描结束未找到任务-返回主界面"
+        ]
+    },
+    "活动-科举乡试-未开放时间OCR": {
+        "focus": {
+            "Node.Recognition.Succeeded": "科举乡试当前未开放，已识别活动面板中的开放时间，正常跳过"
+        },
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "科举乡试",
+                "科举会试"
+            ],
+            "button_texts": [
+                "开启",
+                "未开放",
+                "未开启"
+            ],
+            "infer_button": false,
+            "roi": [
+                316,
+                76,
+                834,
+                433
+            ]
+        },
+        "next": [
             "活动-扫描结束未找到任务-返回主界面"
         ]
     },

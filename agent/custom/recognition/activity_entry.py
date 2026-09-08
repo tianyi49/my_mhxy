@@ -17,6 +17,10 @@ class ActivityEntry(CustomRecognition):
         "参加": ("参加", "参ル"),
         "完成": ("完成", "元成"),
     }
+    _UNAVAILABLE_MARKERS = ("开启", "未开放", "未开启", "结束", "完成")
+    _LEFT_BUTTON_BOX = (635, 0, 63, 38)
+    _RIGHT_BUTTON_BOX = (1045, 0, 63, 38)
+    _BUTTON_Y_OFFSET = 24
 
     @staticmethod
     def _internal_node_name(task_names, button_texts):
@@ -123,6 +127,60 @@ class ActivityEntry(CustomRecognition):
                     best_distance = distance
 
         if best_pair is None:
+            # 部分活动按钮偶尔无法被 OCR 识别。只在目标卡片同行没有“xx:xx开启”
+            # 等不可用状态时，按活动卡片列和标题纵坐标推算按钮区域。
+            infer_button = param.get("infer_button", True)
+            if isinstance(infer_button, str):
+                infer_button = infer_button.strip().lower() not in {
+                    "0",
+                    "false",
+                    "no",
+                    "off",
+                }
+            if infer_button and "参加" in button_texts:
+                for title in titles:
+                    title_y = title.box[1] + title.box[3] / 2
+                    unavailable = [
+                        result
+                        for result in reco.all_results
+                        if result.box
+                        and result.box[0] > title.box[0]
+                        and abs(
+                            title_y - (result.box[1] + result.box[3] / 2)
+                        )
+                        <= max_row_distance
+                        and any(
+                            marker in (result.text or "")
+                            for marker in self._UNAVAILABLE_MARKERS
+                        )
+                    ]
+                    if unavailable:
+                        logger.info(
+                            "[ActivityEntry] 活动当前不可参加，取消推算按钮: "
+                            f"活动={title.text}, 状态={[item.text for item in unavailable]}"
+                        )
+                        continue
+
+                    base_box = (
+                        self._LEFT_BUTTON_BOX
+                        if title.box[0] < 720
+                        else self._RIGHT_BUTTON_BOX
+                    )
+                    inferred_box = [
+                        base_box[0],
+                        int(title.box[1] + self._BUTTON_Y_OFFSET),
+                        base_box[2],
+                        base_box[3],
+                    ]
+                    logger.warning(
+                        "[ActivityEntry] 同行按钮OCR缺失，按活动标题推算参加按钮: "
+                        f"活动={title.text}, 标题框={title.box}, 按钮={inferred_box}"
+                    )
+                    return CustomRecognition.AnalyzeResult(
+                        box=inferred_box,
+                        detail=f"按活动 {title.text} 的位置推算参加按钮",
+                    )
+
             texts = [result.text for result in reco.all_results if result.text]
             detail = (
                 f"识别到活动标题但未找到同行按钮 {button_texts}: {task_names}"

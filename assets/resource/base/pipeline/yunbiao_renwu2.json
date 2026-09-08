@@ -177,9 +177,9 @@
         "action": "Click",
         "target_offset": [
             35,
-            15,
+            70,
             -70,
-            -30
+            -20
         ],
         "post_delay": 1500
     },
