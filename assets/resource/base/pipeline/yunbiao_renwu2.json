@@ -134,7 +134,7 @@
             "识别拓印_停止",
             "[JumpBack]清理主界面使用-关闭",
             "[JumpBack]点击运镖任务NPC",
-            "点击押送普通镖银(三次)"
+            "运镖第1轮-选择普通镖银"
         ],
         "on_error": [
             "运镖接取失败重试"
@@ -151,17 +151,6 @@
             "yunbiao_renwu2"
         ],
         "on_error": []
-    },
-    "运镖执行循环": {
-        "pre_delay": 3000,
-        "next": [
-            "识别拓印_停止",
-            "[JumpBack]清理主界面使用-关闭",
-            "[JumpBack]点击运镖任务NPC",
-            "[JumpBack]运镖中",
-            "[JumpBack]战斗中-等待20秒",
-            "运镖完成"
-        ]
     },
     "点击运镖任务NPC": {
         "recognition": "OCR",
@@ -183,17 +172,6 @@
         ],
         "post_delay": 1500
     },
-    "运镖完成": {
-        "focus": {
-            "Node.Recognition.Succeeded": "运镖已确认接取，且任务标识已消失，运镖完成"
-        },
-        "recognition": "And",
-        "all_of": [
-            "运镖完成-主界面",
-            "运镖完成-任务已消失"
-        ],
-        "pre_delay": 3000
-    },
     "运镖完成-主界面": {
         "recognition": "TemplateMatch",
         "template": [
@@ -209,36 +187,16 @@
             157
         ]
     },
-    "运镖完成-任务已消失": {
-        "recognition": "Or",
-        "inverse": true,
-        "any_of": [
-            {
-                "recognition": "OCR",
-                "expected": [
-                    "距离运镖完成",
-                    "距离运镖完成："
-                ],
-                "roi": [
-                    140,
-                    0,
-                    260,
-                    65
-                ]
-            },
-            {
-                "recognition": "OCR",
-                "expected": [
-                    "运镖任务",
-                    "运镖"
-                ],
-                "roi": [
-                    1034,
-                    171,
-                    235,
-                    336
-                ]
-            }
+    "运镖完成-郑镖头": {
+        "recognition": "OCR",
+        "expected": [
+            "郑镖头"
+        ],
+        "roi": [
+            350,
+            100,
+            350,
+            300
         ]
     },
     "运镖中": {
@@ -255,8 +213,7 @@
         ],
         "pre_delay": 10000
     },
-    "点击押送普通镖银(三次)": {
-        "max_hit": 3,
+    "运镖第1轮-选择普通镖银": {
         "recognition": "OCR",
         "expected": [
             "押送普通.*镖银"
@@ -271,12 +228,12 @@
         "action": "Click",
         "post_delay": 1000,
         "next": [
-            "点击押送普通镖_确定"
+            "运镖第1轮-确认"
         ]
     },
-    "点击押送普通镖_确定": {
+    "运镖第1轮-确认": {
         "focus": {
-            "Node.Action.Succeeded": "已确认押送普通镖银，开始等待运镖完成"
+            "Node.Action.Succeeded": "已确认第1次押送普通镖银，开始等待完成"
         },
         "recognition": "OCR",
         "expected": [
@@ -292,16 +249,16 @@
         "action": "Click",
         "post_delay": 3000,
         "next": [
-            "运镖已开始"
+            "运镖第1轮-已开始"
         ],
         "on_error": [
             "运镖接取失败重试"
         ]
     },
-    "运镖已开始": {
+    "运镖第1轮-已开始": {
         "focus": {
-            "Node.Recognition.Succeeded": "已检测到运镖倒计时或任务追踪，确认普通运镖接取成功",
-            "Node.PipelineNode.Failed": "点击确认后未检测到运镖状态，重新接取"
+            "Node.Recognition.Succeeded": "第1次普通运镖接取成功",
+            "Node.PipelineNode.Failed": "第1次确认后未检测到运镖状态，重新接取"
         },
         "recognition": "Or",
         "any_of": [
@@ -310,10 +267,254 @@
         ],
         "timeout": 60000,
         "next": [
-            "运镖执行循环"
+            "运镖第1轮-等待完成"
         ],
         "on_error": [
             "运镖接取失败重试"
+        ]
+    },
+    "运镖第1轮-等待完成": {
+        "pre_delay": 3000,
+        "next": [
+            "识别拓印_停止",
+            "[JumpBack]清理主界面使用-关闭",
+            "[JumpBack]点击运镖任务NPC",
+            "[JumpBack]运镖中",
+            "[JumpBack]战斗中-等待20秒",
+            "运镖第1轮-完成"
+        ],
+        "on_error": []
+    },
+    "运镖第1轮-完成": {
+        "focus": {
+            "Node.Recognition.Succeeded": "第1次普通运镖完成，开始第2次"
+        },
+        "recognition": "And",
+        "all_of": [
+            "运镖完成-主界面",
+            "运镖完成-郑镖头"
+        ],
+        "pre_delay": 3000,
+        "next": [
+            "运镖第2轮-点击郑镖头"
+        ]
+    },
+    "运镖第2轮-点击郑镖头": {
+        "recognition": "OCR",
+        "expected": [
+            "郑镖头"
+        ],
+        "roi": [
+            350,
+            100,
+            350,
+            300
+        ],
+        "action": "Click",
+        "target_offset": [
+            35,
+            70,
+            -70,
+            -20
+        ],
+        "post_delay": 1500,
+        "next": [
+            "运镖第2轮-选择普通镖银"
+        ]
+    },
+    "运镖第2轮-选择普通镖银": {
+        "recognition": "OCR",
+        "expected": [
+            "押送普通.*镖银"
+        ],
+        "roi": [
+            933,
+            262,
+            307,
+            237
+        ],
+        "pre_delay": 1000,
+        "action": "Click",
+        "post_delay": 1000,
+        "next": [
+            "运镖第2轮-确认"
+        ]
+    },
+    "运镖第2轮-确认": {
+        "focus": {
+            "Node.Action.Succeeded": "已确认第2次押送普通镖银，开始等待完成"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "确定"
+        ],
+        "roi": [
+            656,
+            367,
+            189,
+            96
+        ],
+        "pre_delay": 1000,
+        "action": "Click",
+        "post_delay": 3000,
+        "next": [
+            "运镖第2轮-已开始"
+        ],
+        "on_error": [
+            "运镖接取失败重试"
+        ]
+    },
+    "运镖第2轮-已开始": {
+        "focus": {
+            "Node.Recognition.Succeeded": "第2次普通运镖接取成功",
+            "Node.PipelineNode.Failed": "第2次确认后未检测到运镖状态，重新接取"
+        },
+        "recognition": "Or",
+        "any_of": [
+            "运镖已开始-倒计时",
+            "运镖已开始-任务追踪"
+        ],
+        "timeout": 60000,
+        "next": [
+            "运镖第2轮-等待完成"
+        ],
+        "on_error": [
+            "运镖接取失败重试"
+        ]
+    },
+    "运镖第2轮-等待完成": {
+        "pre_delay": 3000,
+        "next": [
+            "识别拓印_停止",
+            "[JumpBack]清理主界面使用-关闭",
+            "[JumpBack]点击运镖任务NPC",
+            "[JumpBack]运镖中",
+            "[JumpBack]战斗中-等待20秒",
+            "运镖第2轮-完成"
+        ],
+        "on_error": []
+    },
+    "运镖第2轮-完成": {
+        "focus": {
+            "Node.Recognition.Succeeded": "第2次普通运镖完成，开始第3次"
+        },
+        "recognition": "And",
+        "all_of": [
+            "运镖完成-主界面",
+            "运镖完成-郑镖头"
+        ],
+        "pre_delay": 3000,
+        "next": [
+            "运镖第3轮-点击郑镖头"
+        ]
+    },
+    "运镖第3轮-点击郑镖头": {
+        "recognition": "OCR",
+        "expected": [
+            "郑镖头"
+        ],
+        "roi": [
+            350,
+            100,
+            350,
+            300
+        ],
+        "action": "Click",
+        "target_offset": [
+            35,
+            70,
+            -70,
+            -20
+        ],
+        "post_delay": 1500,
+        "next": [
+            "运镖第3轮-选择普通镖银"
+        ]
+    },
+    "运镖第3轮-选择普通镖银": {
+        "recognition": "OCR",
+        "expected": [
+            "押送普通.*镖银"
+        ],
+        "roi": [
+            933,
+            262,
+            307,
+            237
+        ],
+        "pre_delay": 1000,
+        "action": "Click",
+        "post_delay": 1000,
+        "next": [
+            "运镖第3轮-确认"
+        ]
+    },
+    "运镖第3轮-确认": {
+        "focus": {
+            "Node.Action.Succeeded": "已确认第3次押送普通镖银，开始等待完成"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "确定"
+        ],
+        "roi": [
+            656,
+            367,
+            189,
+            96
+        ],
+        "pre_delay": 1000,
+        "action": "Click",
+        "post_delay": 3000,
+        "next": [
+            "运镖第3轮-已开始"
+        ],
+        "on_error": [
+            "运镖接取失败重试"
+        ]
+    },
+    "运镖第3轮-已开始": {
+        "focus": {
+            "Node.Recognition.Succeeded": "第3次普通运镖接取成功",
+            "Node.PipelineNode.Failed": "第3次确认后未检测到运镖状态，重新接取"
+        },
+        "recognition": "Or",
+        "any_of": [
+            "运镖已开始-倒计时",
+            "运镖已开始-任务追踪"
+        ],
+        "timeout": 60000,
+        "next": [
+            "运镖第3轮-等待完成"
+        ],
+        "on_error": [
+            "运镖接取失败重试"
+        ]
+    },
+    "运镖第3轮-等待完成": {
+        "pre_delay": 3000,
+        "next": [
+            "识别拓印_停止",
+            "[JumpBack]清理主界面使用-关闭",
+            "[JumpBack]点击运镖任务NPC",
+            "[JumpBack]运镖中",
+            "[JumpBack]战斗中-等待20秒",
+            "运镖第3轮-完成"
+        ],
+        "on_error": []
+    },
+    "运镖第3轮-完成": {
+        "focus": {
+            "Node.Recognition.Succeeded": "3次普通运镖均已完成"
+        },
+        "recognition": "And",
+        "all_of": [
+            "运镖完成-主界面",
+            "运镖完成-郑镖头"
+        ],
+        "pre_delay": 3000,
+        "next": [
+            "空节点"
         ]
     },
     "运镖已开始-倒计时": {
