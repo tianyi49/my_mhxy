@@ -1,0 +1,258 @@
+warning: in the working copy of 'src/services/scheduleService.ts', LF will be replaced by CRLF the next time Git touches it
+diff --git a/src/services/scheduleService.ts b/src/services/scheduleService.ts
+index 7974e76..bdbc589 100644
+--- a/src/services/scheduleService.ts
++++ b/src/services/scheduleService.ts
+@@ -2,16 +2,37 @@ import { useAppStore } from '@/stores/appStore';
+ import { loggers } from '@/utils';
+ import type { Instance } from '@/types/interface';
+ 
++import { stopInstanceTasks } from './taskStopService';
++
+ const log = loggers.task;
+ 
+ const STORAGE_KEY_LAST_CHECK = 'mxu_schedule_lastCheckAt';
+ const STORAGE_KEY_TRIGGERED = 'mxu_schedule_triggeredSlots';
++const STORAGE_KEY_PENDING = 'mxu_schedule_pendingRuns';
+ 
+ const CHECK_INTERVAL_MS = 30_000; // 每 30 秒轮询一次（分钟精度下降低到点延迟）
+ const SLOT_TTL_MS = 48 * 60 * 60 * 1000; // 触发记录保留 48 小时
+ const MAX_COMPENSATE_MS = 3 * 60 * 60 * 1000; // 最多补偿 3 小时内的遗漏
+ const DEBOUNCE_MS = 2_000; // 事件触发后 2 秒内去重
+ const CURRENT_SLOT_COMPENSATION_GRACE_MS = 30 * 1000; // 当前分钟超过 30 秒后补触发也记为补偿
++const PENDING_TTL_MS = 20 * 60 * 1000; // 忙碌实例的定时任务最多等待 20 分钟
++const PENDING_RETRY_INTERVAL_MS = 15 * 1000;
++const PREEMPT_RETRY_INTERVAL_MS = 60 * 1000;
++const PREEMPTIBLE_TASK_NAMES = new Set(['zhuogui_hundui']);
++
++interface PendingScheduleRun {
++  key: string;
++  instanceId: string;
++  instanceName: string;
++  policyName: string;
++  slotLabel: string;
++  slotStr: string;
++  isCompensation: boolean;
++  createdAt: number;
++  expiresAt: number;
++  lastAttemptAt?: number;
++  preemptRequestedAt?: number;
++}
+ 
+ export type ScheduleTriggerCallback = (
+   instance: Instance,
+@@ -95,6 +116,7 @@ class ScheduleService {
+   private checking = false;
+   private triggerFn: ScheduleTriggerCallback | null = null;
+   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
++  private unsubscribeStore: (() => void) | null = null;
+ 
+   private getLastCheckAt(): number {
+     const val = localStorage.getItem(STORAGE_KEY_LAST_CHECK);
+@@ -152,6 +174,148 @@ class ScheduleService {
+     localStorage.setItem(STORAGE_KEY_TRIGGERED, JSON.stringify([...slots]));
+   }
+ 
++  private getPendingRuns(): PendingScheduleRun[] {
++    try {
++      const value = localStorage.getItem(STORAGE_KEY_PENDING);
++      if (!value) return [];
++      const parsed: unknown = JSON.parse(value);
++      if (!Array.isArray(parsed)) return [];
++
++      return parsed.filter(
++        (item): item is PendingScheduleRun =>
++          typeof item === 'object' &&
++          item !== null &&
++          typeof item.key === 'string' &&
++          typeof item.instanceId === 'string' &&
++          typeof item.policyName === 'string' &&
++          typeof item.slotLabel === 'string' &&
++          typeof item.slotStr === 'string' &&
++          typeof item.createdAt === 'number' &&
++          typeof item.expiresAt === 'number',
++      );
++    } catch {
++      return [];
++    }
++  }
++
++  private setPendingRuns(runs: PendingScheduleRun[]) {
++    if (runs.length === 0) {
++      localStorage.removeItem(STORAGE_KEY_PENDING);
++      return;
++    }
++    localStorage.setItem(STORAGE_KEY_PENDING, JSON.stringify(runs));
++  }
++
++  private getCurrentTaskName(instanceId: string): string | null {
++    const state = useAppStore.getState();
++    const instance = state.instances.find((item) => item.id === instanceId);
++    if (!instance) return null;
++
++    const currentIndex = state.instanceCurrentTaskIndex[instanceId] ?? 0;
++    const maaTaskId = state.instancePendingTaskIds[instanceId]?.[currentIndex];
++    const selectedTaskId = maaTaskId ? state.maaTaskIdMapping[instanceId]?.[maaTaskId] : undefined;
++
++    return instance.selectedTasks.find((task) => task.id === selectedTaskId)?.taskName ?? null;
++  }
++
++  private enqueuePendingRun(run: PendingScheduleRun) {
++    const pendingRuns = this.getPendingRuns();
++    if (pendingRuns.some((item) => item.key === run.key)) return;
++    pendingRuns.push(run);
++    this.setPendingRuns(pendingRuns);
++  }
++
++  private async requestPreemption(run: PendingScheduleRun): Promise<void> {
++    const currentTaskName = this.getCurrentTaskName(run.instanceId);
++    if (!currentTaskName || !PREEMPTIBLE_TASK_NAMES.has(currentTaskName)) return;
++
++    const pendingRuns = this.getPendingRuns();
++    const pending = pendingRuns.find((item) => item.key === run.key);
++    if (
++      !pending ||
++      (pending.preemptRequestedAt &&
++        Date.now() - pending.preemptRequestedAt < PREEMPT_RETRY_INTERVAL_MS)
++    ) {
++      return;
++    }
++
++    pending.preemptRequestedAt = Date.now();
++    run.preemptRequestedAt = pending.preemptRequestedAt;
++    this.setPendingRuns(pendingRuns);
++    log.info(
++      `[调度器] 时间槽 ${run.slotStr} 到达，安全停止长任务 ${currentTaskName}，` +
++        `随后执行策略 "${run.policyName}"`,
++    );
++
++    try {
++      const stopped = await stopInstanceTasks(run.instanceId);
++      if (!stopped) {
++        log.warn(`[调度器] 实例 "${run.instanceName}" 停止超时，策略继续保留在待执行队列`);
++      }
++    } catch (error) {
++      log.error(`[调度器] 实例 "${run.instanceName}" 安全停止失败:`, error);
++    }
++  }
++
++  private async drainPendingRuns(nowTs = Date.now()): Promise<void> {
++    if (!this.triggerFn) return;
++
++    const pendingRuns = this.getPendingRuns();
++    if (pendingRuns.length === 0) return;
++
++    const retained: PendingScheduleRun[] = [];
++    for (const run of pendingRuns) {
++      if (run.expiresAt <= nowTs) {
++        log.error(
++          `[调度器] 待执行策略 "${run.policyName}" 已等待超过 ${PENDING_TTL_MS / 60_000} 分钟，` +
++            `放弃时间槽 ${run.slotStr}`,
++        );
++        continue;
++      }
++
++      let instance = useAppStore.getState().instances.find((item) => item.id === run.instanceId);
++      if (!instance) {
++        log.warn(`[调度器] 待执行策略对应实例已不存在，放弃: ${run.instanceName}`);
++        continue;
++      }
++
++      if (instance.isRunning) {
++        await this.requestPreemption(run);
++        instance = useAppStore.getState().instances.find((item) => item.id === run.instanceId);
++        if (!instance || instance.isRunning) {
++          retained.push(run);
++          continue;
++        }
++      }
++
++      if (run.lastAttemptAt && nowTs - run.lastAttemptAt < PENDING_RETRY_INTERVAL_MS) {
++        retained.push(run);
++        continue;
++      }
++
++      run.lastAttemptAt = nowTs;
++      log.info(
++        `[调度器] 实例 "${instance.name}" 已空闲，补跑时间槽 ${run.slotStr} ` +
++          `策略 "${run.policyName}"`,
++      );
++
++      try {
++        const started = await this.triggerFn(
++          instance,
++          run.policyName,
++          run.slotLabel,
++          run.isCompensation,
++        );
++        if (!started) retained.push(run);
++      } catch (error) {
++        log.error(`[调度器] 待执行策略触发失败:`, error);
++        retained.push(run);
++      }
++    }
++
++    this.setPendingRuns(retained);
++  }
++
+   private cleanupOldSlots() {
+     const slots = this.getTriggeredSlots();
+     if (slots.size === 0) return;
+@@ -189,6 +353,13 @@ class ScheduleService {
+ 
+     document.addEventListener('visibilitychange', this.handleVisibilityChange);
+     window.addEventListener('focus', this.handleFocus);
++    this.unsubscribeStore = useAppStore.subscribe(
++      (state) =>
++        state.instances.map((instance) => `${instance.id}:${instance.isRunning}`).join('|'),
++      (current, previous) => {
++        if (current !== previous) this.debouncedCheck();
++      },
++    );
+   }
+ 
+   stop() {
+@@ -203,6 +374,8 @@ class ScheduleService {
+ 
+     document.removeEventListener('visibilitychange', this.handleVisibilityChange);
+     window.removeEventListener('focus', this.handleFocus);
++    this.unsubscribeStore?.();
++    this.unsubscribeStore = null;
+ 
+     log.info('[调度器] 已停止');
+   }
+@@ -236,6 +409,7 @@ class ScheduleService {
+     try {
+       const now = new Date();
+       const nowTs = now.getTime();
++      await this.drainPendingRuns(nowTs);
+       const storedLastCheckAt = this.getLastCheckAt();
+       const hadPreviousCheck = storedLastCheckAt > 0;
+       let lastCheckAt = storedLastCheckAt;
+@@ -310,11 +484,25 @@ class ScheduleService {
+             if (!freshInst) continue;
+ 
+             if (freshInst.isRunning) {
++              const pendingRun: PendingScheduleRun = {
++                key: slotKey,
++                instanceId: freshInst.id,
++                instanceName: freshInst.name,
++                policyName: policy.name,
++                slotLabel: timeStr,
++                slotStr,
++                isCompensation,
++                createdAt: nowTs,
++                expiresAt: nowTs + PENDING_TTL_MS,
++              };
++              this.enqueuePendingRun(pendingRun);
+               log.info(
+-                `[调度器] 实例 "${inst.name}" 正在运行，跳过时间槽 ${slotStr} 策略 "${policy.name}"`,
++                `[调度器] 实例 "${inst.name}" 正在运行，策略 "${policy.name}" ` +
++                  `已加入待执行队列（最多等待 ${PENDING_TTL_MS / 60_000} 分钟）`,
+               );
+               triggeredSlots.add(slotKey);
+               slotsModified = true;
++              await this.drainPendingRuns();
+               break;
+             }
+ 
