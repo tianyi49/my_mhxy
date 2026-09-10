@@ -16,7 +16,8 @@
             "shimen_renwu2_dianji2",
             "[JumpBack]展开-首页任务栏",
             "[JumpBack]任务栏切换为任务",
-            "[JumpBack]师门-下滑任务栏-三次"
+            "[JumpBack]师门-下滑任务栏-三次",
+            "师门-无现有任务-打开活动"
         ],
         "on_error": []
     },
@@ -40,6 +41,172 @@
                 ]
             }
         ]
+    },
+    "师门-无现有任务-打开活动": {
+        "focus": {
+            "Node.PipelineNode.Starting": "任务栏未找到师门任务，打开活动面板重新领取"
+        },
+        "recognition": "TemplateMatch",
+        "template": [
+            "zonghe/jiahao.png",
+            "zonghe/chenghao.png",
+            "zonghe/baoguo.png",
+            "zonghe/baoguo_man.png"
+        ],
+        "roi": [
+            1197,
+            540,
+            78,
+            157
+        ],
+        "pre_delay": 500,
+        "action": "ClickKey",
+        "key": [
+            57,
+            31
+        ],
+        "post_delay": 1000,
+        "next": [
+            "师门-活动面板",
+            "[JumpBack]活动-界面-打开失败-点击活动图片"
+        ]
+    },
+    "师门-活动面板": {
+        "recognition": "TemplateMatch",
+        "template": "zonghe/huodong_jiemian_panduan.png",
+        "roi": [
+            350,
+            23,
+            600,
+            62
+        ],
+        "next": [
+            "师门-活动-点击日常活动"
+        ]
+    },
+    "师门-活动-点击日常活动": {
+        "recognition": "OCR",
+        "expected": [
+            "日常活动"
+        ],
+        "roi": [
+            132,
+            90,
+            156,
+            59
+        ],
+        "action": "Click",
+        "post_wait_freezes": 500,
+        "next": [
+            "师门-活动-列表回到顶部"
+        ]
+    },
+    "师门-活动-列表回到顶部": {
+        "action": "MultiSwipe",
+        "swipes": [
+            {
+                "starting": 0,
+                "begin": [
+                    731,
+                    129,
+                    1,
+                    1
+                ],
+                "end": [
+                    732,
+                    444,
+                    1,
+                    1
+                ]
+            },
+            {
+                "starting": 1000,
+                "begin": [
+                    731,
+                    129,
+                    1,
+                    1
+                ],
+                "end": [
+                    732,
+                    444,
+                    1,
+                    1
+                ]
+            }
+        ],
+        "post_delay": 500,
+        "next": [
+            "师门-活动-开始",
+            "师门-活动-已完成",
+            "[JumpBack]师门-活动-列表下滑"
+        ],
+        "on_error": [
+            "活动-扫描结束未找到任务-返回主界面"
+        ]
+    },
+    "师门-活动-开始": {
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "师门任务"
+            ],
+            "button_texts": [
+                "参加"
+            ]
+        },
+        "next": [
+            "师门-活动-点击参加"
+        ]
+    },
+    "师门-活动-点击参加": {
+        "recognition": "OCR",
+        "expected": [
+            "参加"
+        ],
+        "roi": "师门-活动-开始",
+        "action": "Click",
+        "post_delay": 2000,
+        "post_wait_freezes": 1500,
+        "next": [
+            "shimen_renwu"
+        ]
+    },
+    "师门-活动-已完成": {
+        "focus": {
+            "Node.Recognition.Succeeded": "师门任务今日已完成，正常结束"
+        },
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "师门任务"
+            ],
+            "button_texts": [
+                "完成"
+            ]
+        },
+        "next": [
+            "panduan_zhujiemian"
+        ]
+    },
+    "师门-活动-列表下滑": {
+        "max_hit": 5,
+        "action": "Swipe",
+        "begin": [
+            731,
+            444,
+            1,
+            1
+        ],
+        "end": [
+            731,
+            129,
+            1,
+            1
+        ],
+        "post_delay": 500
     },
     "shimen_renwu2_dianji": {
         "recognition": "OCR",
