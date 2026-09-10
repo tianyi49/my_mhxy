@@ -106,9 +106,9 @@
             "[JumpBack]close_exit_confirm",
             "[JumpBack]panduan_zhujiemian-关闭顶层窗口",
             "[JumpBack]跳过剧情动画-快进键",
+            "zai_zhujiemian",
             "[JumpBack]panduan_zhujiemian_ks",
-            "[JumpBack]panduan_zhujiemian_restart",
-            "zai_zhujiemian"
+            "[JumpBack]panduan_zhujiemian_restart"
         ]
     },
     "panduan_zhujiemian-关闭顶层窗口": {
