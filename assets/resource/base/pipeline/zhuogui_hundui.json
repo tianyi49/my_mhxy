@@ -320,6 +320,7 @@
         "timeout": 300000,
         "next": [
             "混队-抓鬼-时间到停止",
+            "混队-抓鬼-伙伴界面异常恢复",
             "混队-抓鬼-状态异常重新匹配",
             "混队-抓鬼-任务结束",
             "[JumpBack]战斗中-等待100秒",
@@ -363,11 +364,34 @@
             "混队-抓鬼-执行异常重匹配"
         ]
     },
+    "混队-抓鬼-伙伴界面异常恢复": {
+        "focus": {
+            "Node.Recognition.Succeeded": "混队误入伙伴或阵容界面，立即清理遮挡并重新匹配"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "物攻型",
+            "法攻型",
+            "治疗型",
+            "辅助型",
+            "封印型"
+        ],
+        "roi": [
+            300,
+            430,
+            420,
+            180
+        ],
+        "next": [
+            "混队-抓鬼-执行异常重匹配"
+        ]
+    },
     "混队-抓鬼-执行异常重匹配": {
         "focus": {
-            "Node.PipelineNode.Starting": "混队状态停滞，退出队伍后开始新一轮混队"
+            "Node.PipelineNode.Starting": "混队状态异常，清理遮挡、确认退队后开始新一轮混队"
         },
         "next": [
+            "[JumpBack]panduan_zhujiemian-关闭顶层窗口",
             "[JumpBack]tuichuduiwu",
             "zhuogui_hundui"
         ]

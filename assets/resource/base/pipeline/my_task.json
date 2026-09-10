@@ -104,11 +104,27 @@
             "[JumpBack]点击登录游戏",
             "[JumpBack]amazing_discount",
             "[JumpBack]close_exit_confirm",
+            "[JumpBack]panduan_zhujiemian-关闭顶层窗口",
             "[JumpBack]跳过剧情动画-快进键",
             "[JumpBack]panduan_zhujiemian_ks",
             "[JumpBack]panduan_zhujiemian_restart",
             "zai_zhujiemian"
         ]
+    },
+    "panduan_zhujiemian-关闭顶层窗口": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "zonghe/guanbi1.png",
+            "zonghe/guanbi2.png"
+        ],
+        "roi": [
+            1030,
+            0,
+            250,
+            130
+        ],
+        "action": "Click",
+        "post_delay": 800
     },
     "账号已在其他设备登录-确定": {
         "recognition": "OCR",
