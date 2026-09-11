@@ -227,8 +227,36 @@
         "pre_delay": 10000
     },
     "等待被踢出队伍": {
+        "focus": {
+            "Node.Recognition.Succeeded": "检测到已离开队伍，队员挂机正常结束"
+        },
         "recognition": "Or",
         "any_of": [
+            {
+                "recognition": "OCR",
+                "expected": [
+                    "你尚未创建队伍",
+                    "尚未创建队伍"
+                ],
+                "roi": [
+                    250,
+                    45,
+                    800,
+                    100
+                ]
+            },
+            {
+                "recognition": "OCR",
+                "expected": [
+                    "便捷组队"
+                ],
+                "roi": [
+                    950,
+                    600,
+                    250,
+                    100
+                ]
+            },
             {
                 "recognition": "TemplateMatch",
                 "template": [
