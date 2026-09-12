@@ -17,7 +17,7 @@
             66,
             57
         ],
-        "post_delay": 3000,
+        "post_delay": 500,
         "next": [
             "识别位置-长安城-副本",
             "[JumpBack]panduan_zhujiemian_ks",
@@ -86,7 +86,6 @@
         ],
         "post_delay": 1000
     },
-    "55": {},
     "打开大地图成功_传送长安城_69副本": {
         "recognition": "TemplateMatch",
         "template": [
@@ -111,7 +110,7 @@
             "zonghe/tab_changancheng2.png",
             "zonghe/tab_changancheng3.png"
         ],
-        "pre_delay": 1000,
+        "pre_delay": 500,
         "action": "Click",
         "post_delay": 1000
     },
@@ -126,7 +125,7 @@
             117,
             31
         ],
-        "post_delay": 3000,
+        "post_delay": 1000,
         "next": [
             "打开小地图_百晓仙子"
         ]
@@ -216,7 +215,7 @@
             356
         ],
         "action": "Click",
-        "post_delay": 200,
+        "post_delay": 500,
         "next": [
             "选择侠士副本"
         ]
@@ -233,7 +232,7 @@
             42
         ],
         "action": "Click",
-        "post_delay": 200,
+        "post_delay": 500,
         "next": [
             "进入50级侠士副本"
         ]
@@ -296,7 +295,8 @@
             "[JumpBack]推荐好友信息",
             "[JumpBack]关闭福利弹窗",
             "[JumpBack]关闭师门弹窗",
-            "[JumpBack]任务栏切换为任务"
+            "[JumpBack]任务栏切换为任务",
+            "[JumpBack]关闭任务界面"
         ]
     },
     "测试-进入50级侠士副本": {
@@ -309,7 +309,8 @@
             "[JumpBack]推荐好友信息",
             "[JumpBack]关闭福利弹窗",
             "[JumpBack]关闭师门弹窗",
-            "[JumpBack]任务栏切换为任务"
+            "[JumpBack]任务栏切换为任务",
+            "[JumpBack]关闭任务界面"
         ]
     },
     "50侠士-副本完成-退出": {
@@ -578,7 +579,8 @@
             "[JumpBack]推荐好友信息",
             "[JumpBack]关闭福利弹窗",
             "[JumpBack]关闭师门弹窗",
-            "[JumpBack]任务栏切换为任务"
+            "[JumpBack]任务栏切换为任务",
+            "[JumpBack]关闭任务界面"
         ]
     },
     "50普通-1-副本完成-退出": {
@@ -714,7 +716,8 @@
             "[JumpBack]推荐好友信息",
             "[JumpBack]关闭福利弹窗",
             "[JumpBack]关闭师门弹窗",
-            "[JumpBack]任务栏切换为任务"
+            "[JumpBack]任务栏切换为任务",
+            "[JumpBack]关闭任务界面"
         ]
     },
     "测试-进入50级普通副本-2": {
@@ -727,7 +730,8 @@
             "[JumpBack]推荐好友信息",
             "[JumpBack]关闭福利弹窗",
             "[JumpBack]关闭师门弹窗",
-            "[JumpBack]任务栏切换为任务"
+            "[JumpBack]任务栏切换为任务",
+            "[JumpBack]关闭任务界面"
         ]
     },
     "50普通-2-副本完成-退出": {

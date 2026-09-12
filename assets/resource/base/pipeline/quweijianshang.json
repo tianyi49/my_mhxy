@@ -96,13 +96,14 @@
                 ]
             }
         ],
-        "post_delay": 500,
+        "post_delay": 800,
         "next": [
             "活动-趣味鉴赏-开始",
             "活动-趣味鉴赏-已完成",
             "[JumpBack]baotu_huodong_down"
         ],
-        "on_error": []
+        "on_error": [],
+        "post_wait_freezes": 500
     },
     "活动-趣味鉴赏-已完成": {
         "recognition": "Custom",

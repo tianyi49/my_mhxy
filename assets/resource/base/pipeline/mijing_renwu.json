@@ -107,7 +107,8 @@
     "click_map_yunleyou": {
         "recognition": "OCR",
         "expected": [
-            "云乐游"
+            "云乐游",
+            "云乐"
         ],
         "roi": [
             500,
@@ -298,7 +299,8 @@
             56
         ],
         "next": [
-            "秘境-点击离开"
+            "[JumpBack]秘境-点击离开",
+            "秘境-完成-返回东海湾"
         ]
     },
     "mijing_shibai": {
@@ -314,7 +316,8 @@
             275
         ],
         "next": [
-            "秘境-点击离开",
+            "[JumpBack]秘境-点击离开",
+            "秘境-完成-返回东海湾",
             "[JumpBack]panduan_zhujiemian"
         ]
     },
@@ -467,7 +470,8 @@
         ],
         "next": [
             "[JumpBack]清理主界面使用-关闭",
-            "秘境-点击离开",
+            "[JumpBack]秘境-点击离开",
+            "秘境-完成-返回东海湾",
             "[JumpBack]panduan_zhujiemian"
         ]
     },
@@ -489,7 +493,8 @@
         ],
         "next": [
             "[JumpBack]清理主界面使用-关闭",
-            "秘境-点击离开",
+            "[JumpBack]秘境-点击离开",
+            "秘境-完成-返回东海湾",
             "[JumpBack]panduan_zhujiemian"
         ]
     },
@@ -607,7 +612,8 @@
                 ]
             }
         ],
-        "post_delay": 500,
+        "post_delay": 800,
+        "post_wait_freezes": 500,
         "next": [
             "活动-秘境降妖-开始",
             "[JumpBack]baotu_huodong_down"
@@ -634,5 +640,20 @@
         "action": "Click",
         "post_delay": 4000,
         "next": []
+    },
+    "秘境-完成-返回东海湾": {
+        "focus": {
+            "Node.Recognition.Succeeded": "秘境结束，返回东海湾成功。"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "东海湾"
+        ],
+        "roi": [
+            105,
+            22,
+            124,
+            34
+        ]
     }
 }

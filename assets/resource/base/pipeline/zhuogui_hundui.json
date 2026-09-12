@@ -315,6 +315,18 @@
                     246,
                     91
                 ]
+            },
+            {
+                "recognition": "TemplateMatch",
+                "template": [
+                    "zhuagui/fanhui.png"
+                ],
+                "roi": [
+                    1202,
+                    609,
+                    78,
+                    91
+                ]
             }
         ],
         "timeout": 300000,
@@ -326,7 +338,8 @@
             "[JumpBack]战斗中-等待100秒",
             "[JumpBack]任务栏切换为队伍",
             "[JumpBack]队伍-退出组队界面",
-            "[JumpBack]清理主界面使用-关闭"
+            "[JumpBack]清理主界面使用-关闭",
+            "[JumpBack]刚进正在战斗队伍中"
         ],
         "on_error": [
             "混队-抓鬼-匹配超时恢复"
@@ -663,5 +676,18 @@
         "pre_delay": 500,
         "action": "Click",
         "post_delay": 500
+    },
+    "刚进正在战斗队伍中": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "zhuagui/fanhui.png"
+        ],
+        "roi": [
+            1202,
+            609,
+            78,
+            91
+        ],
+        "pre_delay": 10000
     }
 }
