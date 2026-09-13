@@ -42,13 +42,34 @@
             106
         ],
         "next": [
+            "队长踢人-未创建队伍",
             "[JumpBack]队长踢人-选人",
             "队长踢人-只有自己-退出队伍"
         ]
     },
+    "队长踢人-未创建队伍": {
+        "focus": {
+            "Node.Recognition.Succeeded": "当前未创建队伍，无需踢人或解散"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "尚未创建队伍"
+        ],
+        "roi": [
+            250,
+            55,
+            800,
+            90
+        ],
+        "next": [
+            "空节点"
+        ]
+    },
     "队长踢人-选人": {
+        "focus": {
+            "Node.Recognition.Succeeded": "检测到队员，先请离队伍"
+        },
         "max_hit": 5,
-        "inverse": true,
         "recognition": "OCR",
         "expected": [
             "物攻型",
@@ -63,7 +84,7 @@
             95,
             39
         ],
-        "pre_delay": 500,
+        "pre_delay": 1000,
         "action": "Click",
         "target": [
             379,
@@ -88,9 +109,31 @@
         ],
         "pre_delay": 500,
         "action": "Click",
-        "post_delay": 500
+        "post_delay": 1000,
+        "next": [
+            "队长踢人-确认请离",
+            "空节点"
+        ]
+    },
+    "队长踢人-确认请离": {
+        "recognition": "OCR",
+        "expected": [
+            "确定"
+        ],
+        "roi": [
+            500,
+            350,
+            300,
+            160
+        ],
+        "action": "Click",
+        "post_delay": 1000
     },
     "队长踢人-只有自己-退出队伍": {
+        "focus": {
+            "Node.Recognition.Succeeded": "队员已全部请离，开始解散队伍"
+        },
+        "inverse": true,
         "recognition": "OCR",
         "expected": [
             "物攻型",
@@ -105,8 +148,45 @@
             95,
             39
         ],
+        "pre_delay": 1000,
         "next": [
-            "点击退出队伍"
+            "队长踢人-解散队伍"
+        ]
+    },
+    "队长踢人-解散队伍": {
+        "recognition": "OCR",
+        "expected": [
+            "解散队伍",
+            "退出队伍"
+        ],
+        "roi": [
+            75,
+            620,
+            220,
+            80
+        ],
+        "action": "Click",
+        "post_delay": 1000,
+        "next": [
+            "队长踢人-确认解散",
+            "队长踢人-未创建队伍"
+        ]
+    },
+    "队长踢人-确认解散": {
+        "recognition": "OCR",
+        "expected": [
+            "确定"
+        ],
+        "roi": [
+            500,
+            350,
+            300,
+            160
+        ],
+        "action": "Click",
+        "post_delay": 1000,
+        "next": [
+            "队长踢人-未创建队伍"
         ]
     }
 }

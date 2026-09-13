@@ -30,7 +30,7 @@
                     "pipeline_override": {
                         "50普通-2-副本完成-退出": {
                             "next": [
-                                "退出队伍"
+                                "panduan_zhujiemian"
                             ]
                         }
                     }
