@@ -14,7 +14,8 @@ class ShimenRenwuDecide(CustomRecognition):
 
     在 agent 侧做"点哪个 / 是否点 / 是否触发子链路"的决策，对师门任务追踪面板做一次 OCR，拼出 ``full_text`` 后：
 
-    - **命中打造类任务**：``full_text`` 里出现 ``_50_MAP`` / ``_60_MAP`` 的某个装备名（value）→
+    - **命中打造类任务**：``full_text`` 里出现 ``_50_MAP`` / ``_60_MAP`` 的某个装备名（value），
+      且任务没有“去买/买个/购买/购置”等明确购买语义 →
       解析出对应的 (等级, 品类, 装备名)，``override_pipeline`` 改写 dazao 链路的三个 OCR 节点
       （选等级 / 选品类 / 装备名判定），``run_task("dazao")`` 启动打造，最后返回未识别（``box=None``）。
     - **非打造类师门任务**：直接在 agent 内 ``post_click`` 点击识别框中心，等 7 秒（替代原节点
@@ -44,6 +45,8 @@ class ShimenRenwuDecide(CustomRecognition):
     # 连续 N 次未识别到师门任务 → 飞回长安一次，打破「面板 OCR 持续空/误读」卡死
     _MISS_STREAK_LIMIT = 5
     _BACK_TO_MAIN_ENTRY = "打开大地图_69副本"
+    # 明确要求购买的师门任务应点击任务自动寻路到商店，不能仅因物品是装备就强制进入打造。
+    _PURCHASE_MARKERS = ("去买", "买个", "买一", "购买", "购置")
 
     _50_MAP = {
         # 防具
@@ -82,6 +85,12 @@ class ShimenRenwuDecide(CustomRecognition):
     def _reset_miss_streak(self) -> None:
         """任意命中分支（打造/师门点击）调用，归零连续未命中计数。"""
         self._miss_streak = 0
+
+    @classmethod
+    def _is_purchase_task(cls, full_text: str) -> bool:
+        """任务文本包含明确购买指令时返回 True，购买语义优先于装备名映射。"""
+        compact_text = "".join(full_text.split())
+        return any(marker in compact_text for marker in cls._PURCHASE_MARKERS)
 
     def _on_miss(self, context: Context) -> CustomRecognition.AnalyzeResult:
         """记录一次「未识别到师门任务」。
@@ -137,10 +146,14 @@ class ShimenRenwuDecide(CustomRecognition):
         for cat, name in self._50_MAP.items():
             name_to_target.setdefault(name, ("50", cat))
 
-        # ① 命中打造类任务：full_text 含某装备名 → override dazao 三节点 + run_task dazao
+        # ① 命中打造类任务：装备名 + 缺少物品，且没有明确购买语义。
+        # “去买个蛇形月”等任务直接点击任务条目，让游戏自动寻路购买，不能误走打造。
         hit_name = next((n for n in name_to_target if n in full_text), None)
         not_own = "拥有0" in full_text or "0/1" in full_text
-        if hit_name and not_own:
+        purchase_task = self._is_purchase_task(full_text)
+        if hit_name and not_own and purchase_task:
+            logger.info(f"[shimen_decide] 命中购买任务: {hit_name}，跳过打造并点击任务自动寻路购买")
+        elif hit_name and not_own:
             level, category = name_to_target[hit_name]
             logger.info(f"[shimen_decide] 命中打造任务: {level}级 {category} -> {hit_name}")
             context.override_pipeline({
