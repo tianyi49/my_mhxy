@@ -14,18 +14,15 @@ class ShimenRenwuDecide(CustomRecognition):
 
     在 agent 侧做"点哪个 / 是否点 / 是否触发子链路"的决策，对师门任务追踪面板做一次 OCR，拼出 ``full_text`` 后：
 
-    - **命中打造类任务**：``full_text`` 里出现 ``_50_MAP`` / ``_60_MAP`` 的某个装备名（value），
-      且任务没有“去买/买个/购买/购置”等明确购买语义 →
-      解析出对应的 (等级, 品类, 装备名)，``override_pipeline`` 改写 dazao 链路的三个 OCR 节点
-      （选等级 / 选品类 / 装备名判定），``run_task("dazao")`` 启动打造，最后返回未识别（``box=None``）。
-    - **非打造类师门任务**：直接在 agent 内 ``post_click`` 点击识别框中心，等 7 秒（替代原节点
+    - **命中缺少的装备**：``full_text`` 里出现 ``_50_MAP`` / ``_60_MAP`` 的某个装备名（value），
+      且显示拥有 0/1 时，统一按购买任务处理；点击任务条目，让游戏自动寻路购买，不再进入打造流程。
+    - **其他师门任务**：直接在 agent 内 ``post_click`` 点击识别框中心，等 7 秒（替代原节点
       ``post_delay:7000``），再 ``run_task`` 运行一次「抄本兜底」节点清除点击后出现的「使用抄本」按钮，
       最后返回未识别（``box=None``）。**本识别一律不返回命中信号**——点击副作用由 agent 侧完成.
     - **都没有**：返回 ``box=None``（未命中）；连续 ``_MISS_STREAK_LIMIT`` 次未命中则 ``run_task``
       一次 ``panduan_zhujiemian`` 回主界面（兜底重置屏幕状态）再归零计数。任意命中分支（①②）归零计数。
 
-    MAP 形如 ``{"男衣": "夜魔披风", ...}``：key=品类（dazao 左侧列表项），value=装备名（右侧展示）。
-    合并两个 MAP 反查时，同名装备 60 级优先（``setdefault`` 保留先插入者）。
+    MAP 形如 ``{"男衣": "夜魔披风", ...}``：value 是用于识别师门装备任务的装备名。
 
     OCR 的 roi 起点 (x,y) 每次 ``analyze`` 随机波动 ±``_ROI_JITTER``（``_jittered_roi``），打破固定
     roi 下 OCR 持续 badcase 导致的决策死循环。
@@ -34,19 +31,12 @@ class ShimenRenwuDecide(CustomRecognition):
     _RECO_NAME = "师门任务-单次点击-OCR"
     _DEFAULT_ROI = [1036, 113, 240, 180]
     _ROI_JITTER = 5  # OCR 起点 (x,y) 每次随机波动 ±N，打破固定 ROI 的 OCR badcase 死循环
-    _DAZAO_ENTRY = "dazao"
-    # override 目标：dazao 链路里「选等级 / 选品类 / 装备名判定」三个 OCR 节点
-    _DAZAO_LEVEL_NODE = "打造-切换等级-选择目标等级"
-    _DAZAO_CATEGORY_NODE = "打造-切换装备-选择目标装备"
-    _DAZAO_NAME_NODE = "打造-打造装备-收集材料"
     # 点击师门任务条目后，面板出现「使用抄本」按钮 —— 用兜底节点清除
     _CHAOBEN_FALLBACK_NODE = "师门任务-任务分支-抄本兜底-入口"
     _CHAOBEN_FALLBACK_TIMEOUT = 1000  # 兜底识别上限，防非抄本任务时阻塞状态机
     # 连续 N 次未识别到师门任务 → 飞回长安一次，打破「面板 OCR 持续空/误读」卡死
     _MISS_STREAK_LIMIT = 5
     _BACK_TO_MAIN_ENTRY = "打开大地图_69副本"
-    # 明确要求购买的师门任务应点击任务自动寻路到商店，不能仅因物品是装备就强制进入打造。
-    _PURCHASE_MARKERS = ("去买", "买个", "买一", "购买", "购置")
 
     _50_MAP = {
         # 防具
@@ -83,14 +73,8 @@ class ShimenRenwuDecide(CustomRecognition):
         return [x + dx, y + dy, w, h]
 
     def _reset_miss_streak(self) -> None:
-        """任意命中分支（打造/师门点击）调用，归零连续未命中计数。"""
+        """任意命中分支（装备购买/普通师门点击）调用，归零连续未命中计数。"""
         self._miss_streak = 0
-
-    @classmethod
-    def _is_purchase_task(cls, full_text: str) -> bool:
-        """任务文本包含明确购买指令时返回 True，购买语义优先于装备名映射。"""
-        compact_text = "".join(full_text.split())
-        return any(marker in compact_text for marker in cls._PURCHASE_MARKERS)
 
     def _on_miss(self, context: Context) -> CustomRecognition.AnalyzeResult:
         """记录一次「未识别到师门任务」。
@@ -146,27 +130,13 @@ class ShimenRenwuDecide(CustomRecognition):
         for cat, name in self._50_MAP.items():
             name_to_target.setdefault(name, ("50", cat))
 
-        # ① 命中打造类任务：装备名 + 缺少物品，且没有明确购买语义。
-        # “去买个蛇形月”等任务直接点击任务条目，让游戏自动寻路购买，不能误走打造。
+        # ① 命中缺少的装备：所有师门装备任务统一点击任务自动寻路购买，不再触发打造。
         hit_name = next((n for n in name_to_target if n in full_text), None)
         not_own = "拥有0" in full_text or "0/1" in full_text
-        purchase_task = self._is_purchase_task(full_text)
-        if hit_name and not_own and purchase_task:
-            logger.info(f"[shimen_decide] 命中购买任务: {hit_name}，跳过打造并点击任务自动寻路购买")
-        elif hit_name and not_own:
-            level, category = name_to_target[hit_name]
-            logger.info(f"[shimen_decide] 命中打造任务: {level}级 {category} -> {hit_name}")
-            context.override_pipeline({
-                self._DAZAO_LEVEL_NODE: {"expected": [level]},
-                self._DAZAO_CATEGORY_NODE: {"expected": [category]},
-                self._DAZAO_NAME_NODE: {"expected": [hit_name]},
-            })
-            context.run_task(self._DAZAO_ENTRY)
+        if hit_name and not_own:
+            logger.info(f"[shimen_decide] 命中装备购买任务: {hit_name}，点击任务自动寻路购买")
 
-            self._reset_miss_streak()
-            return CustomRecognition.AnalyzeResult(box=None, detail=f"打造任务:{hit_name} 完成")
-
-        # ② 非打造类师门任务：agent 内直接下发点击，返回未识别（box=None）
+        # ② 所有师门任务统一在 agent 内点击；装备任务由游戏自动寻路进入购买。
         for res in results:
             if "师门" in res.text:
                 center_x = res.box[0] + res.box[2] // 2
