@@ -153,6 +153,9 @@
         "on_error": []
     },
     "点击运镖任务NPC": {
+        "focus": {
+            "Node.Action.Succeeded": "已点击‘运镖任务’文字下方的郑镖头，等待押镖选择界面"
+        },
         "recognition": "OCR",
         "expected": [
             "运镖任.*"
@@ -164,7 +167,14 @@
             220
         ],
         "action": "Click",
-        "post_delay": 1500
+        "target_offset": [
+            20,
+            55,
+            -40,
+            30
+        ],
+        "post_delay": 2000,
+        "max_hit": 5
     },
     "运镖完成-主界面": {
         "recognition": "TemplateMatch",
