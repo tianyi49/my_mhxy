@@ -121,6 +121,9 @@
         ]
     },
     "活动-运镖-开始-点击参加": {
+        "focus": {
+            "Node.Action.Succeeded": "已点击运镖活动‘参加’，等待自动寻路至郑镖头"
+        },
         "recognition": "OCR",
         "expected": [
             "参加"
@@ -299,10 +302,17 @@
         "focus": {
             "Node.Recognition.Succeeded": "第1次普通运镖完成，开始第2次"
         },
-        "recognition": "And",
-        "all_of": [
-            "运镖完成-主界面",
-            "运镖完成-郑镖头"
+        "recognition": "OCR",
+        "expected": [
+            "^郑镖头$",
+            "^运镖$",
+            "^运镖任务$"
+        ],
+        "roi": [
+            500,
+            220,
+            350,
+            280
         ],
         "pre_delay": 3000,
         "next": [
@@ -310,6 +320,9 @@
         ]
     },
     "运镖第2轮-点击郑镖头": {
+        "focus": {
+            "Node.Action.Succeeded": "已点击郑镖头人物，等待第2次押镖选项"
+        },
         "recognition": "OCR",
         "expected": [
             "^郑镖头$",
@@ -323,13 +336,14 @@
             280
         ],
         "action": "Click",
-        "target": [
-            580,
-            300,
-            180,
-            180
+        "target_offset": [
+            20,
+            55,
+            -40,
+            30
         ],
-        "post_delay": 1500,
+        "post_delay": 2000,
+        "max_hit": 5,
         "timeout": 60000,
         "next": [
             "运镖第2轮-选择普通镖银",
@@ -417,10 +431,17 @@
         "focus": {
             "Node.Recognition.Succeeded": "第2次普通运镖完成，开始第3次"
         },
-        "recognition": "And",
-        "all_of": [
-            "运镖完成-主界面",
-            "运镖完成-郑镖头"
+        "recognition": "OCR",
+        "expected": [
+            "^郑镖头$",
+            "^运镖$",
+            "^运镖任务$"
+        ],
+        "roi": [
+            500,
+            220,
+            350,
+            280
         ],
         "pre_delay": 3000,
         "next": [
@@ -428,6 +449,9 @@
         ]
     },
     "运镖第3轮-点击郑镖头": {
+        "focus": {
+            "Node.Action.Succeeded": "已点击郑镖头人物，等待第3次押镖选项"
+        },
         "recognition": "OCR",
         "expected": [
             "^郑镖头$",
@@ -441,13 +465,14 @@
             280
         ],
         "action": "Click",
-        "target": [
-            580,
-            300,
-            180,
-            180
+        "target_offset": [
+            20,
+            55,
+            -40,
+            30
         ],
-        "post_delay": 1500,
+        "post_delay": 2000,
+        "max_hit": 5,
         "timeout": 60000,
         "next": [
             "运镖第3轮-选择普通镖银",
@@ -535,10 +560,17 @@
         "focus": {
             "Node.Recognition.Succeeded": "3次普通运镖均已完成"
         },
-        "recognition": "And",
-        "all_of": [
-            "运镖完成-主界面",
-            "运镖完成-郑镖头"
+        "recognition": "OCR",
+        "expected": [
+            "^郑镖头$",
+            "^运镖$",
+            "^运镖任务$"
+        ],
+        "roi": [
+            500,
+            220,
+            350,
+            280
         ],
         "pre_delay": 3000,
         "next": [
