@@ -21,16 +21,16 @@
                 },
                 {
                     "name": "小时",
-                    "description": "输入范围00-23",
+                    "description": "输入范围00-23，默认23点",
                     "pipeline_type": "int",
-                    "default": "",
+                    "default": "23",
                     "verify": "^(2[0-3]|[01]?\\d)$"
                 },
                 {
                     "name": "分钟",
-                    "description": "输入范围00-59",
+                    "description": "输入范围00-59，默认30分",
                     "pipeline_type": "int",
-                    "default": "",
+                    "default": "30",
                     "verify": "^[0-5]?\\d$"
                 }
             ],
