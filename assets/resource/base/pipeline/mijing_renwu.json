@@ -1,6 +1,7 @@
 {
     "mijing_renwu": {
         "next": [
+            "[JumpBack]清理主界面使用-关闭",
             "识别位置-东海湾-秘境-过渡",
             "[JumpBack]panduan_zhujiemian"
         ]
@@ -193,6 +194,9 @@
         ]
     },
     "秘境降妖-海底秘境-继续挑战": {
+        "focus": {
+            "Node.PipelineNode.Failed": "未进入秘境挑战界面，重新清理主界面后接取"
+        },
         "recognition": "OCR",
         "expected": [
             "挑战"
@@ -213,7 +217,19 @@
             "mijing_tongguan",
             "mijing_shibai",
             "[JumpBack]战斗中-等待20秒"
+        ],
+        "on_error": [
+            "秘境接取失败重试"
         ]
+    },
+    "秘境接取失败重试": {
+        "max_hit": 2,
+        "pre_delay": 1000,
+        "next": [
+            "[JumpBack]清理主界面使用-关闭",
+            "mijing_renwu"
+        ],
+        "on_error": []
     },
     "海底秘境-指定关卡结束任务": {
         "focus": {

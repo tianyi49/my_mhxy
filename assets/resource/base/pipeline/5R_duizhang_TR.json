@@ -30,22 +30,29 @@
         ]
     },
     "队长踢人-进入主界面": {
-        "recognition": "TemplateMatch",
-        "template": [
-            "duiwu/duiwu-zudui.png",
-            "duiwu/duiwu-duiwu.png"
-        ],
-        "roi": [
-            0,
-            0,
-            229,
-            106
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "TemplateMatch",
+                "template": [
+                    "duiwu/duiwu-zudui.png",
+                    "duiwu/duiwu-duiwu.png"
+                ],
+                "roi": [0, 0, 229, 106]
+            },
+            {
+                "recognition": "OCR",
+                "expected": ["^队伍$"],
+                "roi": [35, 5, 190, 100]
+            }
         ],
         "next": [
             "队长踢人-未创建队伍",
+            "队长踢人-首位是助战",
             "[JumpBack]队长踢人-选人",
             "队长踢人-只有自己-退出队伍"
-        ]
+        ],
+        "on_error": []
     },
     "队长踢人-未创建队伍": {
         "focus": {
@@ -92,6 +99,24 @@
             "队长踢人-选人-点击请离队伍"
         ]
     },
+    "队长踢人-首位是助战": {
+        "focus": {
+            "Node.Recognition.Succeeded": "真实队员已全部请离，忽略助战并解散队伍"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "助战"
+        ],
+        "roi": [
+            300,
+            115,
+            220,
+            90
+        ],
+        "next": [
+            "队长踢人-解散队伍"
+        ]
+    },
     "队长踢人-选人-点击请离队伍": {
         "recognition": "OCR",
         "expected": [
@@ -108,6 +133,7 @@
         "post_delay": 1000,
         "next": [
             "队长踢人-确认请离",
+            "队长踢人-首位是助战",
             "[JumpBack]队长踢人-选人"
         ]
     },
@@ -164,8 +190,10 @@
         "post_delay": 1000,
         "next": [
             "队长踢人-确认解散",
-            "队长踢人-未创建队伍"
-        ]
+            "队长踢人-未创建队伍",
+            "[JumpBack]队长踢人-验证已解散"
+        ],
+        "on_error": []
     },
     "队长踢人-确认解散": {
         "recognition": "OCR",
@@ -181,7 +209,24 @@
         "action": "Click",
         "post_delay": 1000,
         "next": [
-            "队长踢人-未创建队伍"
-        ]
+            "队长踢人-未创建队伍",
+            "[JumpBack]队长踢人-验证已解散"
+        ],
+        "on_error": []
+    },
+    "队长踢人-验证已解散": {
+        "max_hit": 2,
+        "pre_delay": 1000,
+        "action": "ClickKey",
+        "key": [
+            57,
+            48
+        ],
+        "post_delay": 1000,
+        "next": [
+            "队长踢人-未创建队伍",
+            "[JumpBack]队伍界面-按键打开失败-点击队伍图标"
+        ],
+        "on_error": []
     }
 }
