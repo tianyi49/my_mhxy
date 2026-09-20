@@ -156,6 +156,9 @@
         ]
     },
     "点击地图-百晓仙子": {
+        "focus": {
+            "Node.PipelineNode.Failed": "未能到达百晓仙子，重新执行副本入口流程"
+        },
         "recognition": "Or",
         "any_of": [
             {
@@ -190,18 +193,35 @@
             }
         ],
         "action": "Click",
-        "target_offset": [
-            3,
-            3,
-            -4,
-            -8
+        "target": [
+            437,
+            367,
+            77,
+            20
         ],
         "post_delay": 1000,
+        "timeout": 60000,
         "next": [
             "[JumpBack]自动寻路中-图片识别",
             "[JumpBack]再次点击地图百晓仙子",
             "百晓仙子-选择副本"
+        ],
+        "on_error": [
+            "副本69-入口失败重试"
         ]
+    },
+    "副本69-入口失败重试": {
+        "focus": {
+            "Node.PipelineNode.Starting": "副本入口未打开，返回主界面后有限次数重试",
+            "Node.PipelineNode.Failed": "副本入口连续重试仍失败，本次副本任务失败"
+        },
+        "max_hit": 3,
+        "pre_delay": 1000,
+        "next": [
+            "[JumpBack]清理主界面使用-关闭",
+            "fuben69"
+        ],
+        "on_error": []
     },
     "百晓仙子-选择副本": {
         "recognition": "OCR",
