@@ -137,6 +137,7 @@
         "next": [
             "识别拓印_停止",
             "[JumpBack]清理主界面使用-关闭",
+            "[JumpBack]战斗中-等待20秒",
             "[JumpBack]点击运镖任务NPC",
             "运镖第1轮-选择普通镖银"
         ],
@@ -171,12 +172,6 @@
             220
         ],
         "action": "Click",
-        "target_offset": [
-            20,
-            55,
-            -40,
-            30
-        ],
         "post_delay": 2000,
         "max_hit": 5
     },
@@ -314,12 +309,6 @@
             280
         ],
         "action": "Click",
-        "target_offset": [
-            20,
-            55,
-            -40,
-            30
-        ],
         "post_delay": 2000,
         "next": [
             "运镖第2轮-选择普通镖银",
@@ -341,12 +330,6 @@
             280
         ],
         "action": "Click",
-        "target_offset": [
-            20,
-            55,
-            -40,
-            30
-        ],
         "post_delay": 2000,
         "max_hit": 5,
         "timeout": 60000,
@@ -447,12 +430,6 @@
             280
         ],
         "action": "Click",
-        "target_offset": [
-            20,
-            55,
-            -40,
-            30
-        ],
         "post_delay": 2000,
         "next": [
             "运镖第3轮-选择普通镖银",
@@ -474,12 +451,6 @@
             280
         ],
         "action": "Click",
-        "target_offset": [
-            20,
-            55,
-            -40,
-            30
-        ],
         "post_delay": 2000,
         "max_hit": 5,
         "timeout": 60000,

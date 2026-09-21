@@ -104,12 +104,99 @@
             "[JumpBack]点击登录游戏",
             "[JumpBack]amazing_discount",
             "[JumpBack]close_exit_confirm",
+            "[JumpBack]帮派任务完成弹窗-确定",
+            "[JumpBack]回主界面-关闭秘境界面",
+            "[JumpBack]回主界面-关闭队伍界面",
+            "[JumpBack]回主界面-关闭师门界面",
             "[JumpBack]panduan_zhujiemian-关闭顶层窗口",
             "[JumpBack]跳过剧情动画-快进键",
             "zai_zhujiemian",
             "[JumpBack]panduan_zhujiemian_ks",
             "[JumpBack]panduan_zhujiemian_restart"
         ]
+    },
+    "帮派任务完成弹窗-确定": {
+        "recognition": "OCR",
+        "expected": [
+            "帮派任务完成"
+        ],
+        "roi": [
+            330,
+            170,
+            620,
+            115
+        ],
+        "action": "Click",
+        "target": [
+            390,
+            548,
+            235,
+            70
+        ],
+        "post_delay": 1000
+    },
+    "回主界面-关闭秘境界面": {
+        "recognition": "OCR",
+        "expected": [
+            "秘境降妖",
+            "秘境挑战"
+        ],
+        "roi": [
+            400,
+            0,
+            760,
+            180
+        ],
+        "action": "Click",
+        "target": [
+            1065,
+            25,
+            100,
+            90
+        ],
+        "post_delay": 800
+    },
+    "回主界面-关闭队伍界面": {
+        "recognition": "OCR",
+        "expected": [
+            "创建队伍",
+            "便捷组队",
+            "退出队伍"
+        ],
+        "roi": [
+            55,
+            35,
+            1170,
+            660
+        ],
+        "action": "Click",
+        "target": [
+            1165,
+            0,
+            110,
+            90
+        ],
+        "post_delay": 800
+    },
+    "回主界面-关闭师门界面": {
+        "recognition": "OCR",
+        "expected": [
+            "师门任务"
+        ],
+        "roi": [
+            120,
+            90,
+            1010,
+            540
+        ],
+        "action": "Click",
+        "target": [
+            1065,
+            80,
+            105,
+            100
+        ],
+        "post_delay": 800
     },
     "panduan_zhujiemian-关闭顶层窗口": {
         "recognition": "TemplateMatch",

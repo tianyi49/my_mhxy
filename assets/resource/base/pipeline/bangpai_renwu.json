@@ -34,6 +34,29 @@
         "post_delay": 1000
     },
     "主界面-领取帮派任务": {
+        "next": [
+            "帮派任务NPC对话-直接领取",
+            "主界面-领取帮派任务-打开活动"
+        ]
+    },
+    "帮派任务NPC对话-直接领取": {
+        "recognition": "OCR",
+        "expected": [
+            "帮派任务"
+        ],
+        "roi": [
+            920,
+            270,
+            325,
+            235
+        ],
+        "action": "Click",
+        "post_delay": 1000,
+        "next": [
+            "click_bangpai_ttwf"
+        ]
+    },
+    "主界面-领取帮派任务-打开活动": {
         "recognition": "TemplateMatch",
         "template": [
             "zonghe/jiahao.png",
