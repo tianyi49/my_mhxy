@@ -138,8 +138,9 @@
             "识别拓印_停止",
             "[JumpBack]清理主界面使用-关闭",
             "[JumpBack]战斗中-等待20秒",
+            "运镖第1轮-选择普通镖银",
             "[JumpBack]点击运镖任务NPC",
-            "运镖第1轮-选择普通镖银"
+            "[JumpBack]点击运镖任务NPC-点击名称"
         ],
         "on_error": [
             "运镖接取失败重试"
@@ -172,8 +173,32 @@
             220
         ],
         "action": "Click",
+        "target_offset": [
+            20,
+            55,
+            -40,
+            30
+        ],
         "post_delay": 2000,
-        "max_hit": 5
+        "max_hit": 3
+    },
+    "点击运镖任务NPC-点击名称": {
+        "focus": {
+            "Node.Action.Succeeded": "点击郑镖头人物未弹出选项，改为点击‘运镖任务’名称兜底"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "运镖任.*"
+        ],
+        "roi": [
+            350,
+            100,
+            350,
+            220
+        ],
+        "action": "Click",
+        "post_delay": 2000,
+        "max_hit": 3
     },
     "运镖完成-主界面": {
         "recognition": "TemplateMatch",
@@ -330,6 +355,12 @@
             280
         ],
         "action": "Click",
+        "target_offset": [
+            20,
+            55,
+            -40,
+            30
+        ],
         "post_delay": 2000,
         "max_hit": 5,
         "timeout": 60000,
@@ -451,6 +482,12 @@
             280
         ],
         "action": "Click",
+        "target_offset": [
+            20,
+            55,
+            -40,
+            30
+        ],
         "post_delay": 2000,
         "max_hit": 5,
         "timeout": 60000,
