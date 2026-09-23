@@ -35,6 +35,11 @@
     },
     "主界面-领取帮派任务": {
         "next": [
+            "[JumpBack]重连失败-重新登录",
+            "[JumpBack]回主界面-确认奖励弹窗",
+            "[JumpBack]回主界面-关闭师门界面",
+            "[JumpBack]回主界面-关闭人物属性",
+            "[JumpBack]panduan_zhujiemian-关闭顶层窗口",
             "帮派任务NPC对话-直接领取",
             "主界面-领取帮派任务-打开活动"
         ]
@@ -389,7 +394,7 @@
         ],
         "action": "Click",
         "next": [
-            "panduan_zhujiemian"
+            "空节点"
         ]
     },
     "任务分支-摆摊购买": {
