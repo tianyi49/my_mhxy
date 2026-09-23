@@ -38,12 +38,24 @@
                     "duiwu/duiwu-zudui.png",
                     "duiwu/duiwu-duiwu.png"
                 ],
-                "roi": [0, 0, 229, 106]
+                "roi": [
+                    0,
+                    0,
+                    229,
+                    106
+                ]
             },
             {
                 "recognition": "OCR",
-                "expected": ["^队伍$"],
-                "roi": [35, 5, 190, 100]
+                "expected": [
+                    "^队伍$"
+                ],
+                "roi": [
+                    35,
+                    5,
+                    190,
+                    100
+                ]
             }
         ],
         "next": [

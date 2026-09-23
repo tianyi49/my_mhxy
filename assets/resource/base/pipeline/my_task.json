@@ -458,12 +458,25 @@
                     "zhandou/zidong.png",
                     "zhandou/quxiao.png"
                 ],
-                "roi": [1175, 549, 103, 159]
+                "roi": [
+                    1175,
+                    549,
+                    103,
+                    159
+                ]
             },
             {
                 "recognition": "OCR",
-                "expected": ["自动", "取消"],
-                "roi": [1160, 530, 120, 190]
+                "expected": [
+                    "自动",
+                    "取消"
+                ],
+                "roi": [
+                    1160,
+                    530,
+                    120,
+                    190
+                ]
             }
         ],
         "pre_delay": 100000
@@ -477,12 +490,25 @@
                     "zhandou/zidong.png",
                     "zhandou/quxiao.png"
                 ],
-                "roi": [1175, 549, 103, 159]
+                "roi": [
+                    1175,
+                    549,
+                    103,
+                    159
+                ]
             },
             {
                 "recognition": "OCR",
-                "expected": ["自动", "取消"],
-                "roi": [1160, 530, 120, 190]
+                "expected": [
+                    "自动",
+                    "取消"
+                ],
+                "roi": [
+                    1160,
+                    530,
+                    120,
+                    190
+                ]
             }
         ],
         "pre_delay": 50000
@@ -496,12 +522,25 @@
                     "zhandou/zidong.png",
                     "zhandou/quxiao.png"
                 ],
-                "roi": [1175, 549, 103, 159]
+                "roi": [
+                    1175,
+                    549,
+                    103,
+                    159
+                ]
             },
             {
                 "recognition": "OCR",
-                "expected": ["自动", "取消"],
-                "roi": [1160, 530, 120, 190]
+                "expected": [
+                    "自动",
+                    "取消"
+                ],
+                "roi": [
+                    1160,
+                    530,
+                    120,
+                    190
+                ]
             }
         ],
         "pre_delay": 20000
@@ -515,12 +554,25 @@
                     "zhandou/zidong.png",
                     "zhandou/quxiao.png"
                 ],
-                "roi": [1175, 549, 103, 159]
+                "roi": [
+                    1175,
+                    549,
+                    103,
+                    159
+                ]
             },
             {
                 "recognition": "OCR",
-                "expected": ["自动", "取消"],
-                "roi": [1160, 530, 120, 190]
+                "expected": [
+                    "自动",
+                    "取消"
+                ],
+                "roi": [
+                    1160,
+                    530,
+                    120,
+                    190
+                ]
             }
         ],
         "pre_delay": 10000
@@ -534,12 +586,25 @@
                     "zhandou/zidong.png",
                     "zhandou/quxiao.png"
                 ],
-                "roi": [1175, 549, 103, 159]
+                "roi": [
+                    1175,
+                    549,
+                    103,
+                    159
+                ]
             },
             {
                 "recognition": "OCR",
-                "expected": ["自动", "取消"],
-                "roi": [1160, 530, 120, 190]
+                "expected": [
+                    "自动",
+                    "取消"
+                ],
+                "roi": [
+                    1160,
+                    530,
+                    120,
+                    190
+                ]
             }
         ],
         "pre_delay": 5000

@@ -82,11 +82,12 @@ def main() -> int:
 
     had_conflicts = False
     for relative_path in args.paths:
-        runtime_relative = (
-            relative_path.removeprefix("assets/")
-            if relative_path.startswith("assets/resource/")
-            else relative_path
-        )
+        if relative_path == "assets/interface.json":
+            runtime_relative = "interface.json"
+        elif relative_path.startswith(("assets/resource/", "assets/tasks/")):
+            runtime_relative = relative_path.removeprefix("assets/")
+        else:
+            runtime_relative = relative_path
         base = _git_json(args.base, relative_path)
         local = _git_json(args.local, relative_path)
         upstream = json.loads(
@@ -94,6 +95,12 @@ def main() -> int:
         )
         conflicts: list[str] = []
         merged = _merge(base, local, upstream, "$", conflicts)
+        # The unpacked runtime is authoritative for its release marker.  Local
+        # patches may be carried across releases, but must not make a v3.0.6
+        # runtime report the previous source snapshot's version.
+        if relative_path == "assets/interface.json" and conflicts == ["$.version"]:
+            merged["version"] = upstream["version"]
+            conflicts.clear()
         if conflicts:
             had_conflicts = True
             print(f"CONFLICT {relative_path}")

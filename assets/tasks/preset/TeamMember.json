@@ -52,8 +52,8 @@
                         "是否使用Ai进行答题": "Yes",
                         "Seed_apikey": {
                             "apikey": "",
-                            "url": "https://api.minimaxi.com/v1/chat/completions",
-                            "model": "MiniMax-M3"
+                            "url": "",
+                            "model": ""
                         }
                     }
                 },

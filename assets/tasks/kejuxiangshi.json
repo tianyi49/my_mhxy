@@ -53,18 +53,18 @@
                     "name": "apikey",
                     "pipeline_type": "string",
                     "default": "",
-                    "description": "API密钥（启用AI答题时必填；留空将降级选择A）"
+                    "description": "API密钥"
                 },
                 {
                     "name": "url",
                     "pipeline_type": "string",
-                    "default": "https://api.minimaxi.com/v1/chat/completions",
+                    "default": "",
                     "description": "url链接"
                 },
                 {
                     "name": "model",
                     "pipeline_type": "string",
-                    "default": "MiniMax-M3",
+                    "default": "",
                     "description": "模型"
                 }
             ],

@@ -110,7 +110,7 @@
             1040,
             630
         ],
-        "pre_delay": 1000,
+        "pre_delay": 500,
         "action": "Click",
         "target": [
             437,
@@ -339,6 +339,40 @@
         "action": "Click",
         "post_delay": 1000
     },
+    "已经在70级侠士副本-过渡": {
+        "recognition": "And",
+        "all_of": [
+            {
+                "recognition": "OCR",
+                "expected": "因缘绘",
+                "roi": [
+                    502,
+                    53,
+                    94,
+                    42
+                ]
+            },
+            {
+                "recognition": "OCR",
+                "expected": [
+                    "桃花定情.*侠士",
+                    "流沙净.*侠士",
+                    "万丈山.*侠士",
+                    "踏西行.*侠士",
+                    "明珠还.*侠士"
+                ],
+                "roi": [
+                    1037,
+                    174,
+                    210,
+                    41
+                ]
+            }
+        ],
+        "next": [
+            "115进入70级侠士副本-成功"
+        ]
+    },
     "115进入70级侠士副本-成功": {
         "focus": {
             "Node.Recognition.Succeeded": "进入70级侠士副本成功，开始70级侠士副本"
@@ -361,7 +395,8 @@
             "[JumpBack]推荐好友信息",
             "[JumpBack]关闭福利弹窗",
             "[JumpBack]关闭师门弹窗",
-            "[JumpBack]任务栏切换为任务"
+            "[JumpBack]任务栏切换为任务",
+            "[JumpBack]关闭任务界面"
         ]
     },
     "115-70级副本完成-退出": {
@@ -514,7 +549,8 @@
             "[JumpBack]推荐好友信息",
             "[JumpBack]关闭福利弹窗",
             "[JumpBack]关闭师门弹窗",
-            "[JumpBack]任务栏切换为任务"
+            "[JumpBack]任务栏切换为任务",
+            "[JumpBack]关闭任务界面"
         ]
     },
     "115-50侠士-副本完成-退出": {
@@ -650,7 +686,8 @@
             "[JumpBack]推荐好友信息",
             "[JumpBack]关闭福利弹窗",
             "[JumpBack]关闭师门弹窗",
-            "[JumpBack]任务栏切换为任务"
+            "[JumpBack]任务栏切换为任务",
+            "[JumpBack]关闭任务界面"
         ]
     },
     "115-50普通-1-副本完成-退出": {
@@ -786,7 +823,8 @@
             "[JumpBack]推荐好友信息",
             "[JumpBack]关闭福利弹窗",
             "[JumpBack]关闭师门弹窗",
-            "[JumpBack]任务栏切换为任务"
+            "[JumpBack]任务栏切换为任务",
+            "[JumpBack]关闭任务界面"
         ]
     },
     "115-50普通-2-副本完成-退出": {
@@ -922,7 +960,8 @@
             "[JumpBack]推荐好友信息",
             "[JumpBack]关闭福利弹窗",
             "[JumpBack]关闭师门弹窗",
-            "[JumpBack]任务栏切换为任务"
+            "[JumpBack]任务栏切换为任务",
+            "[JumpBack]关闭任务界面"
         ]
     },
     "115-50普通-3-副本完成-退出": {

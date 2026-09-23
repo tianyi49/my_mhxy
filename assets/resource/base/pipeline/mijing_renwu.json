@@ -214,6 +214,7 @@
             "海底秘境-指定关卡结束任务",
             "[JumpBack]秘境-点击进入战斗",
             "[JumpBack]海底秘境-点击关卡",
+            "[JumpBack]关闭酒店老板弹窗",
             "mijing_tongguan",
             "mijing_shibai",
             "[JumpBack]战斗中-等待20秒"
@@ -235,19 +236,15 @@
         "focus": {
             "Node.Recognition.Succeeded": "{name}"
         },
-        "recognition": "OCR",
-        "expected": [
-            "第25关"
-        ],
-        "roi": [
-            1014,
-            209,
-            101,
-            109
-        ],
+        "recognition": "Custom",
+        "custom_recognition": "ExpressionRecognition",
+        "custom_recognition_param": {
+            "expression": "{海底秘境-关卡识别}>=25"
+        },
         "next": [
             "[JumpBack]清理主界面使用-关闭",
             "秘境-点击离开",
+            "[JumpBack]战斗中-等待5秒",
             "[JumpBack]panduan_zhujiemian"
         ]
     },
@@ -400,6 +397,7 @@
             "日月之井-指定关卡结束任务",
             "[JumpBack]秘境-点击进入战斗",
             "[JumpBack]日月之井-点击关卡",
+            "[JumpBack]关闭酒店老板弹窗",
             "日月之井-通关",
             "日月之井-失败",
             "[JumpBack]战斗中-等待20秒"
@@ -410,6 +408,7 @@
             "日月之井-指定关卡结束任务",
             "[JumpBack]秘境-点击进入战斗",
             "[JumpBack]日月之井-点击关卡",
+            "[JumpBack]关闭酒店老板弹窗",
             "日月之井-通关",
             "日月之井-失败",
             "[JumpBack]战斗中-等待20秒"
@@ -438,17 +437,15 @@
         "focus": {
             "Node.Recognition.Succeeded": "{name}"
         },
-        "recognition": "OCR",
-        "expected": [],
-        "roi": [
-            1012,
-            169,
-            115,
-            74
-        ],
+        "recognition": "Custom",
+        "custom_recognition": "ExpressionRecognition",
+        "custom_recognition_param": {
+            "expression": "{日月之井-关卡识别}>=25"
+        },
         "next": [
             "[JumpBack]清理主界面使用-关闭",
             "秘境-点击离开",
+            "[JumpBack]战斗中-等待5秒",
             "[JumpBack]panduan_zhujiemian"
         ]
     },
@@ -670,6 +667,54 @@
             22,
             124,
             34
+        ]
+    },
+    "mm": {
+        "next": [
+            "[JumpBack]海底秘境-关闭进入战斗",
+            "海底秘境-指定关卡结束任务",
+            "[JumpBack]秘境-点击进入战斗",
+            "[JumpBack]海底秘境-点击关卡",
+            "[JumpBack]关闭酒店老板弹窗",
+            "mijing_tongguan",
+            "mijing_shibai",
+            "[JumpBack]战斗中-等待20秒"
+        ]
+    },
+    "海底秘境-关卡识别": {
+        "recognition": "OCR",
+        "expected": [],
+        "roi": [
+            1014,
+            209,
+            101,
+            109
+        ]
+    },
+    "关闭酒店老板弹窗": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "zonghe/guanbi1.png",
+            "zonghe/guanbi2.png"
+        ],
+        "roi": [
+            1106,
+            7,
+            77,
+            84
+        ],
+        "pre_delay": 500,
+        "action": "Click",
+        "post_delay": 500
+    },
+    "日月之井-关卡识别": {
+        "recognition": "OCR",
+        "expected": [],
+        "roi": [
+            1012,
+            169,
+            115,
+            74
         ]
     }
 }
