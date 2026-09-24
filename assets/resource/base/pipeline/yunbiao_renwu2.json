@@ -336,10 +336,23 @@
         "action": "Click",
         "post_delay": 2000,
         "next": [
+            "运镖第2轮-接取中心"
+        ]
+    },
+    "运镖第2轮-接取中心": {
+        "focus": {
+            "Node.PipelineNode.Starting": "第1次运镖完成，开始有限重试接取第2次",
+            "Node.PipelineNode.Failed": "第2次普通运镖接取重试耗尽，本次任务失败"
+        },
+        "timeout": 120000,
+        "next": [
             "运镖第2轮-选择普通镖银",
             "[JumpBack]运镖第2轮-点击郑镖头",
-            "运镖第2轮-固定位置点击郑镖头"
-        ]
+            "[JumpBack]运镖第2轮-固定位置点击郑镖头",
+            "[JumpBack]运镖第2轮-点击任务追踪人物",
+            "[JumpBack]运镖第2轮-点击任务追踪名称"
+        ],
+        "on_error": []
     },
     "运镖第2轮-点击郑镖头": {
         "focus": {
@@ -356,23 +369,8 @@
             280
         ],
         "action": "Click",
-        "target_offset": [
-            20,
-            55,
-            -40,
-            30
-        ],
         "post_delay": 2000,
-        "max_hit": 5,
-        "timeout": 60000,
-        "next": [
-            "运镖第2轮-选择普通镖银",
-            "[JumpBack]运镖第2轮-点击郑镖头",
-            "运镖第2轮-固定位置点击郑镖头"
-        ],
-        "on_error": [
-            "运镖第2轮-固定位置点击郑镖头"
-        ]
+        "max_hit": 5
     },
     "运镖第2轮-固定位置点击郑镖头": {
         "focus": {
@@ -380,15 +378,55 @@
         },
         "action": "Click",
         "target": [
-            575,
-            265,
-            145,
-            175
+            570,
+            285,
+            100,
+            100
         ],
         "post_delay": 2000,
-        "next": [
-            "运镖第2轮-选择普通镖银"
-        ]
+        "max_hit": 3
+    },
+    "运镖第2轮-点击任务追踪人物": {
+        "focus": {
+            "Node.Action.Succeeded": "第2次接取未弹出选项，点击任务追踪人物重新定位郑镖头"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "运镖任.*"
+        ],
+        "roi": [
+            350,
+            100,
+            350,
+            220
+        ],
+        "action": "Click",
+        "target_offset": [
+            20,
+            55,
+            -40,
+            30
+        ],
+        "post_delay": 10000,
+        "max_hit": 2
+    },
+    "运镖第2轮-点击任务追踪名称": {
+        "focus": {
+            "Node.Action.Succeeded": "第2次接取重新定位仍失败，点击任务追踪名称兜底"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "运镖任.*"
+        ],
+        "roi": [
+            350,
+            100,
+            350,
+            220
+        ],
+        "action": "Click",
+        "post_delay": 10000,
+        "max_hit": 2
     },
     "运镖第2轮-选择普通镖银": {
         "recognition": "OCR",
@@ -483,10 +521,23 @@
         "action": "Click",
         "post_delay": 2000,
         "next": [
+            "运镖第3轮-接取中心"
+        ]
+    },
+    "运镖第3轮-接取中心": {
+        "focus": {
+            "Node.PipelineNode.Starting": "第2次运镖完成，开始有限重试接取第3次",
+            "Node.PipelineNode.Failed": "第3次普通运镖接取重试耗尽，本次任务失败"
+        },
+        "timeout": 120000,
+        "next": [
             "运镖第3轮-选择普通镖银",
             "[JumpBack]运镖第3轮-点击郑镖头",
-            "运镖第3轮-固定位置点击郑镖头"
-        ]
+            "[JumpBack]运镖第3轮-固定位置点击郑镖头",
+            "[JumpBack]运镖第3轮-点击任务追踪人物",
+            "[JumpBack]运镖第3轮-点击任务追踪名称"
+        ],
+        "on_error": []
     },
     "运镖第3轮-点击郑镖头": {
         "focus": {
@@ -503,23 +554,8 @@
             280
         ],
         "action": "Click",
-        "target_offset": [
-            20,
-            55,
-            -40,
-            30
-        ],
         "post_delay": 2000,
-        "max_hit": 5,
-        "timeout": 60000,
-        "next": [
-            "运镖第3轮-选择普通镖银",
-            "[JumpBack]运镖第3轮-点击郑镖头",
-            "运镖第3轮-固定位置点击郑镖头"
-        ],
-        "on_error": [
-            "运镖第3轮-固定位置点击郑镖头"
-        ]
+        "max_hit": 5
     },
     "运镖第3轮-固定位置点击郑镖头": {
         "focus": {
@@ -527,15 +563,55 @@
         },
         "action": "Click",
         "target": [
-            575,
-            265,
-            145,
-            175
+            570,
+            285,
+            100,
+            100
         ],
         "post_delay": 2000,
-        "next": [
-            "运镖第3轮-选择普通镖银"
-        ]
+        "max_hit": 3
+    },
+    "运镖第3轮-点击任务追踪人物": {
+        "focus": {
+            "Node.Action.Succeeded": "第3次接取未弹出选项，点击任务追踪人物重新定位郑镖头"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "运镖任.*"
+        ],
+        "roi": [
+            350,
+            100,
+            350,
+            220
+        ],
+        "action": "Click",
+        "target_offset": [
+            20,
+            55,
+            -40,
+            30
+        ],
+        "post_delay": 10000,
+        "max_hit": 2
+    },
+    "运镖第3轮-点击任务追踪名称": {
+        "focus": {
+            "Node.Action.Succeeded": "第3次接取重新定位仍失败，点击任务追踪名称兜底"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "运镖任.*"
+        ],
+        "roi": [
+            350,
+            100,
+            350,
+            220
+        ],
+        "action": "Click",
+        "post_delay": 10000,
+        "max_hit": 2
     },
     "运镖第3轮-选择普通镖银": {
         "recognition": "OCR",
