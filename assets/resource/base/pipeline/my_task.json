@@ -284,6 +284,7 @@
         "post_delay": 3000
     },
     "panduan_zhujiemian-关闭顶层窗口": {
+        "max_hit": 3,
         "recognition": "TemplateMatch",
         "template": [
             "zonghe/guanbi1.png",

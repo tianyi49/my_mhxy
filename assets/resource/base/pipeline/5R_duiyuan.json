@@ -178,7 +178,8 @@
             "[JumpBack]队伍-退出组队界面",
             "[JumpBack]战斗中-等待100秒",
             "[JumpBack]队员等待3秒",
-            "[JumpBack]队员等待10秒"
+            "[JumpBack]队员等待10秒",
+            "队员挂机超时退出"
         ]
     },
     "接受队长进入副本申请": {
@@ -224,7 +225,16 @@
         "pre_delay": 3000
     },
     "队员等待10秒": {
+        "max_hit": 540,
         "pre_delay": 10000
+    },
+    "队员挂机超时退出": {
+        "focus": {
+            "Node.PipelineNode.Starting": "队员长时间仍在队伍中，主动退出队伍并结束挂机，避免阻塞后续定时任务"
+        },
+        "next": [
+            "tuichuduiwu"
+        ]
     },
     "等待被踢出队伍": {
         "focus": {
