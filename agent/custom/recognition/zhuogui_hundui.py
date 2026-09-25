@@ -189,13 +189,15 @@ class ZhuoguiTimeGuard(CustomRecognition):
 class ZhuoguiTeamWatchdog(CustomRecognition):
     """连续没有捉鬼进度时触发退队重匹配。
 
-    队伍血条只能证明角色仍在队伍中，不能证明队伍还在执行捉鬼。
-    战斗或自动寻路会刷新进度；只有右侧捉鬼任务但长期不推进时，
-    也会在更宽松的时间窗后重匹配。
+    战斗或自动寻路才会刷新真实进度时间。队伍血条和右侧捉鬼任务
+    只用于选择更宽松的等待阈值；明确识别到未在队伍时快速重匹配。
+    各类界面证据切换不会重置进度时间，避免 OCR 抖动无限续期。
     """
 
     _DEFAULT_IDLE_TIMEOUT = 180
-    _DEFAULT_TASK_ONLY_TIMEOUT = 300
+    _DEFAULT_TASK_ONLY_TIMEOUT = 420
+    _DEFAULT_TEAM_ONLY_TIMEOUT = 420
+    _DEFAULT_NO_TEAM_TIMEOUT = 30
     _STATE_TTL = 8 * 60 * 60
     _states = {}
     _lock = threading.Lock()
@@ -204,6 +206,8 @@ class ZhuoguiTeamWatchdog(CustomRecognition):
         "混队-抓鬼-有效状态-自动寻路",
     )
     _TASK_RECOGNITION = "混队-抓鬼-有效状态-任务追踪"
+    _TEAM_RECOGNITION = "混队-抓鬼-有效状态-队伍中"
+    _NO_TEAM_RECOGNITION = "混队-抓鬼-有效状态-未在队伍"
 
     @classmethod
     def _prune_states(cls, now):
@@ -234,6 +238,16 @@ class ZhuoguiTeamWatchdog(CustomRecognition):
         )
         if not task_only_timeout:
             task_only_timeout = self._DEFAULT_TASK_ONLY_TIMEOUT
+        team_only_timeout = zhuogui_hundui._parse_non_negative_int(
+            param.get("team_only_timeout")
+        )
+        if not team_only_timeout:
+            team_only_timeout = self._DEFAULT_TEAM_ONLY_TIMEOUT
+        no_team_timeout = zhuogui_hundui._parse_non_negative_int(
+            param.get("no_team_timeout")
+        )
+        if not no_team_timeout:
+            no_team_timeout = self._DEFAULT_NO_TEAM_TIMEOUT
 
         progress_name = None
         for name in self._PROGRESS_RECOGNITIONS:
@@ -243,6 +257,12 @@ class ZhuoguiTeamWatchdog(CustomRecognition):
                 break
         task_reco = context.run_recognition(self._TASK_RECOGNITION, argv.image)
         has_task = bool(task_reco and task_reco.hit)
+        team_reco = context.run_recognition(self._TEAM_RECOGNITION, argv.image)
+        has_team = bool(team_reco and team_reco.hit)
+        no_team_reco = context.run_recognition(
+            self._NO_TEAM_RECOGNITION, argv.image
+        )
+        has_no_team_screen = bool(no_team_reco and no_team_reco.hit)
 
         now = time.monotonic()
         task_id = argv.task_detail.task_id
@@ -260,28 +280,55 @@ class ZhuoguiTeamWatchdog(CustomRecognition):
                     "idle_since": now,
                     "last_seen": now,
                     "last_log": now,
+                    "condition": "progress",
                 }
                 return CustomRecognition.AnalyzeResult(
                     box=None,
                     detail={"progress": progress_name},
                 )
 
-            current_timeout = task_only_timeout if has_task else idle_timeout
+            if has_no_team_screen:
+                condition = "no_team"
+                current_timeout = no_team_timeout
+                condition_text = "已确认不在队伍"
+            elif has_task:
+                condition = "task_only"
+                current_timeout = task_only_timeout
+                condition_text = "存在捉鬼任务追踪"
+            elif has_team:
+                condition = "team_only"
+                current_timeout = team_only_timeout
+                condition_text = "仍在队伍中"
+            else:
+                condition = "unknown"
+                current_timeout = idle_timeout
+                condition_text = "未识别到队伍或捉鬼状态"
 
             if state is None:
                 state = {
                     "idle_since": now,
                     "last_seen": now,
                     "last_log": now,
+                    "condition": condition,
                 }
                 self._states[task_id] = state
                 logger.warning(
                     f"[ZhuoguiWatchdog] task_id={task_id} 未检测到战斗或"
                     f"自动寻路，开始 {current_timeout} 秒停滞计时"
-                    f"（捉鬼任务追踪={'存在' if has_task else '不存在'}）"
+                    f"（{condition_text}）"
                 )
             else:
                 state["last_seen"] = now
+                if state.get("condition") != condition:
+                    # OCR 状态会在队伍界面、任务追踪和普通主界面之间切换。
+                    # 只更新证据类型，不重置最后一次真实进度时间，避免靠界面
+                    # 抖动无限延长停滞恢复。
+                    state["condition"] = condition
+                    state["last_log"] = now
+                    logger.warning(
+                        f"[ZhuoguiWatchdog] task_id={task_id} 停滞证据切换为"
+                        f"“{condition_text}”，按 {current_timeout} 秒阈值继续计时"
+                    )
 
             idle_seconds = now - state["idle_since"]
             if idle_seconds < current_timeout:
@@ -297,6 +344,8 @@ class ZhuoguiTeamWatchdog(CustomRecognition):
                         "idle_seconds": int(idle_seconds),
                         "idle_timeout": current_timeout,
                         "has_task": has_task,
+                        "has_team": has_team,
+                        "condition": condition,
                     },
                 )
 
@@ -311,6 +360,8 @@ class ZhuoguiTeamWatchdog(CustomRecognition):
             detail={
                 "idle_seconds": int(idle_seconds),
                 "has_task": has_task,
+                "has_team": has_team,
+                "condition": condition,
                 "action": "leave_and_rematch",
             },
         )

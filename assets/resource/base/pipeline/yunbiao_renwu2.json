@@ -103,8 +103,31 @@
         ],
         "post_delay": 1000,
         "next": [
+            "活动-运镖-已全部完成",
             "活动-运镖-开始",
             "[JumpBack]baotu_huodong_down"
+        ]
+    },
+    "活动-运镖-已全部完成": {
+        "focus": {
+            "Node.Recognition.Succeeded": "活动面板确认普通运镖已完成3次"
+        },
+        "recognition": "Custom",
+        "custom_recognition": "activity_entry",
+        "custom_recognition_param": {
+            "task_names": [
+                "运镖任务",
+                "运镖"
+            ],
+            "button_texts": [
+                "次数3/3",
+                "次数3／3",
+                "完成"
+            ],
+            "infer_button": false
+        },
+        "next": [
+            "空节点"
         ]
     },
     "活动-运镖-开始": {
@@ -321,22 +344,25 @@
     },
     "运镖第1轮-完成": {
         "focus": {
-            "Node.Action.Succeeded": "第1次普通运镖完成，已点击郑镖头开始第2次"
+            "Node.Recognition.Succeeded": "本次普通运镖状态已结束，返回活动面板核验完成次数"
         },
-        "recognition": "OCR",
-        "expected": [
-            "^郑镖头$"
+        "recognition": "Or",
+        "any_of": [
+            "运镖完成-郑镖头",
+            "运镖完成-主界面"
         ],
-        "roi": [
-            500,
-            220,
-            350,
-            280
-        ],
-        "action": "Click",
-        "post_delay": 2000,
+        "pre_delay": 15000,
         "next": [
-            "运镖第2轮-接取中心"
+            "运镖完成-重新核验活动次数"
+        ]
+    },
+    "运镖完成-重新核验活动次数": {
+        "focus": {
+            "Node.PipelineNode.Starting": "重新打开活动面板，以次数x/3决定继续运镖或结束"
+        },
+        "pre_delay": 3000,
+        "next": [
+            "yunbiao_renwu2"
         ]
     },
     "运镖第2轮-接取中心": {

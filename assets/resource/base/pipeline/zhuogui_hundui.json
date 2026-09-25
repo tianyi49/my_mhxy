@@ -375,7 +375,9 @@
         "custom_recognition": "zhuogui_team_watchdog",
         "custom_recognition_param": {
             "idle_timeout": 180,
-            "task_only_timeout": 300
+            "task_only_timeout": 420,
+            "team_only_timeout": 420,
+            "no_team_timeout": 30
         },
         "next": [
             "混队-抓鬼-执行异常重匹配"
@@ -453,6 +455,29 @@
             170,
             243,
             334
+        ]
+    },
+    "混队-抓鬼-有效状态-队伍中": {
+        "recognition": "TemplateMatch",
+        "template": "r5/duiwu_xuetiao.png",
+        "roi": [
+            1036,
+            166,
+            239,
+            333
+        ]
+    },
+    "混队-抓鬼-有效状态-未在队伍": {
+        "recognition": "OCR",
+        "expected": [
+            "尚未创建队伍",
+            "创建队伍"
+        ],
+        "roi": [
+            80,
+            45,
+            1090,
+            640
         ]
     },
     "混队-抓鬼-任务结束": {
