@@ -120,8 +120,8 @@
         "post_delay": 800,
         "post_wait_freezes": 500,
         "next": [
-            "活动-宝图任务-开始",
             "活动-宝图任务-已完成",
+            "活动-宝图任务-开始",
             "[JumpBack]baotu_huodong_down"
         ]
     },
@@ -133,8 +133,12 @@
                 "宝图任务"
             ],
             "button_texts": [
+                "次数10/10",
+                "次数10／10",
                 "完成"
-            ]
+            ],
+            "max_row_distance": 45,
+            "infer_button": false
         },
         "pre_delay": 200,
         "next": [
@@ -147,7 +151,8 @@
         "custom_recognition_param": {
             "task_names": [
                 "宝图任务"
-            ]
+            ],
+            "max_row_distance": 45
         },
         "next": [
             "活动-宝图任务-开始-点击参加"
@@ -315,7 +320,16 @@
             }
         ],
         "next": [
-            "panduan_zhujiemian"
+            "宝图完成-重新核验活动次数"
+        ]
+    },
+    "宝图完成-重新核验活动次数": {
+        "focus": {
+            "Node.PipelineNode.Starting": "宝图追踪暂时消失，返回活动面板核验次数；未到10/10则继续"
+        },
+        "pre_delay": 3000,
+        "next": [
+            "baotu_renwu"
         ]
     },
     "52": {},
