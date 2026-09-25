@@ -138,6 +138,7 @@
                 "完成"
             ],
             "max_row_distance": 45,
+            "match_mode": "row",
             "infer_button": false
         },
         "pre_delay": 200,

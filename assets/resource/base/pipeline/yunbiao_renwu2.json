@@ -124,6 +124,8 @@
                 "次数3／3",
                 "完成"
             ],
+            "max_row_distance": 45,
+            "match_mode": "row",
             "infer_button": false
         },
         "next": [
@@ -137,7 +139,9 @@
             "task_names": [
                 "运镖任务",
                 "运镖"
-            ]
+            ],
+            "max_row_distance": 45,
+            "infer_button": false
         },
         "post_delay": 1000,
         "next": [

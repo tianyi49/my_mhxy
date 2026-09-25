@@ -72,6 +72,9 @@ class ActivityEntry(CustomRecognition):
         except (TypeError, ValueError):
             max_row_distance = self._MAX_ROW_DISTANCE
         max_row_distance = max(1, min(max_row_distance, 300))
+        match_mode = str(param.get("match_mode", "button")).strip().lower()
+        if match_mode not in {"button", "row"}:
+            match_mode = "button"
 
         if not task_names or not button_texts:
             return CustomRecognition.AnalyzeResult(box=None, detail="未配置活动名称或按钮文字")
@@ -119,7 +122,11 @@ class ActivityEntry(CustomRecognition):
             for button in buttons:
                 button_y = button.box[1] + button.box[3] / 2
                 row_distance = abs(title_y - button_y)
-                if row_distance > max_row_distance or button.box[0] <= title.box[0]:
+                if row_distance > max_row_distance:
+                    continue
+                # 默认仍要求目标位于标题右侧，避免相邻活动串行；次数等状态
+                # 通常位于标题正下方，row 模式允许同列匹配。
+                if match_mode == "button" and button.box[0] <= title.box[0]:
                     continue
                 distance = row_distance * 10 + abs(button.box[0] - title.box[0])
                 if best_distance is None or distance < best_distance:
@@ -192,9 +199,11 @@ class ActivityEntry(CustomRecognition):
 
         title, button = best_pair
         logger.info(
-            f"[ActivityEntry] 命中活动={title.text}, 标题框={title.box}, 按钮={button.box}"
+            f"[ActivityEntry] 命中活动={title.text}, 标题框={title.box}, "
+            f"{'同行状态' if match_mode == 'row' else '按钮'}={button.box}, "
+            f"文本={button.text}"
         )
         return CustomRecognition.AnalyzeResult(
             box=button.box,
-            detail=f"定位活动 {title.text} 的按钮 {button.text}",
+            detail=f"定位活动 {title.text} 的同行内容 {button.text}",
         )
