@@ -34,15 +34,38 @@
         "post_delay": 1000
     },
     "主界面-领取帮派任务": {
+        "timeout": 60000,
         "next": [
+            "重新领取帮派任务-已领取",
             "[JumpBack]重连失败-重新登录",
             "[JumpBack]回主界面-确认奖励弹窗",
             "[JumpBack]回主界面-关闭师门界面",
             "[JumpBack]回主界面-关闭人物属性",
+            "[JumpBack]关闭任务界面",
             "[JumpBack]panduan_zhujiemian-关闭顶层窗口",
             "帮派任务NPC对话-直接领取",
             "主界面-领取帮派任务-打开活动"
-        ]
+        ],
+        "on_error": []
+    },
+    "重新领取帮派任务-已领取": {
+        "recognition": "OCR",
+        "expected": [
+            "青龙",
+            "白虎",
+            "朱雀",
+            "玄武"
+        ],
+        "roi": [
+            1034,
+            171,
+            235,
+            336
+        ],
+        "pre_delay": 1500,
+        "focus": {
+            "Node.Recognition.Succeeded": "黑名单任务放弃后已成功重新领取帮派任务"
+        }
     },
     "帮派任务NPC对话-直接领取": {
         "recognition": "OCR",
@@ -212,7 +235,10 @@
         ],
         "pre_delay": 1000,
         "action": "Click",
-        "post_delay": 1000
+        "post_delay": 1500,
+        "next": [
+            "重新领取帮派任务-已领取"
+        ]
     },
     "已领取帮派任务": {
         "recognition": "OCR",

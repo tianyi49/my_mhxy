@@ -21,6 +21,7 @@ class BangpaiRenwuDecide(CustomRecognition):
 
     _ABANDON_ENTRY = "bangpai_放弃任务"
     _REACQUIRE_ENTRY = "主界面-领取帮派任务"   # 放弃后重新领取的链路入口（主界面→活动→参加→领取）
+    _REACQUIRE_MAX_ATTEMPTS = 3
     _ACCEPT_KEYWORD = ["青龙", "白虎", "朱雀", "玄武"]
     _DEFAULT_ROI = [1034, 171, 235, 336]
     _DEFAULT_BLACKLIST = ["金香玉", "九转", "蛇胆酒", "长寿面", "珍露酒"]
@@ -80,12 +81,24 @@ class BangpaiRenwuDecide(CustomRecognition):
                 logger.error(f"[bangpai_decide] 放弃黑名单任务失败：{hit_black}，跳过重新领取")
                 return CustomRecognition.AnalyzeResult(box=None, detail=f"黑名单:{hit_black},放弃失败")
 
-            reacquire = context.run_task(
-                self._REACQUIRE_ENTRY,
-                pipeline_override={self._REACQUIRE_ENTRY: {"on_error": []}},
-            )
+            reacquire = None
+            for attempt in range(1, self._REACQUIRE_MAX_ATTEMPTS + 1):
+                reacquire = context.run_task(
+                    self._REACQUIRE_ENTRY,
+                    pipeline_override={self._REACQUIRE_ENTRY: {"on_error": []}},
+                )
+                if self._task_really_succeeded(reacquire):
+                    break
+
+                if attempt < self._REACQUIRE_MAX_ATTEMPTS:
+                    logger.warning(
+                        f"[bangpai_decide] 第{attempt}次重新领取未通过任务栏核验，恢复界面后重试：{hit_black}"
+                    )
+
             if not self._task_really_succeeded(reacquire):
-                logger.error(f"[bangpai_decide] 黑名单任务已放弃，但重新领取失败：{hit_black}")
+                logger.error(
+                    f"[bangpai_decide] 黑名单任务已放弃，连续{self._REACQUIRE_MAX_ATTEMPTS}次重新领取失败：{hit_black}"
+                )
                 return CustomRecognition.AnalyzeResult(box=None, detail=f"黑名单:{hit_black},重新领取失败")
 
             logger.info(f"[bangpai_decide] 黑名单任务处理完成：{hit_black}，已重新领取")
