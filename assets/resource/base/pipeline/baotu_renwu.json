@@ -329,9 +329,12 @@
             "Node.PipelineNode.Starting": "宝图追踪暂时消失，返回活动面板核验次数；未到10/10则继续"
         },
         "pre_delay": 3000,
+        "timeout": 180000,
         "next": [
-            "baotu_renwu"
-        ]
+            "主界面-宝图任务",
+            "[JumpBack]panduan_zhujiemian"
+        ],
+        "on_error": []
     },
     "52": {},
     "战斗平衡弹窗-点击关闭": {

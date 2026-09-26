@@ -365,9 +365,12 @@
             "Node.PipelineNode.Starting": "重新打开活动面板，以次数x/3决定继续运镖或结束"
         },
         "pre_delay": 3000,
+        "timeout": 180000,
         "next": [
-            "yunbiao_renwu2"
-        ]
+            "主界面-运镖",
+            "[JumpBack]panduan_zhujiemian"
+        ],
+        "on_error": []
     },
     "运镖第2轮-接取中心": {
         "focus": {
