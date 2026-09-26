@@ -214,13 +214,50 @@
         ]
     },
     "活动-科举乡试-进入答题界面": {
-        "recognition": "TemplateMatch",
-        "template": "richangdati/kjxs_datijiemian.png",
-        "roi": [
-            528,
-            65,
-            244,
-            67
+        "focus": {
+            "Node.Recognition.Succeeded": "已识别科举答题页面，直接继续答题"
+        },
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "TemplateMatch",
+                "template": "richangdati/kjxs_datijiemian.png",
+                "roi": [
+                    528,
+                    65,
+                    244,
+                    67
+                ]
+            },
+            {
+                "recognition": "And",
+                "all_of": [
+                    {
+                        "recognition": "OCR",
+                        "expected": [
+                            "科举考试"
+                        ],
+                        "roi": [
+                            515,
+                            55,
+                            270,
+                            85
+                        ]
+                    },
+                    {
+                        "recognition": "OCR",
+                        "expected": [
+                            "剩余时间"
+                        ],
+                        "roi": [
+                            895,
+                            165,
+                            225,
+                            100
+                        ]
+                    }
+                ]
+            }
         ],
         "next": [
             "活动-科举乡试-结束-图片",
