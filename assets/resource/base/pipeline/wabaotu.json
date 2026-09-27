@@ -2,9 +2,9 @@
     "wabaotu_qingli": {
         "pre_delay": 200,
         "next": [
-            "挖宝图-主界面已就绪",
             "[JumpBack]清理主界面使用-关闭",
             "[JumpBack]战斗平衡弹窗-点击关闭",
+            "挖宝图-主界面已就绪",
             "[JumpBack]panduan_zhujiemian"
         ]
     },
@@ -31,6 +31,9 @@
         ]
     },
     "清理主界面使用-关闭": {
+        "focus": {
+            "Node.Action.Succeeded": "检测到右下角遗留物品使用弹窗，已先关闭再处理藏宝图"
+        },
         "recognition": "TemplateMatch",
         "template": "zonghe/zhujiemian_shiyong_cha.png",
         "roi": [
