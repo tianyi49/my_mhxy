@@ -206,7 +206,7 @@
         "action": "Click",
         "rate_limit": 2000,
         "next": [
-            "[JumpBack]藏宝图-主界面使用",
+            "藏宝图-主界面使用",
             "[JumpBack]战斗中-等待10秒",
             "[JumpBack]自动寻路中-图片识别",
             "[JumpBack]关闭三界热点",
@@ -231,7 +231,10 @@
             73
         ],
         "action": "Click",
-        "post_wait_freezes": 1000
+        "post_delay": 3000,
+        "next": [
+            "挖宝图完成判断"
+        ]
     },
     "挖宝图完成判断-过渡": {
         "recognition": "TemplateMatch",
@@ -249,7 +252,52 @@
         ]
     },
     "挖宝图完成判断": {
-        "pre_wait_freezes": 100,
+        "pre_delay": 1000,
+        "next": [
+            "[JumpBack]战斗中-等待10秒",
+            "[JumpBack]自动寻路中-图片识别",
+            "[JumpBack]关闭三界热点",
+            "[JumpBack]战斗平衡弹窗-点击关闭",
+            "[JumpBack]挖宝图-关闭背包物品详情",
+            "挖宝图完成判断-打开背包成功",
+            "挖宝图完成判断-主界面打开背包",
+            "[JumpBack]panduan_zhujiemian"
+        ]
+    },
+    "挖宝图-关闭背包物品详情": {
+        "recognition": "OCR",
+        "expected": [
+            "丢弃"
+        ],
+        "roi": [
+            240,
+            410,
+            190,
+            85
+        ],
+        "action": "ClickKey",
+        "key": [
+            4
+        ],
+        "post_delay": 500
+    },
+    "挖宝图完成判断-主界面打开背包": {
+        "focus": {
+            "Node.Action.Succeeded": "本张藏宝图流程已结束，重新打开背包核验剩余藏宝图"
+        },
+        "recognition": "TemplateMatch",
+        "template": [
+            "zonghe/jiahao.png",
+            "zonghe/chenghao.png",
+            "zonghe/baoguo.png",
+            "zonghe/baoguo_man.png"
+        ],
+        "roi": [
+            1197,
+            540,
+            78,
+            157
+        ],
         "action": "ClickKey",
         "key": [
             57,
@@ -258,7 +306,47 @@
         "post_delay": 1000,
         "next": [
             "挖宝图完成判断-打开背包成功",
-            "[JumpBack]背包界面-按键打开失败-点击图标"
+            "挖宝图完成判断-点击背包图标"
+        ]
+    },
+    "挖宝图完成判断-点击背包图标": {
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "TemplateMatch",
+                "template": [
+                    "zonghe/baoguo.png",
+                    "zonghe/baoguo_man.png"
+                ],
+                "roi": [
+                    1185,
+                    529,
+                    95,
+                    110
+                ],
+                "threshold": [
+                    0.9
+                ]
+            },
+            {
+                "recognition": "OCR",
+                "expected": [
+                    "包裹",
+                    "包",
+                    "裹"
+                ],
+                "roi": [
+                    1211,
+                    591,
+                    58,
+                    38
+                ]
+            }
+        ],
+        "action": "Click",
+        "post_delay": 1000,
+        "next": [
+            "挖宝图完成判断-打开背包成功"
         ]
     },
     "挖宝图完成判断-打开背包成功": {
