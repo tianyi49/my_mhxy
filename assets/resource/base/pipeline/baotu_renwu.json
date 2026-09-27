@@ -147,6 +147,9 @@
         ]
     },
     "活动-宝图任务-开始": {
+        "focus": {
+            "Node.Action.Succeeded": "已点击宝图任务参加按钮，等待领取任务"
+        },
         "recognition": "Custom",
         "custom_recognition": "activity_entry",
         "custom_recognition_param": {
@@ -155,16 +158,6 @@
             ],
             "max_row_distance": 45
         },
-        "next": [
-            "活动-宝图任务-开始-点击参加"
-        ]
-    },
-    "活动-宝图任务-开始-点击参加": {
-        "recognition": "OCR",
-        "expected": [
-            "参加"
-        ],
-        "roi": "活动-宝图任务-开始",
         "action": "Click",
         "post_delay": 2000,
         "post_wait_freezes": 1500,

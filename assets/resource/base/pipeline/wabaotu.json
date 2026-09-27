@@ -2,23 +2,30 @@
     "wabaotu_qingli": {
         "pre_delay": 200,
         "next": [
-            "清理主界面使用-关闭完成",
+            "挖宝图-主界面已就绪",
             "[JumpBack]清理主界面使用-关闭",
             "[JumpBack]战斗平衡弹窗-点击关闭",
             "[JumpBack]panduan_zhujiemian"
         ]
     },
-    "清理主界面使用-关闭完成": {
-        "inverse": true,
-        "pre_delay": 200,
+    "挖宝图-主界面已就绪": {
+        "focus": {
+            "Node.Recognition.Succeeded": "已回到主界面，开始打开背包查找藏宝图"
+        },
         "recognition": "TemplateMatch",
-        "template": "zonghe/zhujiemian_shiyong_cha.png",
-        "roi": [
-            1135,
-            369,
-            50,
-            46
+        "template": [
+            "zonghe/jiahao.png",
+            "zonghe/chenghao.png",
+            "zonghe/baoguo.png",
+            "zonghe/baoguo_man.png"
         ],
+        "roi": [
+            1197,
+            540,
+            78,
+            157
+        ],
+        "pre_delay": 500,
         "next": [
             "wabaotu"
         ]
