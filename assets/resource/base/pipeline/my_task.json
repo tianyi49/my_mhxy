@@ -113,6 +113,7 @@
             "[JumpBack]师门任务完成弹窗-确定",
             "[JumpBack]回主界面-关闭师门界面",
             "[JumpBack]回主界面-关闭人物属性",
+            "[JumpBack]关闭三界热点",
             "[JumpBack]panduan_zhujiemian-关闭顶层窗口",
             "[JumpBack]跳过剧情动画-快进键",
             "zai_zhujiemian",
@@ -467,10 +468,10 @@
             "点击任意空白处关闭界面"
         ],
         "roi": [
-            472,
-            666,
-            332,
-            38
+            420,
+            600,
+            440,
+            110
         ],
         "action": "Click",
         "post_delay": 500

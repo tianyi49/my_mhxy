@@ -44,7 +44,8 @@
         ],
         "next": [
             "活动-运镖-检查活跃度agent"
-        ]
+        ],
+        "on_error": []
     },
     "活动-运镖-检查活跃度agent": {
         "recognition": "Custom",
@@ -65,6 +66,58 @@
         "post_wait_freezes": 500,
         "next": [
             "活动-运镖-向上滑动到顶端"
+        ],
+        "on_error": [
+            "运镖-关闭全屏宣传页"
+        ]
+    },
+    "运镖-关闭全屏宣传页": {
+        "focus": {
+            "Node.Action.Succeeded": "检测到活动全屏宣传页，关闭后重新进入运镖活动",
+            "Node.PipelineNode.Failed": "运镖活动入口失败，且未检测到可关闭的宣传页"
+        },
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "OCR",
+                "expected": [
+                    "点击任意空白处关闭界面",
+                    "点击下方空白处关闭界面",
+                    "点击下万空白处关闭界面"
+                ],
+                "roi": [
+                    400,
+                    580,
+                    480,
+                    130
+                ]
+            },
+            {
+                "recognition": "OCR",
+                "expected": [
+                    "查看详情"
+                ],
+                "roi": [
+                    420,
+                    430,
+                    440,
+                    210
+                ]
+            }
+        ],
+        "action": "Click",
+        "target": [
+            1205,
+            5,
+            70,
+            60
+        ],
+        "post_delay": 1200,
+        "next": [
+            "活动-运镖-点击日常活动"
+        ],
+        "on_error": [
+            "运镖接取失败重试"
         ]
     },
     "活动-运镖-向上滑动到顶端": {
