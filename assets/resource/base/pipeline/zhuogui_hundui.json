@@ -411,9 +411,104 @@
         },
         "next": [
             "[JumpBack]panduan_zhujiemian-关闭顶层窗口",
-            "[JumpBack]tuichuduiwu",
+            "混队-抓鬼-异常恢复-打开队伍"
+        ],
+        "on_error": []
+    },
+    "混队-抓鬼-异常恢复-打开队伍": {
+        "recognition": "TemplateMatch",
+        "template": [
+            "zonghe/chenghao.png",
+            "zonghe/jiahao.png"
+        ],
+        "roi": [
+            1206,
+            637,
+            66,
+            57
+        ],
+        "action": "ClickKey",
+        "key": [
+            57,
+            48
+        ],
+        "post_delay": 800,
+        "next": [
+            "混队-抓鬼-异常恢复-点击退出队伍",
+            "混队-抓鬼-异常恢复-确认已退队"
+        ],
+        "on_error": []
+    },
+    "混队-抓鬼-异常恢复-点击退出队伍": {
+        "focus": {
+            "Node.Action.Succeeded": "异常混队仍在队伍中，执行退出队伍"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "退出队伍"
+        ],
+        "roi": [
+            65,
+            620,
+            225,
+            82
+        ],
+        "action": "Click",
+        "post_delay": 1200,
+        "next": [
+            "混队-抓鬼-异常恢复-确认已退队",
+            "混队-抓鬼-异常恢复-确认主界面"
+        ],
+        "on_error": []
+    },
+    "混队-抓鬼-异常恢复-确认已退队": {
+        "focus": {
+            "Node.Recognition.Succeeded": "已确认离开原队伍，关闭队伍页并重新混队"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "创建队伍",
+            "你尚未创建队伍",
+            "便捷组队"
+        ],
+        "roi": [
+            70,
+            55,
+            1110,
+            645
+        ],
+        "action": "Click",
+        "target": [
+            1176,
+            7,
+            62,
+            55
+        ],
+        "post_delay": 800,
+        "next": [
+            "混队-抓鬼-异常恢复-确认主界面"
+        ],
+        "on_error": []
+    },
+    "混队-抓鬼-异常恢复-确认主界面": {
+        "focus": {
+            "Node.Recognition.Succeeded": "退队恢复完成，开始新一轮混队"
+        },
+        "recognition": "TemplateMatch",
+        "template": [
+            "zonghe/chenghao.png",
+            "zonghe/jiahao.png"
+        ],
+        "roi": [
+            1206,
+            637,
+            66,
+            57
+        ],
+        "next": [
             "zhuogui_hundui"
-        ]
+        ],
+        "on_error": []
     },
     "混队-抓鬼-有效状态-战斗中": {
         "recognition": "TemplateMatch",
