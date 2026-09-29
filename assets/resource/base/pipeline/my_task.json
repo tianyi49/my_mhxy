@@ -109,6 +109,7 @@
             "[JumpBack]close_exit_confirm",
             "[JumpBack]帮派任务完成弹窗-确定",
             "[JumpBack]回主界面-关闭秘境界面",
+            "[JumpBack]回主界面-关闭NPC对话",
             "[JumpBack]回主界面-关闭队伍界面",
             "[JumpBack]师门任务完成弹窗-确定",
             "[JumpBack]回主界面-关闭师门界面",
@@ -163,17 +164,34 @@
         "post_delay": 800
     },
     "回主界面-关闭队伍界面": {
-        "recognition": "OCR",
-        "expected": [
-            "创建队伍",
-            "便捷组队",
-            "退出队伍"
-        ],
-        "roi": [
-            55,
-            35,
-            1170,
-            660
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "TemplateMatch",
+                "template": [
+                    "duiwu/duiwu-zudui.png",
+                    "duiwu/duiwu-duiwu.png"
+                ],
+                "roi": [
+                    0,
+                    0,
+                    229,
+                    106
+                ]
+            },
+            {
+                "recognition": "OCR",
+                "expected": [
+                    "创建队伍",
+                    "退出队伍"
+                ],
+                "roi": [
+                    55,
+                    600,
+                    245,
+                    115
+                ]
+            }
         ],
         "action": "Click",
         "target": [
@@ -181,6 +199,26 @@
             0,
             110,
             90
+        ],
+        "post_delay": 800
+    },
+    "回主界面-关闭NPC对话": {
+        "focus": {
+            "Node.Action.Succeeded": "检测到NPC选项对话，返回关闭后继续结束当前任务"
+        },
+        "recognition": "OCR",
+        "expected": [
+            "请选择要做的事"
+        ],
+        "roi": [
+            880,
+            70,
+            360,
+            100
+        ],
+        "action": "ClickKey",
+        "key": [
+            4
         ],
         "post_delay": 800
     },
