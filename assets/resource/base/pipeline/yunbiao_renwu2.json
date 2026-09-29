@@ -1,10 +1,20 @@
 {
     "yunbiao_renwu2": {
         "next": [
+            "运镖普通-流程总控"
+        ]
+    },
+    "运镖普通-流程总控": {
+        "focus": {
+            "Node.PipelineNode.Failed": "普通运镖超过40分钟仍未完成3次，停止本任务并放行后续任务"
+        },
+        "timeout": 2400000,
+        "next": [
             "[JumpBack]清理主界面使用-关闭",
             "主界面-运镖",
             "[JumpBack]panduan_zhujiemian"
-        ]
+        ],
+        "on_error": []
     },
     "主界面-运镖": {
         "recognition": "TemplateMatch",
@@ -234,7 +244,7 @@
         "max_hit": 2,
         "pre_delay": 2000,
         "next": [
-            "yunbiao_renwu2"
+            "运镖普通-流程总控"
         ],
         "on_error": []
     },

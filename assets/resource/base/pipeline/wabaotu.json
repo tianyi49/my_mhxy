@@ -1,12 +1,22 @@
 {
     "wabaotu_qingli": {
+        "next": [
+            "挖宝图-流程总控"
+        ]
+    },
+    "挖宝图-流程总控": {
+        "focus": {
+            "Node.PipelineNode.Failed": "挖宝图流程超过20分钟仍未结束，停止本任务并放行后续任务"
+        },
         "pre_delay": 200,
+        "timeout": 1200000,
         "next": [
             "[JumpBack]清理主界面使用-关闭",
             "[JumpBack]战斗平衡弹窗-点击关闭",
             "挖宝图-主界面已就绪",
             "[JumpBack]panduan_zhujiemian"
-        ]
+        ],
+        "on_error": []
     },
     "挖宝图-主界面已就绪": {
         "focus": {
@@ -178,7 +188,7 @@
         "next": [
             "点击藏宝图",
             "挖宝图完成",
-            "[JumpBack]背包向上滑动10次"
+            "[JumpBack]挖宝图-背包扫描下一页"
         ]
     },
     "点击藏宝图": {
@@ -364,7 +374,48 @@
         "next": [
             "点击藏宝图",
             "挖宝图完成",
-            "[JumpBack]背包向上滑动10次"
+            "[JumpBack]挖宝图-背包扫描下一页"
+        ]
+    },
+    "挖宝图-背包扫描下一页": {
+        "focus": {
+            "Node.PipelineNode.Failed": "背包已有限扫描12页且未发现藏宝图，结束挖宝并放行后续任务"
+        },
+        "max_hit": 12,
+        "action": "Swipe",
+        "begin": [
+            907,
+            462,
+            1,
+            1
+        ],
+        "end": [
+            907,
+            363,
+            1,
+            1
+        ],
+        "post_delay": 500,
+        "next": [
+            "点击藏宝图",
+            "挖宝图完成",
+            "[JumpBack]挖宝图-背包扫描下一页"
+        ],
+        "on_error": [
+            "挖宝图-扫描上限结束"
+        ]
+    },
+    "挖宝图-扫描上限结束": {
+        "focus": {
+            "Node.Action.Succeeded": "背包扫描已到上限，关闭背包后正常结束挖宝任务"
+        },
+        "action": "ClickKey",
+        "key": [
+            4
+        ],
+        "post_delay": 1000,
+        "next": [
+            "空节点"
         ]
     },
     "挖宝图完成": {
@@ -372,7 +423,10 @@
             "Node.Recognition.Succeeded": "背包已扫描到底且未发现藏宝图，挖宝完成"
         },
         "recognition": "TemplateMatch",
-        "template": "beibao/beibao_diduan.png",
+        "template": [
+            "beibao/beibao_diduan.png",
+            "beibao/beibao_konggezi.png"
+        ],
         "roi": [
             905,
             543,
