@@ -19,8 +19,9 @@ class ShimenRenwuDecide(CustomRecognition):
     - **其他师门任务**：直接在 agent 内 ``post_click`` 点击识别框中心，等 7 秒（替代原节点
       ``post_delay:7000``），再 ``run_task`` 运行一次「抄本兜底」节点清除点击后出现的「使用抄本」按钮，
       最后返回未识别（``box=None``）。**本识别一律不返回命中信号**——点击副作用由 agent 侧完成.
-    - **都没有**：返回 ``box=None``（未命中）；连续 ``_MISS_STREAK_LIMIT`` 次未命中则 ``run_task``
-      一次 ``panduan_zhujiemian`` 回主界面（兜底重置屏幕状态）再归零计数。任意命中分支（①②）归零计数。
+    - **都没有**：返回 ``box=None``（未命中）。战斗、寻路、购买及剧情切换期间暂时看不到
+      任务栏是正常状态，不能仅凭连续未命中强制回主界面；恢复与总时限统一交给外层状态机处理。
+      任意命中分支（①②）会归零诊断计数。
 
     MAP 形如 ``{"男衣": "夜魔披风", ...}``：value 是用于识别师门装备任务的装备名。
 
@@ -34,9 +35,9 @@ class ShimenRenwuDecide(CustomRecognition):
     # 点击师门任务条目后，面板出现「使用抄本」按钮 —— 用兜底节点清除
     _CHAOBEN_FALLBACK_NODE = "师门任务-任务分支-抄本兜底-入口"
     _CHAOBEN_FALLBACK_TIMEOUT = 1000  # 兜底识别上限，防非抄本任务时阻塞状态机
-    # 连续 N 次未识别到师门任务 → 飞回长安一次，打破「面板 OCR 持续空/误读」卡死
-    _MISS_STREAK_LIMIT = 5
-    _BACK_TO_MAIN_ENTRY = "打开大地图_69副本"
+    # 未命中只用于低频诊断。外层「师门-进行中状态机-v2」已经覆盖战斗、寻路、
+    # 购买、剧情和总超时，识别器不得在这些正常过渡态中擅自切换场景。
+    _MISS_LOG_INTERVAL = 20
 
     _50_MAP = {
         # 防具
@@ -79,17 +80,16 @@ class ShimenRenwuDecide(CustomRecognition):
     def _on_miss(self, context: Context) -> CustomRecognition.AnalyzeResult:
         """记录一次「未识别到师门任务」。
 
-        连续达到 ``_MISS_STREAK_LIMIT`` 次时，``run_task`` 执行一次 ``panduan_zhujiemian`` 回主界面
-        （兜底重置屏幕状态），再归零计数；否则只递增并返回未命中。
+        未命中在战斗、自动寻路、商店和剧情画面都可能正常发生，因此这里只记录低频
+        诊断信息，不再主动飞回主界面，避免打断正在执行的师门子流程。
         """
         streak = getattr(self, "_miss_streak", 0) + 1
         self._miss_streak = streak
-        if streak >= self._MISS_STREAK_LIMIT:
-            logger.info(f"[shimen_decide] 连续 {streak} 次未识别到师门任务，回主界面")
-            context.run_task(self._BACK_TO_MAIN_ENTRY)
-            self._miss_streak = 0
-        else:
-            logger.info(f"[shimen_decide] 未识别到师门任务（连续 {streak}/{self._MISS_STREAK_LIMIT}）")
+        if streak == 1 or streak % self._MISS_LOG_INTERVAL == 0:
+            logger.debug(
+                f"[shimen_decide] 当前处于非任务栏画面，连续 {streak} 次未识别到师门任务；"
+                "保持外层状态机继续判断"
+            )
         return CustomRecognition.AnalyzeResult(box=None, detail="未识别到师门任务")
 
     def analyze(
@@ -157,5 +157,5 @@ class ShimenRenwuDecide(CustomRecognition):
                 self._reset_miss_streak()
                 return CustomRecognition.AnalyzeResult(box=None, detail="已点击师门任务")
 
-        # ③ 都没有：未命中 → 计数，连续 _MISS_STREAK_LIMIT 次则回主界面打破卡死
+        # ③ 都没有：当前可能处于正常过渡画面，只返回未命中，不主动切换场景。
         return self._on_miss(context)

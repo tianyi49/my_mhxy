@@ -224,15 +224,34 @@
     },
     "回主界面-关闭师门界面": {
         "max_hit": 3,
-        "recognition": "OCR",
-        "expected": [
-            "师门任务"
-        ],
-        "roi": [
-            120,
-            30,
-            1010,
-            600
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "OCR",
+                "expected": [
+                    "师门"
+                ],
+                "roi": [
+                    170,
+                    90,
+                    220,
+                    190
+                ]
+            },
+            {
+                "recognition": "OCR",
+                "expected": [
+                    "自动选择每日任务",
+                    "自动完成任务",
+                    "门派关系"
+                ],
+                "roi": [
+                    500,
+                    500,
+                    650,
+                    115
+                ]
+            }
         ],
         "action": "Click",
         "target": [
