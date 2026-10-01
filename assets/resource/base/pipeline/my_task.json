@@ -114,6 +114,7 @@
             "[JumpBack]师门任务完成弹窗-确定",
             "[JumpBack]回主界面-关闭师门界面",
             "[JumpBack]回主界面-关闭人物属性",
+            "[JumpBack]关闭通用活动宣传页",
             "[JumpBack]关闭三界热点",
             "[JumpBack]panduan_zhujiemian-关闭顶层窗口",
             "[JumpBack]跳过剧情动画-快进键",
@@ -532,6 +533,62 @@
         ],
         "action": "Click",
         "post_delay": 500
+    },
+    "关闭通用活动宣传页": {
+        "focus": {
+            "Node.Action.Succeeded": "检测到全屏活动宣传遮挡，已关闭并继续当前流程"
+        },
+        "recognition": "Or",
+        "any_of": [
+            {
+                "recognition": "OCR",
+                "expected": [
+                    "点击任意空白处关闭界面",
+                    "点击下方空白处关闭界面",
+                    "点击下万空白处关闭界面"
+                ],
+                "roi": [
+                    400,
+                    560,
+                    480,
+                    150
+                ]
+            },
+            {
+                "recognition": "And",
+                "all_of": [
+                    {
+                        "recognition": "OCR",
+                        "expected": [
+                            "每周可得预计至少"
+                        ],
+                        "roi": [
+                            430,
+                            190,
+                            520,
+                            360
+                        ]
+                    },
+                    {
+                        "recognition": "OCR",
+                        "expected": [
+                            "赛季"
+                        ],
+                        "roi": [
+                            430,
+                            190,
+                            520,
+                            360
+                        ]
+                    }
+                ]
+            }
+        ],
+        "action": "ClickKey",
+        "key": [
+            4
+        ],
+        "post_delay": 1000
     },
     "MyTask3": {},
     "战斗中-等待100秒": {

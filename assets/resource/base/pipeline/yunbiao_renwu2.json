@@ -78,55 +78,7 @@
             "活动-运镖-向上滑动到顶端"
         ],
         "on_error": [
-            "运镖-关闭全屏宣传页"
-        ]
-    },
-    "运镖-关闭全屏宣传页": {
-        "focus": {
-            "Node.Action.Succeeded": "检测到活动全屏宣传页，关闭后重新进入运镖活动",
-            "Node.PipelineNode.Failed": "运镖活动入口失败，且未检测到可关闭的宣传页"
-        },
-        "recognition": "Or",
-        "any_of": [
-            {
-                "recognition": "OCR",
-                "expected": [
-                    "点击任意空白处关闭界面",
-                    "点击下方空白处关闭界面",
-                    "点击下万空白处关闭界面"
-                ],
-                "roi": [
-                    400,
-                    580,
-                    480,
-                    130
-                ]
-            },
-            {
-                "recognition": "OCR",
-                "expected": [
-                    "查看详情"
-                ],
-                "roi": [
-                    420,
-                    430,
-                    440,
-                    210
-                ]
-            }
-        ],
-        "action": "Click",
-        "target": [
-            1205,
-            5,
-            70,
-            60
-        ],
-        "post_delay": 1200,
-        "next": [
-            "活动-运镖-点击日常活动"
-        ],
-        "on_error": [
+            "[JumpBack]关闭通用活动宣传页",
             "运镖接取失败重试"
         ]
     },
@@ -396,12 +348,13 @@
     },
     "运镖第1轮-等待完成": {
         "focus": {
-            "Node.PipelineNode.Failed": "第1次普通运镖等待超过10分钟，本次任务失败"
+            "Node.PipelineNode.Failed": "普通运镖3轮累计等待超过30分钟，本次任务失败"
         },
         "pre_delay": 3000,
-        "timeout": 600000,
+        "timeout": 1800000,
         "next": [
             "识别拓印_停止",
+            "[JumpBack]关闭通用活动宣传页",
             "[JumpBack]清理主界面使用-关闭",
             "[JumpBack]运镖中",
             "[JumpBack]战斗中-等待20秒",
@@ -593,6 +546,7 @@
         "timeout": 600000,
         "next": [
             "识别拓印_停止",
+            "[JumpBack]关闭通用活动宣传页",
             "[JumpBack]清理主界面使用-关闭",
             "[JumpBack]运镖中",
             "[JumpBack]战斗中-等待20秒",
@@ -778,6 +732,7 @@
         "timeout": 600000,
         "next": [
             "识别拓印_停止",
+            "[JumpBack]关闭通用活动宣传页",
             "[JumpBack]清理主界面使用-关闭",
             "[JumpBack]运镖中",
             "[JumpBack]战斗中-等待20秒",
